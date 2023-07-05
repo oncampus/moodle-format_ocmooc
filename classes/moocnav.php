@@ -18,7 +18,7 @@ class moocnav {
         if (self::is_social_area()) {
             $moocnav[] = [
                     'name' => get_string('social', 'format_ocmooc'),
-                    'url' => new \moodle_url('/course/format/ocmooc/social.php', ['courseid' => $COURSE->id]),
+                    'url' => new \moodle_url('/course/format/ocmooc/views/social.php', ['courseid' => $COURSE->id]),
             ];
         }
 
@@ -42,7 +42,7 @@ class moocnav {
         foreach ($pages as $page) {
             $moocnav[] = [
                     'name' => $pages->title,
-                    'url' => new \moodle_url('/course/format/ocmooc/page.php', ['courseid' => $COURSE->id, 'id' => $page->id])
+                    'url' => new \moodle_url('/course/format/ocmooc/views/page.php', ['courseid' => $COURSE->id, 'id' => $page->id])
             ];
         }
 

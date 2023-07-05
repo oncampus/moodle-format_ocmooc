@@ -87,6 +87,20 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023062800, 'format', 'ocmooc');
     }
 
+    if ($oldversion < 2023070501) {
+
+        // Define field sortorder to be added to format_ocmooc_social.
+        $table = new xmldb_table('format_ocmooc_social');
+        $field = new xmldb_field('sortorder', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'type');
+
+        // Conditionally launch add field sortorder.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Ocmooc savepoint reached.
+        upgrade_plugin_savepoint(true, 2023070501, 'format', 'ocmooc');
+    }
 
     return true;
 }

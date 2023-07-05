@@ -90,6 +90,7 @@ class content extends content_base {
                     $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
 
                     $section->sections = $this->get_chapter_sections($section, $chapter, $output);
+                    $section->sectioncount = count($section->sections);
 
                     $chapters[] = $section;
                 }
