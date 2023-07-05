@@ -1,0 +1,112 @@
+ul#oc-coursenavlist {
+    margin-left: auto;
+    margin-right: auto;
+    list-style-type: none;
+    padding: 0px;
+    text-align: center;
+    max-width: 1080px;
+    width: 80%;
+    min-width: 275px;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 979px) {
+    .wrap {
+        max-width: 610px;
+    }
+}
+
+.wrap {
+    position: relative;
+    margin: 20px auto 30px auto;
+    width: 940px;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 979px) {
+    .frame ul li {
+        width: 178px;
+        margin: 20px 0px 20px auto;
+    }
+}
+
+.frame ul li {
+    float: left;
+    width: 280px;
+    height: auto;
+    margin: 30px 4px 20px auto;
+    padding: 0;
+    background: #ddd;
+    color: #ddd;
+    text-align: center;
+    cursor: pointer;
+    z-index: 10;
+    vertical-align: middle;
+    /* opacity: 0.6; */
+}
+
+.frame ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.frame ul li img {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    text-align: center;
+    opacity: 0.6;
+}
+
+.frame ul li img.active {
+    opacity: 1 !important;
+}
+
+.ocmooc-navigation {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.ocmooc-navigation li {
+    margin-right: 10px;
+    width: 96px;
+    height: 96px; /* Set the desired height */
+}
+
+.ocmooc-navigation li:first-child,
+.ocmooc-navigation li:last-child {
+    width: 30px;
+}
+
+.ocmooc-navigation li.button-item {
+    width: 96px;
+}
+
+.ocmooc-navigation li button,
+.ocmooc-navigation li a {
+    width: 100%;
+    height: 100%; /* Make the buttons and links fill the entire height of their parent */
+    background-color: #eaeaea;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ocmooc-navigation li button:hover,
+.ocmooc-navigation li a:hover {
+    background-color: #ccc;
+}
+
+.ocmooc-nav-link .text-container {
+    align-items: flex-start; /* Align elements to the top */
+}

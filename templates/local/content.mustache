@@ -1,0 +1,59 @@
+<div class="w-100">
+    {{$format_ocmooc/local/moocnav}}
+        {{> format_ocmooc/local/moocnav}}
+    {{/format_ocmooc/local/moocnav}}
+</div>
+<div id="course-format-{{uniqid}}">
+    <h2 class="accesshide">{{{title}}}</h2>
+    {{{completionhelp}}}
+    <ul class="{{format}}" data-for="course_sectionlist">
+        {{#editing}}
+            {{#initialsection}}
+                {{$ format_ocmooc/local/content/section }}
+                    {{> format_ocmooc/local/content/section }}
+                {{/ format_ocmooc/local/content/section }}
+            {{/initialsection}}
+        {{/editing}}
+        {{#sections}}
+            {{$ format_ocmooc/local/content/section }}
+                {{> format_ocmooc/local/content/section }}
+            {{/ format_ocmooc/local/content/section }}
+        {{/sections}}
+    </ul>
+    {{#hasnavigation}}
+        <div class="single-section">
+            {{#sectionnavigation}}
+                {{$ core_courseformat/local/content/sectionnavigation }}
+                    {{> core_courseformat/local/content/sectionnavigation }}
+                {{/ core_courseformat/local/content/sectionnavigation }}
+            {{/sectionnavigation}}
+            <ul class="{{format}}">
+                {{#singlesection}}
+                    {{$ format_ocmooc/local/content/chapter }}
+                        {{> format_ocmooc/local/content/chapter }}
+                    {{/ format_ocmooc/local/content/chapter }}
+                {{/singlesection}}
+            </ul>
+            {{#sectionselector}}
+                {{$ core_courseformat/local/content/sectionselector }}
+                    {{> core_courseformat/local/content/sectionselector }}
+                {{/ core_courseformat/local/content/sectionselector }}
+            {{/sectionselector}}
+        </div>
+    {{/hasnavigation}}
+    {{#numsections}}
+        {{$ core_courseformat/local/content/addsection}}
+            {{> core_courseformat/local/content/addsection}}
+        {{/ core_courseformat/local/content/addsection}}
+    {{/numsections}}
+</div>
+<div class="w-100">
+    {{$format_ocmooc/local/moocnav/sectionquicknav}}
+        {{> format_ocmooc/local/moocnav/sectionquicknav}}
+    {{/format_ocmooc/local/moocnav/sectionquicknav}}
+</div>
+{{#js}}
+    require(['core_courseformat/local/content'], function(component) {
+    component.init('course-format-{{uniqid}}', {}, {{sectionreturn}});
+    });
+{{/js}}

@@ -1,0 +1,34 @@
+<div class="d-flex justify-content-center">
+    <ul id="" class="ocmooc-navigation">
+        {{#firstsection}}
+            <li class="ocmooc-nav-item">
+
+            </li>
+        {{/firstsection}}
+        {{^firstsection}}
+            <li class="ocmooc-nav-item">
+                <a href="{{prevsection}}"><</a>
+            </li>
+        {{/firstsection}}
+
+        {{#chaptersections}}
+            <li class="ocmooc-nav-item">
+                <a class="ocmooc-nav-link" href="{{url}}">
+                    <div class="text-container">
+                        <div>{{title}}</div>
+                        <div>{{sectionnum}}</div>
+                    </div>
+                </a>
+            </li>
+        {{/chaptersections}}
+
+        {{#lastsection}}
+            <li class="ocmooc-nav-item"></li>
+        {{/lastsection}}
+        {{^lastsection}}
+            <li class="ocmooc-nav-item">
+                <a href="{{nextsection}}">></a>
+            </li>
+        {{/lastsection}}
+    </ul>
+</div>
