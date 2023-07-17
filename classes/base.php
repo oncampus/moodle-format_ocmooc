@@ -19,12 +19,12 @@ abstract class base {
     }
 
     public function render_view() {
-        global $DB;
+        global $OUTPUT;
+
+        $moocnav = \format_ocmooc\moocnav::get_moocnav_entries();
+        echo $OUTPUT->render_from_template('format_ocmooc/local/moocnav/headernav', ['moocnav' => $moocnav]);
 
         $this->render_view_custom();
-
-        $records = $DB->get_records('format_ocmooc_social', ['courseid' => $this->courseid]);
-        print_object($records);
     }
 
     protected abstract function render_view_custom();
@@ -41,6 +41,9 @@ abstract class base {
     public abstract function render_overview();
 
     public function handle_form() {
+        if (!isset($this->mform))
+            return;
+
         if ($this->mform->is_cancelled()) {
             redirect($this->url);
         } else if ($fromform = $this->mform->get_data()) {
@@ -66,6 +69,9 @@ abstract class base {
     protected abstract function handle_data($data);
 
     private function show_form() {
+        if (!isset($this->mform))
+            return;
+
         $this->mform->display();
     }
 

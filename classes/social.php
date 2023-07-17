@@ -14,7 +14,12 @@ class social extends base {
     }
 
     protected function render_view_custom() {
+        global $DB, $OUTPUT;
 
+        $socials = $DB->get_records('format_ocmooc_social', ['courseid' => $this->courseid]);
+        $socials = array_values($socials);
+
+        echo $OUTPUT->render_from_template('format_ocmooc/social/socials', ['socials' => $socials]);
     }
 
     protected function render_editor_custom() {

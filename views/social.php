@@ -22,8 +22,5 @@ $PAGE->set_context($coursecontext);
 
 echo $OUTPUT->header();
 
-$moocnav = \format_ocmooc\moocnav::get_moocnav_entries();
-echo $OUTPUT->render_from_template('format_ocmooc/local/moocnav/headernav', ['moocnav' => $moocnav]);
-
 $social->render_view();
 echo $OUTPUT->footer();
