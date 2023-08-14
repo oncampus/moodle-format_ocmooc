@@ -147,7 +147,7 @@ class format_ocmooc extends core_courseformat\base {
     }
 
     public function get_chapter_sections($chapter) {
-        $sectionnum  = $this->resolve_section_number($chapter);
+        $sectionnum = $this->resolve_section_number($chapter);
         $sections = array();
         foreach ($this->get_sections() as $num => $subsection) {
             if ($subsection->parent == $sectionnum && $num != $sectionnum) {
@@ -183,5 +183,25 @@ function format_ocmooc_inplace_editable($itemtype, $itemid, $newvalue) {
 }
 
 function format_ocmooc_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
-    $parentnode->add('HIERHABEICHMICHVERSTECKT', new moodle_url('/index.php'));
+    if ($course->foramt != 'ocmooc' && !has_capability('format/ocmooc:edit', $context)) {
+        return;
+    }
+
+    $params = [
+            'courseid' => $course->id,
+    ];
+    $parentnode->add(
+            get_string('edit:participants', 'format_ocmooc'),
+            new moodle_url('/course/format/ocmooc/edit/participants.php', $params)
+    );
+
+    $parentnode->add(
+            get_string('edit:social', 'format_ocmooc'),
+            new moodle_url('/course/format/ocmooc/edit/social.php', $params)
+    );
+
+    $parentnode->add(
+            get_string('edit:social', 'format_ocmooc'),
+            new moodle_url('/course/format/ocmooc/edit/social.php', $params)
+    );
 }

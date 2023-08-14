@@ -10,6 +10,8 @@ abstract class base {
 
     protected $mform;
 
+    protected $setdatadb;
+
     /**
      * @param $courseid
      */
@@ -30,6 +32,8 @@ abstract class base {
     protected abstract function render_view_custom();
 
     public function render_editor() {
+        $this->set_data();
+
         echo \html_writer::tag('h2', get_string('editor', 'format_ocmooc'));
 
         $this->render_editor_custom();
@@ -67,6 +71,17 @@ abstract class base {
     }
 
     protected abstract function handle_data($data);
+
+    protected function set_data() {
+        global $DB;
+
+        if (!isset($this->setdatadb) || !isset($this->mform)) {
+            return;
+        }
+
+        $data = $DB->get_record($this->setdatadb, ['courseid' => $this->courseid]);
+        $this->mform->set_data($data);
+    }
 
     private function show_form() {
         if (!isset($this->mform))

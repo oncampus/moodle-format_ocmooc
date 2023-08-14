@@ -15,6 +15,11 @@ class moocnav {
                 ],
         ];
 
+        $moocnav[] = [
+                'name' => get_string('participants', 'format_ocmooc'),
+                'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
+        ];
+
         if (self::is_social_area()) {
             $moocnav[] = [
                     'name' => get_string('social', 'format_ocmooc'),
