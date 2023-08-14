@@ -7,6 +7,7 @@ use format_ocmooc\forms\participantsform;
 require_once($CFG->dirroot . '/enrol/locallib.php');
 
 require_once($CFG->libdir . '/tablelib.php');
+require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
 
 class participants extends base {
 
@@ -35,10 +36,20 @@ class participants extends base {
     }
 
     protected function render_view_custom() {
-        global $PAGE, $COURSE, $DB;
+        global $PAGE, $COURSE, $DB, $OUTPUT;
+
+        $page = optional_param('page', 0, PARAM_INT);
+        $perpage = optional_param('perpage', 10, PARAM_INT);
+
+        $data = $this->get_data();
+
+        if ($data->town && $data->country) {
+            echo get_html_osmmap();
+        }
+
         $manager = new \course_enrolment_manager($PAGE, $COURSE);
 
-        list($header, $titles) = $this->prepare_table_header();
+        list($header, $titles, $nosort) = $this->prepare_table_header();
 
         $table = new \flexible_table('user-index-participants-' . $this->courseid);
         $table->define_columns($header);
@@ -49,37 +60,48 @@ class participants extends base {
         $table->set_attribute('id', 'participants');
         $table->set_attribute('class', 'generaltable generalbox');
 
+        foreach ($nosort as $col) {
+            $table->no_sorting($col);
+        }
+
         $table->sortable(true);
-        
 
         $table->setup();
 
         $instances = $manager->get_enrolment_instances();
-        $users = array();
+        $ids = array();
         foreach ($instances as $instance) {
-            $sql = "SELECT u.* FROM {user} u
-                INNER JOIN {user_enrolments} ue
-                    ON u.id = ue.userid
-                WHERE enrolid = ?";
-
-            $params = [
-                    $instance->id
-            ];
-
-            $records = $DB->get_records_sql($sql, $params);
-            foreach ($records as $record) {
-                $users[$record->id] = $record;
-            }
+            $ids[] = $instance->id;
         }
 
-        ksort($users);
+        list($insql, $params) = $DB->get_in_or_equal($ids);
+
+        $sql = "SELECT u.* FROM {user} u
+                INNER JOIN {user_enrolments} ue
+                    ON u.id = ue.userid
+                WHERE enrolid $insql";
+
+        $sort = $table->get_sql_sort();
+        if ($sort) {
+            $sql .= " ORDER BY $sort";
+        }
+
+        $users = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
 
         foreach ($users as $user) {
             $user = $this->prepare_user_entry($user);
             $table->add_data($user);
         }
 
+        // There was a problem with count_records_sql. The count was incorrect.
+        $total = $DB->get_records_sql($sql, $params);
+        $total = count($total);
+
+        echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
+
         $table->finish_html();
+
+        echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
     }
 
     private function prepare_table_header() {
@@ -90,6 +112,7 @@ class participants extends base {
         $notsortable = [];
 
         if ($data->profilepicture) {
+            $notsortable[] = 'profilepicture';
             $header[] = 'profilepicture';
             $titles[] = get_string('profilepicture', 'format_ocmooc');
         }
@@ -100,6 +123,7 @@ class participants extends base {
                 $titles[] = get_string('username', 'format_ocmooc');
                 break;
             case 2:
+                $notsortable[] = 'name';
                 $header[] = 'name';
                 $titles[] = get_string('name', 'format_ocmooc');
                 break;
@@ -125,16 +149,19 @@ class participants extends base {
         }
 
         if ($data->badges) {
+            $notsortable[] = 'badges';
             $header[] = 'badges';
             $titles[] = get_string('badges', 'format_ocmooc');
         }
 
         if ($data->roles) {
+            $notsortable[] = 'roles';
             $header[] = 'roles';
             $titles[] = get_string('roles', 'format_ocmooc');
         }
 
         if ($data->groups) {
+            $notsortable[] = 'groups';
             $header[] = 'groups';
             $titles[] = get_string('groups', 'format_ocmooc');
         }
@@ -144,7 +171,7 @@ class participants extends base {
             $titles[] = get_string('lastaccess', 'format_ocmooc');
         }
 
-        return [$header, $titles];
+        return [$header, $titles, $notsortable];
     }
 
     private function prepare_user_entry($user) {
@@ -155,10 +182,10 @@ class participants extends base {
         $userdata = [];
 
         if ($data->profilepicture) {
-            $userdata[] = $OUTPUT->user_picture($user, ['size' => 100, 'courseid' => $this->courseid]);
+            $userdata[] = $OUTPUT->user_picture($user, ['size' => 35, 'courseid' => $this->courseid]);
         }
 
-        switch ($data->namedispley) {
+        switch ($data->namedisplay) {
             case 1:
                 $userdata[] = $user->username;
                 break;
@@ -187,7 +214,7 @@ class participants extends base {
             $images = [];
             foreach ($badges as $badge) {
                 $imageurl = \moodle_url::make_pluginfile_url(\context_course::instance($this->courseid)->id, 'badges', 'badgeimage', $badge->id, '/', 'f1', FALSE);
-                $images[] = \html_writer::img($imageurl, $badge->name, ['class' => '']);
+                $images[] = \html_writer::img($imageurl, $badge->name, ['style' => 'width: 30px; heigth: 30px;']);
             }
 
             $seperator = \html_writer::tag('span', ', ', ['class' => '']);
