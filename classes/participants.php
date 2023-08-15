@@ -3,6 +3,7 @@
 namespace format_ocmooc;
 
 use format_ocmooc\forms\participantsform;
+use format_ocmooc\forms\searchform;
 
 require_once($CFG->dirroot . '/enrol/locallib.php');
 
@@ -16,6 +17,8 @@ class participants extends base {
     private $counter = 1;
 
     private $datestring;
+
+    private $searchform;
 
     public function __construct($courseid, $url) {
         parent::__construct($courseid, $url);
@@ -33,6 +36,8 @@ class participants extends base {
         $this->datestring->mins = get_string('mins');
         $this->datestring->sec = get_string('sec');
         $this->datestring->secs = get_string('secs');
+
+        $this->searchform = new searchform($this->url);
     }
 
     protected function render_view_custom() {
@@ -44,7 +49,8 @@ class participants extends base {
         $data = $this->get_data();
 
         if ($data->town && $data->country) {
-            echo get_html_osmmap();
+            $map = get_html_osmmap();
+            echo \html_writer::span($map, 'mb-2');
         }
 
         $manager = new \course_enrolment_manager($PAGE, $COURSE);
@@ -74,12 +80,21 @@ class participants extends base {
             $ids[] = $instance->id;
         }
 
+        unset($instance);
+        unset($instances);
+
         list($insql, $params) = $DB->get_in_or_equal($ids);
 
         $sql = "SELECT u.* FROM {user} u
                 INNER JOIN {user_enrolments} ue
                     ON u.id = ue.userid
                 WHERE enrolid $insql";
+
+        list($sql, $paramssearch) = $this->handle_search_data($sql);
+
+        if ($paramssearch) {
+            $params = array_merge($params, $paramssearch);
+        }
 
         $sort = $table->get_sql_sort();
         if ($sort) {
@@ -91,17 +106,22 @@ class participants extends base {
         foreach ($users as $user) {
             $user = $this->prepare_user_entry($user);
             $table->add_data($user);
+            unset($user);
         }
 
         // There was a problem with count_records_sql. The count was incorrect.
         $total = $DB->get_records_sql($sql, $params);
         $total = count($total);
 
+        $this->searchform->display();
+
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
 
         $table->finish_html();
 
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
+
+        unset($table);
     }
 
     private function prepare_table_header() {
@@ -148,12 +168,6 @@ class participants extends base {
             $titles[] = get_string('country', 'format_ocmooc');
         }
 
-        if ($data->badges) {
-            $notsortable[] = 'badges';
-            $header[] = 'badges';
-            $titles[] = get_string('badges', 'format_ocmooc');
-        }
-
         if ($data->roles) {
             $notsortable[] = 'roles';
             $header[] = 'roles';
@@ -164,6 +178,12 @@ class participants extends base {
             $notsortable[] = 'groups';
             $header[] = 'groups';
             $titles[] = get_string('groups', 'format_ocmooc');
+        }
+
+        if ($data->badges) {
+            $notsortable[] = 'badges';
+            $header[] = 'badges';
+            $titles[] = get_string('badges', 'format_ocmooc');
         }
 
         if ($data->lastaccess) {
@@ -202,7 +222,7 @@ class participants extends base {
         }
 
         if ($data->town) {
-            $userdata[] = $user->town;
+            $userdata[] = $user->city;
         }
 
         if ($data->country) {
@@ -213,7 +233,8 @@ class participants extends base {
             $badges = badges_get_user_badges($user->id, $this->courseid);
             $images = [];
             foreach ($badges as $badge) {
-                $imageurl = \moodle_url::make_pluginfile_url(\context_course::instance($this->courseid)->id, 'badges', 'badgeimage', $badge->id, '/', 'f1', FALSE);
+                $imageurl = \moodle_url::make_pluginfile_url(\context_course::instance($this->courseid)->id, 'badges', 'badgeimage',
+                        $badge->id, '/', 'f1', false);
                 $images[] = \html_writer::img($imageurl, $badge->name, ['style' => 'width: 30px; heigth: 30px;']);
             }
 
@@ -275,6 +296,52 @@ class participants extends base {
         }
 
         return $this->data;
+    }
+
+    private function handle_search_data($sql) {
+        if ($this->searchform->is_cancelled()) {
+            redirect($this->url);
+        } else if ($fromform = $this->searchform->get_data()) {
+            $data = $this->get_data();
+            $searchtext = "%$fromform->searchtext%";
+
+            $sql .= " AND ";
+
+            $sqlwhere = array();
+
+            $params = array();
+
+            switch ($data->displayname) {
+                case 1:
+                    $sqlwhere[] = 'u.username LIKE ?';
+                    $params[] = $searchtext;
+                    break;
+                default:
+                    $sqlwhere[] = 'u.firstname LIKE ? OR u.lastname LIKE ?';
+                    $params[] = $searchtext;
+                    $params[] = $searchtext;
+                    break;
+            }
+
+            if ($data->email) {
+                $sqlwhere[] = 'u.email LIKE ?';
+                $params[] = $searchtext;
+            }
+
+            if ($data->town) {
+                $sqlwhere[] = 'u.city LIKE ?';
+                $params[] = $searchtext;
+            }
+
+            if ($data->country) {
+                $sqlwhere[] = 'u.city LIKE ?';
+                $params[] = $searchtext;
+            }
+
+            $sql .= '(' . implode(' OR ', $sqlwhere) . ')';
+        }
+
+        return [$sql, $params ?? false];
     }
 
     protected function render_editor_custom() {

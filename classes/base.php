@@ -12,11 +12,14 @@ abstract class base {
 
     protected $setdatadb;
 
+    protected $context;
+
     /**
      * @param $courseid
      */
     public function __construct($courseid, $url) {
         $this->courseid = $courseid;
+        $this->context = \context_course::instance($courseid);
         $this->url = $url;
     }
 
@@ -45,8 +48,9 @@ abstract class base {
     public abstract function render_overview();
 
     public function handle_form() {
-        if (!isset($this->mform))
+        if (!isset($this->mform)) {
             return;
+        }
 
         if ($this->mform->is_cancelled()) {
             redirect($this->url);
@@ -84,8 +88,9 @@ abstract class base {
     }
 
     private function show_form() {
-        if (!isset($this->mform))
+        if (!isset($this->mform)) {
             return;
+        }
 
         $this->mform->display();
     }
