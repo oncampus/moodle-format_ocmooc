@@ -15,11 +15,7 @@ if ($course->format != 'ocmooc') {
 $url = new moodle_url('/course/format/ocmooc/views/social.php', ['courseid' => $courseid]);
 $social = new \format_ocmooc\social($courseid, $url);
 
-$PAGE->set_url($url);
-$PAGE->set_title(get_string('social', 'format_ocmooc'));
-$PAGE->set_heading(format_string($course->fullname));
-$PAGE->set_context($coursecontext);
-
+$social->setup_page();
 echo $OUTPUT->header();
 
 $social->render_view();

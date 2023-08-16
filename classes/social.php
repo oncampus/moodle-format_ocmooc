@@ -11,6 +11,8 @@ class social extends base {
     public function __construct($courseid, $url) {
         parent::__construct($courseid, $url);
         $this->mform = new socialform($this->url, ['courseid' => $this->courseid]);
+
+        $this->title = get_string('social', 'format_ocmooc');
     }
 
     protected function render_view_custom() {

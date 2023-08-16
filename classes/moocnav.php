@@ -5,7 +5,7 @@ namespace format_ocmooc;
 class moocnav {
 
     public static function get_moocnav_entries() {
-        global $COURSE;
+        global $COURSE, $DB;
 
         // static entries.
         $moocnav = [
@@ -19,6 +19,17 @@ class moocnav {
                 'name' => get_string('participants', 'format_ocmooc'),
                 'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
         ];
+
+        $htmlpages = $DB->get_records('format_ocmooc_htmlsite', ['courseid' => $COURSE->id]);
+        if ($htmlpages) {
+            foreach ($htmlpages as $htmlpage) {
+                $moocnav[] = [
+                        'name' => $htmlpage->title,
+                        'url' => (new \moodle_url('/course/format/ocmooc/views/htmlpage.php',
+                                ['id' => $htmlpage->id, 'courseid' => $COURSE->id]))->out(false),
+                ];
+            }
+        }
 
         if (self::is_social_area()) {
             $moocnav[] = [

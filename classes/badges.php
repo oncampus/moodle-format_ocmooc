@@ -4,29 +4,55 @@ namespace format_ocmooc;
 
 class badges extends base {
 
+    public function __construct($courseid, $url) {
+        $this->title = get_string('badges', 'format_ocmooc');
+        parent::__construct($courseid, $url);
+    }
+
     protected function render_view_custom() {
-        global $DB, $USER;
+        global $OUTPUT, $USER;
 
-        $h2class = '';
+        $data = array();
+        $data['profileurl'] = new \moodle_url('/user/profile.php', ['id' => $USER->id]);
+        $data['mybackpack'] = new \moodle_url('/badges/mybackpack.php');
 
-        echo \html_writer::tag('h2', get_string('badges', 'format_ocmooc'), ['class' => $h2class]);
+        $badges = badges_get_user_badges($USER->id, $this->courseid);
+        $this->prepare_badges($badges);
 
-        $profileurl = new \moodle_url('/user/profile.php', ['id' => $USER->id]);
-        $mybackpack = new \moodle_url('/badges/mybackpack.php');
+        $data['badges'] = array_values($badges);
 
-        echo \html_writer::div(get_string('badge_overview_descriotion', 'format_ocmooc'), '');
-        echo \html_writer::start_div('');
+        $allbadges = badges_get_badges(2, $this->courseid);
+        $this->prepare_badges($allbadges);
+        $this->prepare_all_badges_awarded($allbadges, $badges);
+        $data['allbadges'] = array_values($allbadges);
 
-        echo \html_writer::link($profileurl, get_string('profile_badges', 'format_ocmooc'));
-        echo \html_writer::link($mybackpack, get_string('mybackpack', 'format_ocmooc'));
+        echo $OUTPUT->render_from_template('format_ocmooc/badges/badges', $data);
+    }
 
-        echo \html_writer::end_div();
+    private function prepare_badges(&$badges) {
+        foreach ($badges as &$badge) {
+            $badge->badgeurl = new \moodle_url('/badges/overview.php', ['id' => $badge->id]);
 
-        echo \html_writer::tag('h2', get_string('my_badges', 'format_ocmooc'), ['class' => $h2class]);
-        $this->display_badges();
+            $badge->owned = true;
 
-        echo \html_writer::tag('h2', get_string('all_badges', 'format_ocmooc'), ['class' => $h2class]);
-        $this->display_all_badges();
+            $badge->imageurl = \moodle_url::make_pluginfile_url(
+                    \context_course::instance($this->courseid)->id,
+                    'badges',
+                    'badgeimage',
+                    $badge->id,
+                    '/',
+                    'f1',
+                    false
+            );
+        }
+        return $badges;
+    }
+
+    private function prepare_all_badges_awarded(&$allbadges, $badges) {
+        foreach ($allbadges as &$allbadge) {
+            $allbadge->owned = $this->check_is_badge_owned($allbadge, $badges);
+        }
+        return $allbadges;
     }
 
     private function display_badges() {

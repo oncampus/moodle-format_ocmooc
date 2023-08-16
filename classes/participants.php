@@ -38,6 +38,8 @@ class participants extends base {
         $this->datestring->secs = get_string('secs');
 
         $this->searchform = new searchform($this->url);
+
+        $this->title = get_string('participants', 'format_ocmooc');
     }
 
     protected function render_view_custom() {

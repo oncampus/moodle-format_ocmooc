@@ -201,7 +201,7 @@ function format_ocmooc_extend_navigation_course(navigation_node $parentnode, std
     );
 
     $parentnode->add(
-            get_string('edit:social', 'format_ocmooc'),
-            new moodle_url('/course/format/ocmooc/edit/social.php', $params)
+            get_string('edit:htmlpage', 'format_ocmooc'),
+            new moodle_url('/course/format/ocmooc/edit/htmlpage.php', $params)
     );
 }

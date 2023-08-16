@@ -2,7 +2,7 @@
 
 namespace format_ocmooc\forms;
 
-require_once("$CFG->libdir/formlibs.php");
+require_once("$CFG->libdir/formslib.php");
 
 class htmlpageform extends \moodleform {
 
@@ -14,5 +14,7 @@ class htmlpageform extends \moodleform {
 
         $mform->addElement('editor', 'content', get_string('content', 'format_ocmooc'));
         $mform->setType('content', PARAM_RAW);
+
+        $this->add_action_buttons();
     }
 }

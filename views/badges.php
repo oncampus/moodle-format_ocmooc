@@ -17,15 +17,11 @@ $badges = new \format_ocmooc\badges($courseid, $url);
 
 $badges->handle_form();
 
-$PAGE->set_url($url);
-$PAGE->set_title(get_string('badges', 'format_ocmooc'));
-$PAGE->set_heading(format_string($course->fullname));
-$PAGE->set_context($coursecontext);
-
+$badges->setup_page();
 echo $OUTPUT->header();
 
 $badges->render_view();
 
-$badges->render_editor();
+$badges->render_editor(false);
 
 echo $OUTPUT->footer();
