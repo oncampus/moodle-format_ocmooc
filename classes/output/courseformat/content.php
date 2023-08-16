@@ -146,8 +146,42 @@ class content extends content_base {
     }
 
     private function get_progress_by_section($section) {
-        // TODO: Implement progress calculation
-        return 0;
+        global $USER, $COURSE;
+
+        $completion = new \completion_info($COURSE);
+
+        if (!$completion->is_enabled()) {
+            return false;
+        }
+
+        if (!$completion->is_tracked_user($USER->id)) {
+            return false;
+        }
+
+        if ($completion->is_course_complete($USER->id)) {
+            return 100;
+        }
+
+        $modules = $completion->get_activities();
+        $count = 0;
+        $completed = 0;
+        foreach ($modules as $module) {
+            if ($module->section == $section->id) {
+                $count++;
+                $data = $completion->get_data($module, true, $USER->id);
+                if (($data->completionstate == COMPLETION_INCOMPLETE) || ($data->completionstate == COMPLETION_COMPLETE_FAIL)) {
+                    $completed += 0;
+                } else {
+                    $completed += 1;
+                };
+            }
+        }
+
+        if ($count == 0) {
+            return false;
+        }
+
+        return ($completed / $count) * 100;
     }
 
     public function get_template_name(\renderer_base $renderer): string {
