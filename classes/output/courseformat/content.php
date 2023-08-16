@@ -20,8 +20,10 @@ class content extends content_base {
             $chapter = 0;
         }
 
-        $chapters[$chapter]->selected = true;
-        $data->currentchapter = $chapters[$chapter];
+        if (array_key_exists($chapter, $chapters)) {
+            $chapters[$chapter]->selected = true;
+            $data->currentchapter = $chapters[$chapter];
+        }
 
         $elementsize = 284;
         $data->chapters = $chapters;
