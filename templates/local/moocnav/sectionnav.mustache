@@ -15,7 +15,12 @@
             <li class="ocmooc-nav-item">
                 <a class="ocmooc-nav-link" href="{{url}}">
                     <div class="text-container">
-                        <div>{{title}}</div>
+                        {{#lectionname}}
+                            <div>{{#str}}lection, format_ocmooc{{/str}}</div>
+                        {{/lectionname}}
+                        {{^lectionname}}
+                            <div>{{header.title}}</div>
+                        {{/lectionname}}
                         <div>{{sectionnum}}</div>
                     </div>
                 </a>

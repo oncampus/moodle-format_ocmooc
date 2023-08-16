@@ -21,13 +21,13 @@ class content extends content_base {
         }
 
         $chapters[$chapter]->selected = true;
+        $data->currentchapter = $chapters[$chapter];
 
         $elementsize = 284;
         $data->chapters = $chapters;
         $sections = $this->get_chapter_sections($chapters[$chapter], $chapter, $output);
         $data->chaptersections = $sections;
         $data->chaptersstartwidth = count($chapters) * $elementsize;
-
 
         $data->chapterstarttransform = ($chapter * -$elementsize) + $elementsize;
 
@@ -90,6 +90,7 @@ class content extends content_base {
                     $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
 
                     $section->sections = $this->get_chapter_sections($section, $chapter, $output);
+                    $section->progress = $this->get_progress_by_sections($section->sections);
                     $section->sectioncount = count($section->sections);
 
                     $chapters[] = $section;
@@ -120,6 +121,7 @@ class content extends content_base {
 
                 $section = $section->export_for_template($output);
                 $section->sectionnum = $sectionnum + 1;
+                $section->progress = $this->get_progress_by_section($section);
                 $params = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
                 $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
 
@@ -130,6 +132,22 @@ class content extends content_base {
         }
 
         return $sections;
+    }
+
+    private function get_progress_by_sections($sections) {
+        $progress = 0;
+        if (!empty($sections)) {
+            foreach ($sections as $section) {
+                $progress += $this->get_progress_by_section($section);
+            }
+            $progress /= count($sections);
+        }
+        return $progress;
+    }
+
+    private function get_progress_by_section($section) {
+        // TODO: Implement progress calculation
+        return 0;
     }
 
     public function get_template_name(\renderer_base $renderer): string {
