@@ -19,7 +19,12 @@
                             <div>{{#str}}lection, format_ocmooc{{/str}}</div>
                         {{/lectionname}}
                         {{^lectionname}}
-                            <div>{{{rawtitle}}}</div>
+                            {{#rawtitle}}
+                                <div>{{{rawtitle}}}</div>
+                            {{/rawtitle}}
+                            {{^rawtitle}}
+                                <div>{{#str}}lection, format_ocmooc{{/str}}</div>
+                            {{/rawtitle}}
                         {{/lectionname}}
                         <div>{{sectionnum}}</div>
                         <!-- progress for current progress of lection -->

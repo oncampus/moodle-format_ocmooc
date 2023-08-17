@@ -123,7 +123,7 @@ class content extends content_base {
         foreach ($modinfo->get_section_info_all() as $section) {
             if ($section != 0 && $section->parent == $chapterid) {
                 $rawtitle = $section->name;
-                
+
                 $section = new $this->sectionclass($this->format, $section);
                 $section = $section->export_for_template($output);
 
