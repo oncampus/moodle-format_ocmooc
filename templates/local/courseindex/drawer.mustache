@@ -1,1 +1,10 @@
-Haha
+<nav id="courseindex" class="courseindex">
+    <div id="courseindex-content">
+        {{> core_courseformat/local/courseindex/placeholders }}
+    </div>
+</nav>
+{{#js}}
+    require(['core_courseformat/local/courseindex/drawer'], function(component) {
+    component.init('courseindex');
+    });
+{{/js}}

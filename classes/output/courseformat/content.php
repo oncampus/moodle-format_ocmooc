@@ -84,9 +84,12 @@ class content extends content_base {
 
             if ($section->parent === 0) {
                 if ($this->format->is_section_visible($section)) {
-                    $section = new $this->sectionclass($this->format, $section);
+                    $rawtitle = $section->name;
 
+                    $section = new $this->sectionclass($this->format, $section);
                     $section = $section->export_for_template($output);
+
+                    $section->rawtitle = $rawtitle;
                     $params = ['id' => $COURSE->id, 'chapter' => $chapter, 'lection' => 0];
                     $section->chapternum = $chapter + 1;
                     $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
@@ -119,9 +122,12 @@ class content extends content_base {
         $sectionnum = 0;
         foreach ($modinfo->get_section_info_all() as $section) {
             if ($section != 0 && $section->parent == $chapterid) {
+                $rawtitle = $section->name;
+                
                 $section = new $this->sectionclass($this->format, $section);
-
                 $section = $section->export_for_template($output);
+
+                $section->rawtitle = $rawtitle;
                 $section->sectionnum = $sectionnum + 1;
                 $section->progress = $this->get_progress_by_section($section);
                 $params = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
