@@ -71,9 +71,10 @@ class content extends content_base {
     }
 
     public function get_chapters($output) {
-        global $COURSE;
+        global $COURSE, $PAGE, $DB;
 
         $chapters = array();
+        $context = \context_course::instance($COURSE->id);
 
         $modinfo = $this->format->get_modinfo();
         $chapter = 0;
@@ -85,6 +86,7 @@ class content extends content_base {
             if ($section->parent === 0) {
                 if ($this->format->is_section_visible($section)) {
                     $rawtitle = $section->name;
+                    $sectionid = $section->id;
 
                     $section = new $this->sectionclass($this->format, $section);
                     $section = $section->export_for_template($output);
@@ -93,6 +95,15 @@ class content extends content_base {
                     $params = ['id' => $COURSE->id, 'chapter' => $chapter, 'lection' => 0];
                     $section->chapternum = $chapter + 1;
                     $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
+                    if ($PAGE->user_is_editing()) {
+                        $section->editurl = (new \moodle_url('/course/editsection.php', ['id' => $sectionid]));
+                    }
+
+                    $file = $DB->get_record('files',
+                            ['contextid' => $context->id, 'component' => 'course', 'filearea' => 'section', 'itemid' => $sectionid]);
+                    if ($file) {
+                        $section->imgurl = \moodle_url::make_pluginfile_url($context->id, 'course', 'section', $sectionid, '/', $file->filename);
+                    }
 
                     $section->sections = $this->get_chapter_sections($section, $chapter, $output);
                     $section->progress = $this->get_progress_by_sections($section->sections);

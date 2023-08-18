@@ -1,7 +1,12 @@
 <div>
-    <p class="">
+    <span class="">
         {{#str}}chapter, format_ocmooc{{/str}}{{currentchapter.chapternum}}: {{{currentchapter.header.title}}}
-    </p>
+    </span>
+    {{#currentchapter.editurl}}
+        <span>
+            <a href="{{currentchapter.editurl}}">{{#str}}edit, format_ocmooc{{/str}}</a>
+        </span>
+    {{/currentchapter.editurl}}
 
     <!-- currentchapter.progress for current progress -->
 </div>
