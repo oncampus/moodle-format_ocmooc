@@ -18,12 +18,18 @@ class sections {
 
     public function add_chapter() {
         $section = course_create_section($this->courseid);
+        return $this->get_chapter_no_from_id($section->id);
     }
 
     public function add_lection($chapterid) {
         $section = course_create_section($this->courseid);
         $section->parent = $chapterid;
         $this->format->update_section_format_options($section);
+
+        $chapterno = $this->get_chapter_no_from_id($chapterid);
+        $lectiono = $this->get_lection_no_from_id($chapterid, $section->id);
+
+        return ['chapter' => $chapterno, 'lection' => $lectiono];
     }
 
     public function delete_section($id) {
@@ -59,6 +65,46 @@ class sections {
 
     public function move_chapter($chapterid, $position) {
 
+    }
+
+    private function get_chapter_no_from_id($chapterid) {
+        $modinfo = $this->format->get_modinfo();
+        $chapter = 0;
+        foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
+            if ($sectionnum == 0) {
+                continue;
+            }
+
+            if ($section->id == $chapterid) {
+                return $chapter;
+            }
+
+            if ($section->parent === 0) {
+                $chapter++;
+            }
+        }
+
+        return $chapter;
+    }
+
+    private function get_lection_no_from_id($chapterid, $lectionid) {
+        $modinfo = $this->format->get_modinfo();
+        $lection = 0;
+        foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
+            if ($sectionnum == 0) {
+                continue;
+            }
+
+            if ($section->id == $lectionid && $section->parent == $chapterid) {
+                return $lection;
+            }
+
+            if ($section->parent === $chapterid) {
+                $lection++;
+            }
+        }
+
+        return $lection;
     }
 
 }

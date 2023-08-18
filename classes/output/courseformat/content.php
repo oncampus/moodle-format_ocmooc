@@ -103,6 +103,8 @@ class content extends content_base {
                             ['contextid' => $context->id, 'component' => 'course', 'filearea' => 'section', 'itemid' => $sectionid]);
                     if ($file) {
                         $section->imgurl = \moodle_url::make_pluginfile_url($context->id, 'course', 'section', $sectionid, '/', $file->filename);
+                    } else {
+                        // TODO: Use placeholder image url.
                     }
 
                     $section->sections = $this->get_chapter_sections($section, $chapter, $output);

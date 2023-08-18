@@ -22,11 +22,14 @@ $sections = new format_ocmooc\sections($courseid);
 
 switch ($action) {
     case 'addchapter':
-        $sections->add_chapter();
+        $chapterno = $sections->add_chapter();
+        $redirecturl->param('chapter', $chapterno);
         break;
     case 'addlection':
         $chapterid = required_param('chapterid', PARAM_INT);
-        $sections->add_lection($chapterid);
+        list($chapterno, $lectiono) = $sections->add_lection($chapterid);
+        $redirecturl->param('chapter', $chapterno);
+        $redirecturl->param('lection', $lectiono);
         break;
     case 'delete':
         $id = required_param('id', PARAM_INT);
