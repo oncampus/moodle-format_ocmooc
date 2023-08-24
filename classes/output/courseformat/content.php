@@ -39,7 +39,7 @@ class content extends content_base {
             $data->firstsection = true;
             $data->lastsection = true;
         } else {
-            if ($section < 0 || $section > count($sections)) {
+            if ($section < 0 || $section >= count($sections)) {
                 $section = 0;
             }
 
