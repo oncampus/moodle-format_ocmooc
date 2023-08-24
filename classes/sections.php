@@ -29,7 +29,7 @@ class sections {
         $chapterno = $this->get_chapter_no_from_id($chapterid);
         $lectiono = $this->get_lection_no_from_id($chapterid, $section->id);
 
-        return ['chapter' => $chapterno, 'lection' => $lectiono];
+        return [$chapterno, $lectiono];
     }
 
     public function delete_section($id) {
