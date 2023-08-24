@@ -15,9 +15,21 @@ class moocnav {
                 ],
         ];
 
+        // news forum
+        $moocnav[] = [
+                'name' => get_string('newsforum', 'format_ocmooc'),
+                'url' => (new \moodle_url('/course/format/ocmooc/views/forum.php', ['courseid' => $COURSE->id, 'type' => "news"]))->out(false)
+        ];
+
         $moocnav[] = [
                 'name' => get_string('participants', 'format_ocmooc'),
                 'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
+        ];
+        //discussion forum
+
+        $moocnav[]= [
+                'name' => get_string('discussionforum', 'format_ocmooc'),
+                'url' => (new \moodle_url('/course/format/ocmooc/views/forum.php', ['courseid' => $COURSE->id,'type' => 'social']))->out(false),
         ];
 
         $htmlpages = $DB->get_records('format_ocmooc_htmlsite', ['courseid' => $COURSE->id]);
@@ -69,5 +81,4 @@ class moocnav {
 
         return $moocnav;
     }
-
 }
