@@ -110,3 +110,6 @@ ul#oc-coursenavlist {
 .ocmooc-nav-link .text-container {
     align-items: flex-start; /* Align elements to the top */
 }
+.course-content .ocmooc {
+    padding-left:0px;
+}
