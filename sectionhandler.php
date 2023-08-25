@@ -17,7 +17,6 @@ $redirecturl = new moodle_url('/course/view.php', ['id' => $courseid]);
 if (!has_capability('format/ocmooc:edit', $context) || $course->format != 'ocmooc') {
     redirect($redirecturl);
 }
-
 $sections = new format_ocmooc\sections($courseid);
 
 switch ($action) {
@@ -30,6 +29,10 @@ switch ($action) {
         list($chapterno, $lectiono) = $sections->add_lection($chapterid);
         $redirecturl->param('chapter', $chapterno);
         $redirecturl->param('lection', $lectiono);
+        break;
+    case 'confirm-delete':
+        $id = required_param('id', PARAM_INT);
+        $sections->deleteconfirmation($id,$course,$redirecturl);
         break;
     case 'delete':
         $id = required_param('id', PARAM_INT);
