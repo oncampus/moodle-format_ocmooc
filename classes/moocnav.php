@@ -29,7 +29,7 @@ class moocnav {
                 'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
         ];
         //discussion forum
-        $type = 'general';
+        $type = 'social';
         if (self::is_forum($type)){
             $social = $DB->get_record('forum', ['course' => $COURSE->id, 'type'=> $type]);
             $moocnav[]= [
