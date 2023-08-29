@@ -21,10 +21,21 @@
  * @copyright   2022 oncampus GmbH <support@oncampus.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use format_ocmooc\sections;
+
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/course/format/lib.php');
 
 class format_ocmooc extends core_courseformat\base {
+    private $setionmanager;
+
+    public function get_section_manager() {
+        if (!$this->setionmanager) {
+            $this->setionmanager = new sections($this->courseid, $this);
+        }
+        return $this->setionmanager;
+    }
 
     /**
      * Returns true if this course format uses sections.
@@ -156,6 +167,43 @@ class format_ocmooc extends core_courseformat\base {
         }
         return $sections;
     }
+
+    public function get_view_url($section, $options = array()) {
+        global $CFG;
+        $course = $this->get_course();
+        $url    = new moodle_url('/course/view.php', array('id' => $course->id));
+
+        if (array_key_exists('sr', $options)) {
+            $sectionno = $options['sr'];
+
+            $modinfo = get_fast_modinfo($course);
+            $section = $modinfo->get_section_info($sectionno, MUST_EXIST);
+        } else if (is_object($section)) {
+            $sectionno = $section->section;
+        } else {
+            $sectionno = $section;
+            $modinfo   = get_fast_modinfo($course);
+            $section   = $modinfo->get_section_info($sectionno, MUST_EXIST);
+        }
+        if ($section->parent == 0) {
+            $chapterno = $this->get_section_manager()->get_chapter_no_from_id($section->id);
+            $lectionno = 0;
+        } else {
+            $chapterno = $this->get_section_manager()->get_chapter_no_from_id($section->parent);
+            $lectionno = $this->get_section_manager()->get_lection_no_from_id($section->parent, $section->id);
+        }
+        if (empty($CFG->linkcoursesections) && !empty($options['navigation']) && $sectionno !== null) {
+            // By default assume that sections are never displayed on separate pages.
+            return null;
+        }
+        if ($this->uses_sections() && $sectionno !== null) {
+            $url->remove_params('section');
+            $url->param('chapter', $chapterno);
+            $url->param('lection', $lectionno);
+        }
+        return $url;
+    }
+
 }
 
 /**
