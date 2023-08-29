@@ -5,6 +5,8 @@ namespace format_ocmooc\output\courseformat;
 use core_courseformat\output\local\content as content_base;
 use core_reportbuilder\local\aggregation\count;
 use format_ocmooc\moocnav;
+use section_info;
+use stdClass;
 
 class content extends content_base {
 
@@ -26,7 +28,7 @@ class content extends content_base {
             $deleteurl->param('action', "confirm-delete");
             $deleteurl->param('sesskey', sesskey());
             $deleteurl->param('courseid', $COURSE->id);
-            $deleteurl->param('id',  $chapters[$chapter]->id);
+            $deleteurl->param('sectionnum', $chapters[$chapter]->section);
             $chapters[$chapter]->deleteurl = $deleteurl->out(false);
             $data->currentchapter          = $chapters[$chapter];
         }
@@ -106,15 +108,16 @@ class content extends content_base {
                     }
 
                     $file = $DB->get_record('files',
-                            ['contextid' => $context->id, 'component' => 'course', 'filearea' => 'section', 'itemid' => $sectionid,
-                            ]);
+                                            ['contextid' => $context->id, 'component' => 'course', 'filearea' => 'section', 'itemid' => $sectionid,
+                                            ]);
                     if ($file) {
                         $section->imgurl = \moodle_url::make_pluginfile_url($context->id, 'course', 'section', $sectionid, '/',
-                                $file->filename);
+                                                                            $file->filename);
                     } else {
                         // TODO: Use placeholder image url.
                     }
 
+                    $section->section      = $sectionnum;
                     $section->sections     = $this->get_chapter_sections($section, $chapter, $output);
                     $section->progress     = $this->get_progress_by_sections($section->sections);
                     $section->sectioncount = count($section->sections);
@@ -128,21 +131,28 @@ class content extends content_base {
         return $chapters;
     }
 
+    /**
+     * @param $chapter section_info|stdClass|int the chapter section
+     * @param $chapternum
+     * @param $output
+     * @return array
+     * @throws \moodle_exception
+     */
     public function get_chapter_sections($chapter, $chapternum, $output) {
         global $COURSE;
 
         $sections = [];
 
         if (is_number($chapter)) {
-            $chapterid = $chapter;
+            $chaptersectionnumber = $chapter;
         } else {
-            $chapterid = $chapter->id;
+            $chaptersectionnumber = $chapter->section;
         }
 
         $modinfo    = $this->format->get_modinfo();
         $sectionnum = 0;
         foreach ($modinfo->get_section_info_all() as $section) {
-            if ($section->section != 0 && $section->parent == $chapterid) {
+            if ($section->section != 0 && $section->parent == $chaptersectionnumber) {
                 $rawtitle = $section->name;
 
                 $section = new $this->sectionclass($this->format, $section);
@@ -174,6 +184,10 @@ class content extends content_base {
         return $progress;
     }
 
+    /**
+     * @param $section section_info|stdClass the section
+     * @return false|float|int
+     */
     private function get_progress_by_section($section) {
         global $USER, $COURSE;
 
