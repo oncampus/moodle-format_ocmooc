@@ -36,14 +36,36 @@ class format_ocmooc_observer {
      * @return void
      */
     public static function course_created(\core\event\course_created $event) {
-        global $CFG;
+        global $CFG, $DB;
 
         $course = $event->get_record_snapshot('course', $event->objectid);
         $format = course_get_format($course);
-        if ($format->supports_news() && !empty($course->newsitems)) {
+        $socialforum = $DB->get_record('forum', ['course' => $course->id, 'type'=> 'social']);
+        if (!$socialforum && ($format->get_format() === 'ocmooc')) {
             require_once($CFG->dirroot . '/mod/forum/lib.php');
             // Auto create the Social forum.
             forum_get_course_forum($event->objectid, 'social');
         }
     }
+
+    /**
+     * Observer for \core\event\course_category_updated
+     *
+     * @param \core\event\course_updated $event
+     * @return void
+     */
+    public static function course_updated(\core\event\course_updated $event) {
+        global $CFG, $DB;
+
+        $course = $event->get_record_snapshot('course', $event->objectid);
+        $format = course_get_format($course);
+        $socialforum = $DB->get_record('forum', ['course' => $course->id, 'type'=> 'social']);
+        //Check if the social forum already exists
+        if (!$socialforum && ($format->get_format() === 'ocmooc')) {
+            require_once($CFG->dirroot . '/mod/forum/lib.php');
+            // Auto create the Social forum.
+            forum_get_course_forum($event->objectid, 'social');
+        }
+    }
+
 }

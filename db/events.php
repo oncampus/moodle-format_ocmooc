@@ -27,5 +27,9 @@ $observers = [
     [
         'eventname' => '\core\event\course_created',
         'callback' => 'format_ocmooc_observer::course_created',
+    ],
+    [
+        'eventname' => '\core\event\course_updated',
+        'callback' => 'format_ocmooc_observer::course_updated',
     ]
 ];
