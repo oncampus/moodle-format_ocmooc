@@ -12,13 +12,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-define('format_ocmooc/hvp_resizer', [], function () {
+define(['jquery', 'format_ocmooc/hvp_resizer'], function($) {
         return {
-            handleFrame: function() {
+            handleFrame: function () {
                 // Iframe
-                let height;
 
                 const sendPostMessage = () => {
+                    let height;
                     // To determine our id
                     let queryString = window.location.search;
                     let urlParams = new URLSearchParams(queryString);
@@ -35,11 +35,13 @@ define('format_ocmooc/hvp_resizer', [], function () {
                         }, '*');
                     }
                 };
-                window.onload = () => sendPostMessage();
-                window.onresize = () => sendPostMessage();
+                var intervalid =setInterval(() => {
+                    sendPostMessage();
+                }, 750);
+                setTimeout(function() { clearInterval( intervalid ); }, 20000);
             },
 
-            handleParent: function() {
+            handleParent: function () {
                 // Website
                 window.onmessage = (e) => {
                     // Make sure its the message we need
