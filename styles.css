@@ -18,7 +18,8 @@ ul#oc-coursenavlist {
 .wrap {
     position: relative;
     margin: 20px auto 30px auto;
-    width: 940px;
+    width: calc(284px * 3);
+    max-width:100%
 }
 
 @media only screen and (min-width: 768px) and (max-width: 979px) {
@@ -32,15 +33,13 @@ ul#oc-coursenavlist {
     float: left;
     width: 280px;
     height: auto;
-    margin: 30px 4px 20px auto;
+    margin: 0px 4px 0px auto;
     padding: 0;
     background: #ddd;
     color: #ddd;
-    text-align: center;
     cursor: pointer;
     z-index: 10;
     vertical-align: middle;
-    /* opacity: 0.6; */
 }
 
 .frame ul {
@@ -57,11 +56,68 @@ ul#oc-coursenavlist {
     padding: 0;
     text-align: center;
     opacity: 0.6;
+    object-fit: cover;
 }
 
 .frame ul li img.active {
     opacity: 1 !important;
 }
+.frame ul li .icon {
+    position: absolute;
+    top: -1.25rem;
+    font-size: 40px;
+    width:40px;
+    margin-left:240px;
+    text-align: center;
+    height: 40px;
+    text-shadow: 0.5px 2px 1px rgba(255, 255, 255,0.75);
+    display:none;
+}
+.frame ul li.active .icon {
+    display:block;
+}
+
+.chapters-control-prev, .chapters-control-next {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+    background: none;
+    border: 0;
+    text-decoration:none;
+    opacity: .5;
+    transition: opacity 0.15s ease;
+}
+.chapters-control-prev .icon, .chapters-control-next .icon {
+    font-size:30px;
+    text-align:center;
+    width:100%;
+    height:40px;
+}
+.chapters-control-prev {
+    left:-50px;
+}
+.chapters-control-next {
+    right:-50px;
+}
+.chapters-control-prev:target, .chapters-control-next:target {
+    scroll-margin-top: unset;
+  }
+.chapters-control-prev:hover, .chapters-control-next:hover, 
+.chapters-control-prev:focus, .chapters-control-next:focus {
+    text-decoration:none;
+    outline:0;
+    box-shadow:none !important;
+    opacity: 1;
+}
+
 
 .ocmooc-navigation {
     list-style: none;
