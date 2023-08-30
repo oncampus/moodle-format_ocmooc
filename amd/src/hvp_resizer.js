@@ -47,7 +47,7 @@ define('format_ocmooc/hvp_resizer', [], function () {
                         // To avoid retroactively adding/using ids on iframes
                         let frame = document.getElementById(e.data.frameId);
                         // Adjust the height
-                        frame.style.height = `${e.data.frameHeight + 60}px`;
+                        frame.style.height = `${e.data.frameHeight}px`;
                     }
                 };
             },
