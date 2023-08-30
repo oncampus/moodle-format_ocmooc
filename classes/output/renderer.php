@@ -64,4 +64,5 @@ class renderer extends section_renderer {
         }
         return '';
     }
+
 }
