@@ -217,7 +217,7 @@ class sections {
      * @param int|section_info $section
      * @return int
      */
-    protected function resolve_section_number($section) {
+    public function resolve_section_number($section) {
         if ($section === null || $section === '') {
             return null;
         } else if (is_object($section)) {
@@ -465,11 +465,11 @@ class sections {
      * @param $chapterid int the id of the chapter
      * @return int the index of the chapter
      * @deprecated use get_chapter_no_from_number() instead
-     *             Calculates the index of the given chapter
+     *                   Calculates the index of the given chapter
      */
     public function get_chapter_no_from_id($chapterid) {
         $modinfo = $this->format->get_modinfo();
-        $chapter = 0;
+        $chapter = 1;
         foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
             if ($sectionnum == 0) {
                 continue;
@@ -493,8 +493,9 @@ class sections {
      * @return int the index of the chapter
      */
     public function get_chapter_no_from_number($chaptersectionumber) {
+        if ($chaptersectionumber == 0) return 1;
         $modinfo = $this->format->get_modinfo();
-        $chapter = 0;
+        $chapter = 1;
         foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
             if ($sectionnum == 0) {
                 continue;
@@ -517,11 +518,11 @@ class sections {
      * @param $lectionid int the id of the lection
      * @return int the index of the lection in the chapter
      * @deprecated use get_lection_no_from_number() instead
-     *             calculates the index of the given lection in the given chapter
+     *                   calculates the index of the given lection in the given chapter
      */
     public function get_lection_no_from_id($chapterid, $lectionid) {
         $modinfo = $this->format->get_modinfo();
-        $lection = 0;
+        $lection = 1;
         foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
             if ($sectionnum == 0) {
                 continue;
@@ -547,7 +548,7 @@ class sections {
      */
     public function get_lection_no_from_number($chaptersectionumber, $lectionsectionnumber) {
         $modinfo = $this->format->get_modinfo();
-        $lection = 0;
+        $lection = 1;
         foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
             if ($sectionnum == 0) {
                 continue;

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace format_ocmooc\courseformat;
+namespace format_ocmooc\output\courseformat;
 
 use context_course;
 use core_courseformat\stateupdates;
@@ -123,11 +123,11 @@ class stateactions extends  \core_courseformat\stateactions {
     /**
      * Delete course sections.
      *
-     * @param stateupdates $updates the affected course elements track
-     * @param stdClass $course the course object
-     * @param int[] $ids section ids
-     * @param int $targetsectionid not used
-     * @param int $targetcmid not used
+     * @param \format_ocmooc\output\courseformat\stateupdates $updates         the affected course elements track
+     * @param stdClass                                        $course          the course object
+     * @param int[]                                           $ids             section ids
+     * @param int                                             $targetsectionid not used
+     * @param int                                             $targetcmid      not used
      */
     public function section_delete(
         stateupdates $updates,

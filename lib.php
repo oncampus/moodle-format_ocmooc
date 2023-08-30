@@ -28,13 +28,13 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/course/format/lib.php');
 
 class format_ocmooc extends core_courseformat\base {
-    private $setionmanager;
+    private sections $sectionmanager;
 
-    public function get_section_manager() {
-        if (!$this->setionmanager) {
-            $this->setionmanager = new sections($this->courseid, $this);
+    public function get_section_manager(): sections {
+        if (!isset($this->sectionmanager)) {
+            $this->sectionmanager = new sections($this->courseid, $this);
         }
-        return $this->setionmanager;
+        return $this->sectionmanager;
     }
 
     /**
@@ -187,7 +187,7 @@ class format_ocmooc extends core_courseformat\base {
         }
         if ($section->parent == 0) {
             $chapterno = $this->get_section_manager()->get_chapter_no_from_number($section->section);
-            $lectionno = 0;
+            $lectionno = 1;
         } else {
             $chapterno = $this->get_section_manager()->get_chapter_no_from_number($section->parent);
             $lectionno = $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
@@ -204,6 +204,194 @@ class format_ocmooc extends core_courseformat\base {
         return $url;
     }
 
+    /**
+     * Loads all the course sections into the navigation
+     *
+     * @param global_navigation $navigation
+     * @param navigation_node   $node The course node within the navigation
+     * @return void
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
+    public function extend_course_navigation($navigation, navigation_node $node) {
+        global $PAGE;
+        // If section is specified in course/view.php, make sure it is expanded in navigation.
+        if ($navigation->includesectionnum === false) {
+            $selectedsection = optional_param('section', null, PARAM_INT);
+            if ($selectedsection !== null && (!defined('AJAX_SCRIPT') || AJAX_SCRIPT == '0') &&
+                $PAGE->url->compare(new moodle_url('/course/view.php'), URL_MATCH_BASE)) {
+                $navigation->includesectionnum = $selectedsection;
+            }
+        }
+        // Check if there are callbacks to extend course navigation.
+//        parent::extend_course_navigation($navigation, $node);
+
+        // We want to remove the general section if it is empty.
+        $course   = $this->get_course();
+        $modinfo  = get_fast_modinfo($course);
+        $sections = $modinfo->get_sections();
+        if (!isset($sections[0])) {
+            // The general section is empty to find the navigation node for it we need to get its ID.
+            $section        = $modinfo->get_section_info(0);
+            $generalsection = $node->get($section->id, navigation_node::TYPE_SECTION);
+            if ($generalsection) {
+                // We found the node - now remove it.
+                $generalsection->remove();
+            }
+        }
+
+
+        if (!empty($modinfo->sections[0])) {
+            foreach ($modinfo->sections[0] as $cmid) {
+                $this->navigation_add_activity($node, $modinfo->get_cm($cmid));
+            }
+        }
+        foreach ($modinfo->get_section_info_all() as $section) {
+            if ($section->parent == 0 && $section->section != 0) {
+                $this->navigation_add_section($navigation, $node, $section);
+            }
+        }
+    }
+
+    /**
+     * Adds a section to navigation node, loads modules and subsections if necessary
+     *
+     * @param global_navigation $navigation
+     * @param navigation_node   $node
+     * @param section_info      $section
+     * @return null|navigation_node
+     */
+    protected function navigation_add_section($navigation, navigation_node $node, section_info $section): ?navigation_node {
+        if (!$section->uservisible || !$this->is_section_real_available($section)) {
+            return null;
+        }
+        $sectionname = get_section_name($this->get_course(), $section);
+        $url         = course_get_url($this->get_course(), $section->section, array('navigation' => true));
+
+        $sectionnode           = $node->add($sectionname, $url, navigation_node::TYPE_SECTION, null, $section->id);
+        $sectionnode->nodetype = navigation_node::NODETYPE_BRANCH;
+        $sectionnode->hidden   = !$section->visible || !$section->available;
+        if ($section->section == $this->get_viewed_section()) {
+            $sectionnode->force_open();
+        }
+        if ($this->get_section_manager()->section_has_parent($navigation->includesectionnum, $section->section)
+            || $navigation->includesectionnum == $section->section) {
+            $modinfo = get_fast_modinfo($this->courseid);
+            if (!empty($modinfo->sections[$section->section])) {
+                foreach ($modinfo->sections[$section->section] as $cmid) {
+                    $this->navigation_add_activity($sectionnode, $modinfo->get_cm($cmid));
+                }
+            }
+            foreach ($modinfo->get_section_info_all() as $subsection) {
+                if ($subsection->parent == $section->section && $subsection->section != 0) {
+                    $this->navigation_add_section($navigation, $sectionnode, $subsection);
+                }
+            }
+        }
+        return $sectionnode;
+    }
+
+    public function delete_section($section, $forcedeleteifnotempty = false) {
+        $section = $this->get_section($section, MUST_EXIST);
+        $parent  = $section->parent;
+        $this->get_section_manager()->delete_section_with_children($section);
+        $neworder = array();
+        $this->get_section_manager()->reorder_sections($neworder, 0);
+//        $url = course_get_url($this->courseid, $parent);
+//        redirect($url);
+    }
+
+    /**
+     * If we are on course/view.php page return the 'section' attribute from query
+     *
+     * @return int
+     */
+    public function get_viewed_section() {
+        if ($this->on_course_view_page()) {
+            if ($s = $this->get_caller_page_url()->get_param('section')) {
+                return $s;
+            }
+            $sid = $this->get_caller_page_url()->get_param('sectionid');
+            if ($sid && ($section = $this->get_modinfo()->get_section_info_by_id($sid))) {
+                return $section->section;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Returns true if we are on /course/view.php page
+     *
+     * @return bool
+     */
+    public function on_course_view_page() {
+        $url = $this->get_caller_page_url();
+        return ($url && $url->compare(new moodle_url('/course/view.php'), URL_MATCH_BASE));
+    }
+
+    /**
+     * URL of the page from where this function was called (use referer if this is an AJAX request)
+     *
+     * @return moodle_url
+     */
+    protected function get_caller_page_url(): moodle_url {
+        global $PAGE, $FULLME;
+        $url = $PAGE->has_set_url() ? $PAGE->url : new moodle_url($FULLME);
+        if ($url->compare(new moodle_url('/lib/ajax/service.php'), URL_MATCH_BASE)) {
+            return !empty($_SERVER['HTTP_REFERER']) ? new moodle_url($_SERVER['HTTP_REFERER']) : $url;
+        }
+        return $url;
+    }
+
+    /**
+     * Adds a course module to the navigation node
+     *
+     * @param navigation_node $node
+     * @param cm_info         $cm
+     * @return null|navigation_node
+     */
+    protected function navigation_add_activity(navigation_node $node, cm_info $cm): ?navigation_node {
+        if (!$cm->uservisible || !$cm->has_view()) {
+            return null;
+        }
+        $activityname = $cm->get_formatted_name();
+        $action       = $cm->url;
+        if ($cm->icon) {
+            $icon = new pix_icon($cm->icon, $cm->modfullname, $cm->iconcomponent);
+        } else {
+            $icon = new pix_icon('icon', $cm->modfullname, $cm->modname);
+        }
+        $activitynode = $node->add($activityname, $action, navigation_node::TYPE_ACTIVITY, null, $cm->id, $icon);
+        if (global_navigation::module_extends_navigation($cm->modname)) {
+            $activitynode->nodetype = navigation_node::NODETYPE_BRANCH;
+        } else {
+            $activitynode->nodetype = navigation_node::NODETYPE_LEAF;
+        }
+        if (method_exists($cm, 'is_visible_on_course_page')) {
+            $activitynode->display = $cm->is_visible_on_course_page();
+        }
+        return $activitynode;
+    }
+
+    /**
+     * Checks if section is really available for the current user (analyses parent section available)
+     *
+     * @param int|section_info $section
+     * @return bool
+     */
+    public function is_section_real_available($section) {
+        if (($this->get_section_manager()->resolve_section_number($section) == 0)) {
+            // Section 0 is always available.
+            return true;
+        }
+        $context = context_course::instance($this->courseid);
+        if (has_capability('moodle/course:viewhiddensections', $context)) {
+            // For the purpose of this function only return true for teachers.
+            return true;
+        }
+        $section = $this->get_section($section);
+        return $section->available && $this->is_section_real_available($section->parent);
+    }
 }
 
 /**

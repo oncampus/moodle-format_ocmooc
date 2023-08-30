@@ -12,7 +12,7 @@ class addsection extends addsection_base {
 
         $data = new stdClass();
 
-        $chapter = optional_param('chapter', 0, PARAM_INT);
+        $chapter = optional_param('chapter', 1, PARAM_INT);
 
         $format      = $this->format;
         $lastsection = $format->get_last_section_number();
@@ -51,7 +51,7 @@ class addsection extends addsection_base {
     private function get_chapter_section_number($chapter) {
         $modinfo = $this->format->get_modinfo();
 
-        $chaptercount = 0;
+        $chaptercount = 1;
         foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
             if ($sectionnum == 0) {
                 continue;

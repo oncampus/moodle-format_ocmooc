@@ -39,7 +39,7 @@ switch ($action) {
         $modinfo    = get_fast_modinfo($course);
         $section    = $modinfo->get_section_info($sectionnum, MUST_EXIST);
         $redirecturl->param('chapter', $sectionmanager->get_chapter_no_from_number($section->parent));
-        $redirecturl->param('lection',  $sectionmanager->get_lection_no_from_number($section->parent,$sectionnum-1));
+        $redirecturl->param('lection', $sectionmanager->get_lection_no_from_number($section->parent, $sectionnum - 1));
         $sectionmanager->delete_section_with_children($section);
         break;
     case 'reorder':
