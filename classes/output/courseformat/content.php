@@ -38,7 +38,7 @@ class content extends content_base {
         $sections                 = $this->get_chapter_sections($chapters[$chapter], $chapter, $output);
         $data->chaptersstartwidth = count($chapters) * $elementsize;
 
-        $data->chapterstarttransform = ($chapter * -$elementsize) + $elementsize;
+        $data->chapterstarttransform = (($chapter - 1) * -$elementsize) + $elementsize;
 
         $lection = optional_param('lection', 1, PARAM_INT);
         if (empty($sections)) {

@@ -1,4 +1,4 @@
-var container = document.getElementById('oc-chapters-navigation')
+var container = document.getElementById('oc-chapters-navigation');
 var slider = document.getElementById('oc-chapters-slider');
 var slides = document.getElementsByClassName('oc-chapter-item').length;
 var buttons = document.getElementsByClassName('chapters-nav-btn');
@@ -33,7 +33,7 @@ currentPosition = getCurrentActiveIndex();
 
 function setOpacity(index) {
     let items = getAlleItems();
-    if (!!items[index]) {
+    if (items[index]) {
         items[index].firstElementChild.firstElementChild.setAttribute('style', 'opacity: 1 !important');
     }
 }
@@ -41,7 +41,7 @@ function setOpacity(index) {
 function resetOpacity(index) {
     let items = getAlleItems();
 
-    if (!!items[index]) {
+    if (items[index]) {
         items[index].firstElementChild.firstElementChild.setAttribute('style', 'opacity: 0.6 !important');
     }
 }
@@ -70,7 +70,7 @@ function slideRight() {
     if (currentPosition < slidesCount) {
         buttons[1].classList.remove('inactive');
     }
-};
+}
 
 function slideLeft() {
     if (currentPosition != slidesCount) {
@@ -86,4 +86,4 @@ function slideLeft() {
     if (currentPosition > 0) {
         buttons[0].classList.remove('inactive');
     }
-};
+}
