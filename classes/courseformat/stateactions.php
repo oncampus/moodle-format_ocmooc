@@ -24,7 +24,7 @@ use stdClass;
 /**
  * class stateactions
  *
- * @package   format_flexsections
+ * @package   format_ocmooc
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class stateactions extends \core_courseformat\stateactions {
@@ -50,7 +50,7 @@ class stateactions extends \core_courseformat\stateactions {
         $coursecontext = context_course::instance($course->id);
         require_capability('moodle/course:movesections', $coursecontext);
 
-        /** @var \format_flexsections $format */
+        /** @var \format_ocmooc $format */
         $format  = course_get_format($course);
         $modinfo = $format->get_modinfo();
 
@@ -59,7 +59,8 @@ class stateactions extends \core_courseformat\stateactions {
             $this->validate_sections($course, [$targetsectionid], __FUNCTION__);
             $targetsection = $modinfo->get_section_info_by_id($targetsectionid, MUST_EXIST);
             $before        = $this->find_next_section($modinfo, $targetsection);
-            $parent        = $targetsection->parent;
+//            $parent        = $targetsection->parent;
+            $parent        = $targetsection->section;
         } else if ($targetsectionid < 0) {
             $this->validate_sections($course, [-$targetsectionid], __FUNCTION__);
             $targetsection = $modinfo->get_section_info_by_id(-$targetsectionid, MUST_EXIST);
@@ -73,8 +74,9 @@ class stateactions extends \core_courseformat\stateactions {
         // Move sections.
         $sections = $this->get_section_info($modinfo, $ids);
         foreach ($sections as $section) {
-            if ($format->can_move_section_to($section, $parent, $before)) {
-                $format->move_section($section, $parent, $before);
+            $sectionmanager = $format->get_section_manager();
+            if ($sectionmanager->can_move_section_to($section, $parent, $before)) {
+                $sectionmanager->move_section($section, $parent, $before);
             }
         }
 
