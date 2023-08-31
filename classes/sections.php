@@ -73,8 +73,7 @@ class sections {
      * @throws \moodle_exception
      */
     public function deleteconfirmation(int $sectionnum, $cancelurl) {
-        global $PAGE, $OUTPUT, $DB;
-        $section = $DB->get_record('course_sections', ['sectionnum' => $sectionnum, 'course' => $this->courseid], '*', MUST_EXIST);
+        global $PAGE, $OUTPUT;
 
         // Get section_info object with all availability options.
         $sectioninfo = get_fast_modinfo($this->course)->get_section_info($sectionnum);
