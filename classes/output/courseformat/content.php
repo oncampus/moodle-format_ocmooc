@@ -142,7 +142,7 @@ class content extends content_base {
         $modinfo    = $this->format->get_modinfo();
         $sectionnum = 0;
         foreach ($modinfo->get_section_info_all() as $section) {
-            if ($section != 0 && $section->parent == $chapterid) {
+            if ($section->section != 0 && $section->parent == $chapterid) {
                 $rawtitle = $section->name;
 
                 $section = new $this->sectionclass($this->format, $section);

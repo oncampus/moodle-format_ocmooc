@@ -18,7 +18,8 @@ ul#oc-coursenavlist {
 .wrap {
     position: relative;
     margin: 20px auto 30px auto;
-    width: 940px;
+    width: calc(284px * 3);
+    max-width:100%
 }
 
 @media only screen and (min-width: 768px) and (max-width: 979px) {
@@ -32,15 +33,13 @@ ul#oc-coursenavlist {
     float: left;
     width: 280px;
     height: auto;
-    margin: 30px 4px 20px auto;
+    margin: 0px 4px 0px auto;
     padding: 0;
     background: #ddd;
     color: #ddd;
-    text-align: center;
     cursor: pointer;
     z-index: 10;
     vertical-align: middle;
-    /* opacity: 0.6; */
 }
 
 .frame ul {
@@ -57,11 +56,68 @@ ul#oc-coursenavlist {
     padding: 0;
     text-align: center;
     opacity: 0.6;
+    object-fit: cover;
 }
 
 .frame ul li img.active {
     opacity: 1 !important;
 }
+.frame ul li .icon {
+    position: absolute;
+    top: -1.25rem;
+    font-size: 40px;
+    width:40px;
+    margin-left:240px;
+    text-align: center;
+    height: 40px;
+    text-shadow: 0.5px 2px 1px rgba(255, 255, 255,0.75);
+    display:none;
+}
+.frame ul li.active .icon {
+    display:block;
+}
+
+.chapters-control-prev, .chapters-control-next {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+    background: none;
+    border: 0;
+    text-decoration:none;
+    opacity: .5;
+    transition: opacity 0.15s ease;
+}
+.chapters-control-prev .icon, .chapters-control-next .icon {
+    font-size:30px;
+    text-align:center;
+    width:100%;
+    height:40px;
+}
+.chapters-control-prev {
+    left:-50px;
+}
+.chapters-control-next {
+    right:-50px;
+}
+.chapters-control-prev:target, .chapters-control-next:target {
+    scroll-margin-top: unset;
+  }
+.chapters-control-prev:hover, .chapters-control-next:hover, 
+.chapters-control-prev:focus, .chapters-control-next:focus {
+    text-decoration:none;
+    outline:0;
+    box-shadow:none !important;
+    opacity: 1;
+}
+
 
 .ocmooc-navigation {
     list-style: none;
@@ -72,9 +128,9 @@ ul#oc-coursenavlist {
 }
 
 .ocmooc-navigation li {
-    margin-right: 10px;
+    margin: 0px;
     width: 96px;
-    height: 96px; /* Set the desired height */
+    height: 75px; /* Set the desired height */
 }
 
 .ocmooc-navigation li:first-child,
@@ -113,3 +169,257 @@ ul#oc-coursenavlist {
 .course-content .ocmooc {
     padding-left:0px;
 }
+/* Lektionsnavigation */
+#oc-section-navigation {
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+}
+#oc-section-navigation .mooc-navigation {
+    max-width:840px;
+    background-color:#fff;
+}
+
+
+/* ---- Neue Anpassungen --- */
+/* SCSS for course layout */
+/* Kapitelnavigation */
+#page-course-view-ocmooc.format-ocmooc #topofscroll > .secondary-navigation {
+    max-width: 100px;
+    float: right;
+    padding-bottom:0px;
+    margin-right:15px;
+    display:none;
+}
+#page-course-view-ocmooc.editing #topofscroll > .secondary-navigation {
+    display:block;
+}
+
+#page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation  {
+    padding: 0;
+    background-color:transparent;    
+}
+#page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation .nav-link.active {
+    border-bottom:0px;
+    padding-top:10px;
+    border-top: 1px solid transparent;
+}
+#page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation .nav-link.active:hover {
+    border-top: 1px solid #dee2e6;
+}
+#page-course-view-ocmooc.format-ocmooc #region-main .secondary-navigation {
+
+}
+#page-course-view-ocmooc #region-main .secondary-navigation .navigation {
+    background-color:#f8f9fa;
+    border-top: 1px solid #dee2e6;  
+}
+#page-course-view-ocmooc .secondary-navigation .navigation .nav-tabs {
+    background-color:transparent;
+}
+#page-course-view-ocmooc #region-main .moremenu .nav-link:hover, 
+#page-course-view-ocmooc #region-main .moremenu .nav-link:focus {
+    border-color: transparent;
+    background-color: #ffffff;
+}
+#page-course-view-ocmooc .secondary-navigation .navigation .nav-link:hover, 
+#page-course-view-ocmooc .secondary-navigation .navigation .nav-link:focus {
+    border-bottom-color: transparent;
+    background-color: #ffffff;
+}
+
+/* ----------- LOL andere datei highlight ----------------  */
+/* SCSS for marking areas width icons an colors*/
+/* this is loaded from the post.scss.*/
+
+/* Runde Bilder */
+.img-circle {
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+/* Bereichskennzeichnung */
+.book-grey, .paragraph-blue, .math-blue, .example-green, .quest-orange, .cal-green, .download-blue, .pay-green, .important-purple, .education-orange, .browsercheck-blue, .quiz-green, .watch-turquoise, .link-pink, .docs-grey, .recommend-grey, .certificate-yellow, .forum-blue, .zitat-blue, .scorm-violet, .summary-dark, .target-dark, .task-blue {
+    background-color: #30ade7;
+    background-size: 65px 65px;
+    background-position: 5px 0px;
+    background-repeat: no-repeat;
+    margin-bottom: 20px;
+    margin-left: 0px;
+    padding: 15px 20px 15px 75px;
+    min-height: 70px;
+}
+@media (max-width: 480px) {
+    .book-grey, .paragraph-blue, .math-blue, .example-green, .quest-orange, .cal-green, .download-blue, .pay-green, .important-purple, .education-orange, .browsercheck-blue, .quiz-green, .watch-turquoise, .link-pink, .docs-grey, .recommend-grey, .certificate-yellow, .forum-blue, .zitat-blue, .scorm-violet, .summary-dark, .target-dark, .task-blue {
+        background-size: 45px 45px;
+        padding: 45px 20px 15px 15px;
+   }
+}
+.quest-orange, .cal-green, .download-blue, .pay-green, .important-purple, .education-orange, .browsercheck-blue, .quiz-green, .watch-turquoise, .link-pink, .docs-grey, .recommend-grey, .certificate-yellow, .forum-blue, .zitat-blue, .scorm-violet, .summary-dark, .target-dark, .task-blue {
+    color: #fff;
+}
+.quest-orange a, .cal-green a, .download-blue a, .pay-green a, .important-purple a, .education-orange a, .browsercheck-blue a, .quiz-green a, .watch-turquoise a, .link-pink a, .docs-grey a, .recommend-grey a, .certificate-yellow a, .forum-blue a, .zitat-blue a, .scorm-violet a, .summary-dark a, .target-dark a, .task-blue a {
+    color: #fff;
+    text-decoration: underline;
+}
+.quest-orange a:hover, .cal-green a:hover, .download-blue a:hover, .pay-green a:hover, .important-purple a:hover, .education-orange a:hover, .browsercheck-blue a:hover, .quiz-green a:hover, .watch-turquoise a:hover, .link-pink a:hover, .docs-grey a:hover, .recommend-grey a:hover, .certificate-yellow a:hover, .forum-blue a:hover, .zitat-blue a:hover, .scorm-violet a:hover, .summary-dark a:hover, .target-dark a:hover, .task-blue a:hover {
+    color: rgba(255, 255, 255, 0.85);
+}
+.book-grey, .paragraph-blue, .math-blue, .example-green {
+    color: #333;
+    background-color: #efefef;
+}
+.book-grey a, .paragraph-blue a, .math-blue a, .example-green a {
+    color: #333;
+    text-decoration: underline;
+}
+.book-grey a:hover, .paragraph-blue a:hover, .math-blue a:hover, .example-green a:hover {
+    color: #1a1a1a;
+}
+
+
+.task-blue {
+	background-color: #30ade7;
+	background-image: url([[pix:format_ocmooc|icons/task]]);
+}
+.book-grey {
+	background-color: #efefef;
+	background-image: url([[pix:format_ocmooc|icons/book]]);
+}
+.paragraph-blue {
+	background-color: #c3dbea;
+	background-image: url([[pix:format_ocmooc|icons/paragraph-dark]]);
+}
+.math-blue {
+	background-color: #bfd8d7;
+	background-image: url([[pix:format_ocmooc|icons/formel]]);
+}
+.example-green {
+	background-color: #a7d2ac;
+	background-image: url([[pix:format_ocmooc|icons/example]]);
+}
+.quest-orange {
+	background-color: #f7941e;
+	background-image: url([[pix:format_ocmooc|icons/question]]);
+}
+.cal-green {
+	background-color: #8cc63f;
+	background-image: url([[pix:format_ocmooc|icons/calendar]]);
+}
+.download-blue {
+	background-color: #0c5374;
+	background-image: url([[pix:format_ocmooc|icons/download]]);
+}
+.pay-green {
+	background-color: #006837;
+	background-image: url([[pix:format_ocmooc|icons/euro]]);
+}
+.important-purple {
+	background-color: #534c91;
+	background-image: url([[pix:format_ocmooc|icons/important]]);
+}
+.education-orange {
+	background-color: #ea621f;
+	background-image: url([[pix:format_ocmooc|icons/education]]);
+}
+.browsercheck-blue {
+	background-color: #687497;
+	background-image: url([[pix:format_ocmooc|icons/check]]);
+}
+.quiz-green {
+	background-color: #0e9a8e;
+	background-image: url([[pix:format_ocmooc|icons/quiz]]);
+	background-position:0px 8px;
+}
+.watch-turquoise {
+	background-color: #71b0b0;
+	background-image: url([[pix:format_ocmooc|icons/eye]]);
+}
+.link-pink {
+	background-color: #bf3e6f;
+	background-image: url([[pix:format_ocmooc|icons/link]]);
+}
+.docs-grey {
+	background-color: #b2b2b2;
+	background-image: url([[pix:format_ocmooc|icons/document]]);
+}
+.recommend-grey {
+	background-color: #a2a4af;
+	background-image: url([[pix:format_ocmooc|icons/attention]]);
+}
+.certificate-yellow {
+	background-color: #fdc60b;
+	background-image: url([[pix:format_ocmooc|icons/certificate]]);
+}
+.forum-blue {
+	background-color: #26769d;
+	background-image: url([[pix:format_ocmooc|icons/forum]]);
+}
+.zitat-blue {
+	background-color: #2e90c0;
+	background-image: url([[pix:format_ocmooc|icons/quote]]);
+}
+.scorm-violet {
+	background-color: #80559d;
+	background-image: url([[pix:format_ocmooc|icons/scorm]]);
+}
+.summary-dark {
+	background-color: #646879;
+	background-image: url([[pix:format_ocmooc|icons/summary]]);
+}
+.target-dark {
+	background-color: #76144a;
+	background-image: url([[pix:format_ocmooc|icons/target]]);
+}
+
+/*------------------- LOL andere datei accoreon ------------------ */
+/* Anpassung HTML5-Accordion */
+.accordion { position: relative; margin-bottom: 3px; width: 100%; overflow: hidden;}
+.accordion + p { margin-top: 20px;}
+p + .accordion { margin-top: 20px;}
+.accordion input { position: absolute; opacity: 0; z-index: -1;}
+.accordion label { position: relative; display: block !important; margin-bottom: 0; margin-right: 10px; background-color: #ededed; 
+font-weight: 600; line-height: 22px; cursor: pointer; width: 100%; padding-left: 10px !important; padding: 7px 7px 7px 7px; 
+border: 1px solid #ccc; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;}
+.accordion_content { max-height: 0; overflow: hidden; background-color: #fefefe; -webkit-transition: max-height .35s; -o-transition: max-height .35s; transition: max-height .35s; 
+border: 1px solid #ccc; border-top: 0; border-bottom: 0; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;}
+.accordion_content p { margin: 10px;}
+.accordion input:checked ~ .accordion_content { max-height: none; height:auto; border-bottom: 1px solid #ccc;}
+.full_color input:checked ~ .accordion_content { max-height: none; height:auto; border-bottom: none;}
+.accordion input[type=checkbox] +	label::before { content: "\25BA"; padding-right: 10px; font-family:Arial,sans-serif; font-size:14px;}
+.accordion input[type=checkbox]:checked + label::before { content: "\25BC"; padding-right: 10px; font-family:unset;}
+.accordion.green label, .accordion.red label, .accordion.blue label, .accordion.light-blue label, .accordion.purple label, .accordion.orange label, .accordion.dark-blue label, .accordion.blue-gray label, 
+.accordion.pink label, .accordion.turquoise label, .accordion.red-orange label, .accordion.yellow label { border: none; color: white;} 
+.accordion.green label { background-color: rgba(140, 198, 63, 1); }
+.accordion.orange label { background-color: rgba(247, 148, 30, 1); }
+.accordion.blue label { background-color: rgba(48, 173, 231, 1); }
+.accordion.light-blue label { background-color: rgba(131, 206, 241, 1); }
+.accordion.purple label { background-color: rgba(83, 76, 145, 1); }
+.accordion.dark-blue label { background-color: rgba(38, 118, 157, 1); }
+.accordion.yellow label { background-color: rgba(253, 198, 11, 1); }
+.accordion.turquoise label { background-color: rgba(14, 154, 142, 1); }
+.accordion.pink label { background-color: rgba(191, 62, 111, 1); }
+.accordion.red label { background-color: rgba(209, 33, 33, 1); }
+.accordion.red-orange label { background-color: rgba(234, 98, 31, 1); }
+.accordion.blue-gray label { background-color: rgba(104, 116, 151, 1); }
+.accordion.full_color > .accordion_content { border: none;}
+.accordion.full_color p { color: white;}
+.full_color.green .accordion_content { background-color: rgba(140, 198, 63, 0.6); }
+.full_color.orange .accordion_content { background-color: rgba(247, 148, 30, 0.5); }
+.full_color.blue .accordion_content { background-color: rgba(48, 173, 231, 0.6) }
+.full_color.purple .accordion_content { background-color: rgba(83, 76, 145, 0.5); }
+.full_color.dark-blue .accordion_content { background-color: rgba(38, 118, 157, 0.5); }
+.full_color.yellow .accordion_content { background-color: rgba(253, 198, 11, 0.6); }
+.full_color.turquoise .accordion_content { background-color: rgba(14, 154, 142, 0.5); }
+.full_color.pink .accordion_content { background-color: rgba(191, 62, 111, 0.5); }
+.full_color.red .accordion_content { background-color: rgba(209, 33, 33, 0.5); }
+.full_color.red-orange .accordion_content { background-color: rgba(234, 98, 31, 0.5); }
+.full_color.blue-gray .accordion_content { background-color: rgba(104, 116, 151, 0.5); }
+
+/* Anpassungen HTML5-Akkordeon */
+.acc_h { margin-top: 10px; width: 100%; height: auto; background-color: #f0f0f0; border: solid 1px #d4d4d4; cursor: pointer; z-index: 1000; box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.07);}
+.acc_h h2 { margin-top: 8px !important; line-height: 25px !important; font-size: 15px !important; font-weight: bold; padding-left: 37px; padding-right: 10px;}
+.acc_h:hover { background-color: #fafafa;}
+.acc_p  { width: 100%; position: relative; height: auto; background-color: #ffffff; display: none;}
+.acc_p p { margin: 0px; padding-top: 10px; padding-right: 12px; padding-left: 12px; padding-bottom: 12px; display: none; border-top: solid 1px #d4d4d4;}
+.acc_svgContainer { position: relative;  float: left; margin-left: 10px; margin-right: 7px; padding-top: 5px; width: 20px;}
+@media (max-width: 700px) { .acc_p p { padding-top: 10px; padding-right: 10px; padding-left: 10px; }}

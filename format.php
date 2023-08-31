@@ -50,3 +50,4 @@ $widget = new $outputclass($format);
 echo $renderer->render($widget);
 
 // Include any format js module here using $PAGE->requires->js.
+$PAGE->requires->js('/course/format/ocmooc/chapterslider.js');

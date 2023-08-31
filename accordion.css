@@ -1,0 +1,51 @@
+/* Anpassung HTML5-Accordion */
+.accordion { position: relative; margin-bottom: 3px; width: 100%; overflow: hidden;}
+.accordion + p { margin-top: 20px;}
+p + .accordion { margin-top: 20px;}
+.accordion input { position: absolute; opacity: 0; z-index: -1;}
+.accordion label { position: relative; display: block !important; margin-bottom: 0; margin-right: 10px; background-color: #ededed; 
+font-weight: 600; line-height: 22px; cursor: pointer; width: 100%; padding-left: 10px !important; padding: 7px 7px 7px 7px; 
+border: 1px solid #ccc; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;}
+.accordion_content { max-height: 0; overflow: hidden; background-color: #fefefe; -webkit-transition: max-height .35s; -o-transition: max-height .35s; transition: max-height .35s; 
+border: 1px solid #ccc; border-top: 0; border-bottom: 0; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;}
+.accordion_content p { margin: 10px;}
+.accordion input:checked ~ .accordion_content { max-height: none; height:auto; border-bottom: 1px solid #ccc;}
+.full_color input:checked ~ .accordion_content { max-height: none; height:auto; border-bottom: none;}
+.accordion input[type=checkbox] +	label::before { content: "\25BA"; padding-right: 10px; font-family:Arial,sans-serif; font-size:14px;}
+.accordion input[type=checkbox]:checked + label::before { content: "\25BC"; padding-right: 10px; font-family:unset;}
+.accordion.green label, .accordion.red label, .accordion.blue label, .accordion.light-blue label, .accordion.purple label, .accordion.orange label, .accordion.dark-blue label, .accordion.blue-gray label, 
+.accordion.pink label, .accordion.turquoise label, .accordion.red-orange label, .accordion.yellow label { border: none; color: white;} 
+.accordion.green label { background-color: rgba(140, 198, 63, 1); }
+.accordion.orange label { background-color: rgba(247, 148, 30, 1); }
+.accordion.blue label { background-color: rgba(48, 173, 231, 1); }
+.accordion.light-blue label { background-color: rgba(131, 206, 241, 1); }
+.accordion.purple label { background-color: rgba(83, 76, 145, 1); }
+.accordion.dark-blue label { background-color: rgba(38, 118, 157, 1); }
+.accordion.yellow label { background-color: rgba(253, 198, 11, 1); }
+.accordion.turquoise label { background-color: rgba(14, 154, 142, 1); }
+.accordion.pink label { background-color: rgba(191, 62, 111, 1); }
+.accordion.red label { background-color: rgba(209, 33, 33, 1); }
+.accordion.red-orange label { background-color: rgba(234, 98, 31, 1); }
+.accordion.blue-gray label { background-color: rgba(104, 116, 151, 1); }
+.accordion.full_color > .accordion_content { border: none;}
+.accordion.full_color p { color: white;}
+.full_color.green .accordion_content { background-color: rgba(140, 198, 63, 0.6); }
+.full_color.orange .accordion_content { background-color: rgba(247, 148, 30, 0.5); }
+.full_color.blue .accordion_content { background-color: rgba(48, 173, 231, 0.6) }
+.full_color.purple .accordion_content { background-color: rgba(83, 76, 145, 0.5); }
+.full_color.dark-blue .accordion_content { background-color: rgba(38, 118, 157, 0.5); }
+.full_color.yellow .accordion_content { background-color: rgba(253, 198, 11, 0.6); }
+.full_color.turquoise .accordion_content { background-color: rgba(14, 154, 142, 0.5); }
+.full_color.pink .accordion_content { background-color: rgba(191, 62, 111, 0.5); }
+.full_color.red .accordion_content { background-color: rgba(209, 33, 33, 0.5); }
+.full_color.red-orange .accordion_content { background-color: rgba(234, 98, 31, 0.5); }
+.full_color.blue-gray .accordion_content { background-color: rgba(104, 116, 151, 0.5); }
+
+/* Anpassungen HTML5-Akkordeon */
+.acc_h { margin-top: 10px; width: 100%; height: auto; background-color: #f0f0f0; border: solid 1px #d4d4d4; cursor: pointer; z-index: 1000; box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.07);}
+.acc_h h2 { margin-top: 8px !important; line-height: 25px !important; font-size: 15px !important; font-weight: bold; padding-left: 37px; padding-right: 10px;}
+.acc_h:hover { background-color: #fafafa;}
+.acc_p  { width: 100%; position: relative; height: auto; background-color: #ffffff; display: none;}
+.acc_p p { margin: 0px; padding-top: 10px; padding-right: 12px; padding-left: 12px; padding-bottom: 12px; display: none; border-top: solid 1px #d4d4d4;}
+.acc_svgContainer { position: relative;  float: left; margin-left: 10px; margin-right: 7px; padding-top: 5px; width: 20px;}
+@media (max-width: 700px) { .acc_p p { padding-top: 10px; padding-right: 10px; padding-left: 10px; }}

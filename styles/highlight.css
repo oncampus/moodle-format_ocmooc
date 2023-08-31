@@ -1,0 +1,142 @@
+/* SCSS for marking areas width icons an colors*/
+/* this is loaded from the post.scss.*/
+
+/* Runde Bilder */
+.img-circle {
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+/* Bereichskennzeichnung */
+.book-grey, .paragraph-blue, .math-blue, .example-green, .quest-orange, .cal-green, .download-blue, .pay-green, .important-purple, .education-orange, .browsercheck-blue, .quiz-green, .watch-turquoise, .link-pink, .docs-grey, .recommend-grey, .certificate-yellow, .forum-blue, .zitat-blue, .scorm-violet, .summary-dark, .target-dark, .task-blue {
+    background-color: #30ade7;
+    background-size: 65px 65px;
+    background-position: 5px 0px;
+    background-repeat: no-repeat;
+    margin-bottom: 20px;
+    margin-left: 0px;
+    padding: 15px 20px 15px 75px;
+    min-height: 70px;
+}
+@media (max-width: 480px) {
+    .book-grey, .paragraph-blue, .math-blue, .example-green, .quest-orange, .cal-green, .download-blue, .pay-green, .important-purple, .education-orange, .browsercheck-blue, .quiz-green, .watch-turquoise, .link-pink, .docs-grey, .recommend-grey, .certificate-yellow, .forum-blue, .zitat-blue, .scorm-violet, .summary-dark, .target-dark, .task-blue {
+        background-size: 45px 45px;
+        padding: 45px 20px 15px 15px;
+   }
+}
+.quest-orange, .cal-green, .download-blue, .pay-green, .important-purple, .education-orange, .browsercheck-blue, .quiz-green, .watch-turquoise, .link-pink, .docs-grey, .recommend-grey, .certificate-yellow, .forum-blue, .zitat-blue, .scorm-violet, .summary-dark, .target-dark, .task-blue {
+    color: #fff;
+}
+.quest-orange a, .cal-green a, .download-blue a, .pay-green a, .important-purple a, .education-orange a, .browsercheck-blue a, .quiz-green a, .watch-turquoise a, .link-pink a, .docs-grey a, .recommend-grey a, .certificate-yellow a, .forum-blue a, .zitat-blue a, .scorm-violet a, .summary-dark a, .target-dark a, .task-blue a {
+    color: #fff;
+    text-decoration: underline;
+}
+.quest-orange a:hover, .cal-green a:hover, .download-blue a:hover, .pay-green a:hover, .important-purple a:hover, .education-orange a:hover, .browsercheck-blue a:hover, .quiz-green a:hover, .watch-turquoise a:hover, .link-pink a:hover, .docs-grey a:hover, .recommend-grey a:hover, .certificate-yellow a:hover, .forum-blue a:hover, .zitat-blue a:hover, .scorm-violet a:hover, .summary-dark a:hover, .target-dark a:hover, .task-blue a:hover {
+    color: rgba(255, 255, 255, 0.85);
+}
+.book-grey, .paragraph-blue, .math-blue, .example-green {
+    color: #333;
+    background-color: #efefef;
+}
+.book-grey a, .paragraph-blue a, .math-blue a, .example-green a {
+    color: #333;
+    text-decoration: underline;
+}
+.book-grey a:hover, .paragraph-blue a:hover, .math-blue a:hover, .example-green a:hover {
+    color: #1a1a1a;
+}
+
+
+.task-blue {
+	background-color: #30ade7;
+	background-image: url([[pix:format_ocmooc|icons/task]]);
+}
+.book-grey {
+	background-color: #efefef;
+	background-image: url([[pix:format_ocmooc|icons/book]]);
+}
+.paragraph-blue {
+	background-color: #c3dbea;
+	background-image: url([[pix:format_ocmooc|icons/paragraph-dark]]);
+}
+.math-blue {
+	background-color: #bfd8d7;
+	background-image: url([[pix:format_ocmooc|icons/formel]]);
+}
+.example-green {
+	background-color: #a7d2ac;
+	background-image: url([[pix:format_ocmooc|icons/example]]);
+}
+.quest-orange {
+	background-color: #f7941e;
+	background-image: url([[pix:format_ocmooc|icons/question]]);
+}
+.cal-green {
+	background-color: #8cc63f;
+	background-image: url([[pix:format_ocmooc|icons/calendar]]);
+}
+.download-blue {
+	background-color: #0c5374;
+	background-image: url([[pix:format_ocmooc|icons/download]]);
+}
+.pay-green {
+	background-color: #006837;
+	background-image: url([[pix:format_ocmooc|icons/euro]]);
+}
+.important-purple {
+	background-color: #534c91;
+	background-image: url([[pix:format_ocmooc|icons/important]]);
+}
+.education-orange {
+	background-color: #ea621f;
+	background-image: url([[pix:format_ocmooc|icons/education]]);
+}
+.browsercheck-blue {
+	background-color: #687497;
+	background-image: url([[pix:format_ocmooc|icons/check]]);
+}
+.quiz-green {
+	background-color: #0e9a8e;
+	background-image: url([[pix:format_ocmooc|icons/quiz]]);
+	background-position:0px 8px;
+}
+.watch-turquoise {
+	background-color: #71b0b0;
+	background-image: url([[pix:format_ocmooc|icons/eye]]);
+}
+.link-pink {
+	background-color: #bf3e6f;
+	background-image: url([[pix:format_ocmooc|icons/link]]);
+}
+.docs-grey {
+	background-color: #b2b2b2;
+	background-image: url([[pix:format_ocmooc|icons/document]]);
+}
+.recommend-grey {
+	background-color: #a2a4af;
+	background-image: url([[pix:format_ocmooc|icons/attention]]);
+}
+.certificate-yellow {
+	background-color: #fdc60b;
+	background-image: url([[pix:format_ocmooc|icons/certificate]]);
+}
+.forum-blue {
+	background-color: #26769d;
+	background-image: url([[pix:format_ocmooc|icons/forum]]);
+}
+.zitat-blue {
+	background-color: #2e90c0;
+	background-image: url([[pix:format_ocmooc|icons/quote]]);
+}
+.scorm-violet {
+	background-color: #80559d;
+	background-image: url([[pix:format_ocmooc|icons/scorm]]);
+}
+.summary-dark {
+	background-color: #646879;
+	background-image: url([[pix:format_ocmooc|icons/summary]]);
+}
+.target-dark {
+	background-color: #76144a;
+	background-image: url([[pix:format_ocmooc|icons/target]]);
+}
