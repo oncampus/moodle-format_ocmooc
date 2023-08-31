@@ -41,6 +41,8 @@ switch ($action) {
         $redirecturl->param('chapter', $sectionmanager->get_chapter_no_from_number($section->parent));
         $redirecturl->param('lection', $sectionmanager->get_lection_no_from_number($section->parent, $sectionnum - 1));
         $sectionmanager->delete_section_with_children($section);
+        $neworder = array();
+        $sectionmanager->reorder_sections($neworder, 0);
         break;
     case 'reorder':
         $neworder = array();
