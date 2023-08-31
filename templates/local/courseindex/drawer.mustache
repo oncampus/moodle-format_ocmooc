@@ -1,10 +1,10 @@
 <nav id="courseindex" class="courseindex">
     <div id="courseindex-content">
-        {{> core_courseformat/local/courseindex/placeholders }}
+        {{> format_ocmooc/local/courseindex/placeholders }}
     </div>
 </nav>
 {{#js}}
-    require(['core_courseformat/local/courseindex/drawer'], function(component) {
+    require(['format_ocmooc/local/courseindex/drawer'], function(component) {
     component.init('courseindex');
     });
 {{/js}}
