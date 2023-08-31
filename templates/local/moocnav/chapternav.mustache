@@ -11,11 +11,20 @@
         <ul id="oc-chapters-slider"class="clearfix" style="width: {{chaptersstartwidth}}px; transform: translateX({{chapterstarttransform}}px);">
             {{#chapters}}
                 <li class="oc-chapter-item {{#selected}}active{{/selected}}">
-                    <a class="chapter-card d-block" href="{{url}}">
+                    {{#imgurl}}
+                    <a class="chapter-card d-block h-100 w-100" href="{{url}}">
                         <img src="{{imgurl}}" class="chapter-img {{#selected}}active{{/selected}}">
                     </a>
                     <i class="icon fa fa-map-marker fa-fw text-dark" title="Zurück" aria-hidden="true"></i>
-                    
+                    {{/imgurl}}
+                    {{^imgurl}}
+                        <a class="chapter-card d-block" href="{{url}}">
+                            <div class="bg-light border border-grey border-1" style="height:30px">
+                                <i class="icon fa fa-file-o fa-fw text-dark" title="Nothing" aria-hidden="true"></i>
+                            </div>
+                        </a>
+                        <i class="icon fa fa-map-marker fa-fw text-dark" title="Zurück" aria-hidden="true"></i>
+                    {{/imgurl}}
                 </li>
             {{/chapters}}
         </ul>

@@ -34,9 +34,8 @@ class content extends content_base {
         }
 
         $elementsize              = 284;
-        $data->chapters           = $chapters;
+        $data->chapters           = array_values($chapters);
         $sections                 = $this->get_chapter_sections($chapters[$chapter], $chapter, $output);
-        $data->chaptersections    = $sections;
         $data->chaptersstartwidth = count($chapters) * $elementsize;
 
         $data->chapterstarttransform = ($chapter * -$elementsize) + $elementsize;
@@ -60,6 +59,18 @@ class content extends content_base {
             } else if ($lection == count($sections)) {
                 $data->lastsection = true;
             }
+
+            $navlectionarr      = [];
+            $maxlectionnavitems = 5;
+            $sectioncount       = count($sections);
+            if ($lection > 2) {
+                $itemcount     = ($sectioncount - ($lection - 3) - $maxlectionnavitems) > $maxlectionnavitems ? $maxlectionnavitems :($sectioncount - ($lection - 3) - $maxlectionnavitems)  ;
+                $navlectionarr = array_slice($sections, $lection - 3, $itemcount);
+            } else {
+                $itemcount     = ($sectioncount - $maxlectionnavitems) > $maxlectionnavitems ? $maxlectionnavitems :($sectioncount - $maxlectionnavitems)  ;
+                $navlectionarr = array_slice($sections, 0, $itemcount);
+            }
+            $data->chaptersections = $navlectionarr;
 
             $params            = ['id' => $COURSE->id, 'chapter' => $chapter];
             $params['lection'] = $lection + 1;
@@ -108,11 +119,11 @@ class content extends content_base {
                     }
 
                     $file = $DB->get_record('files',
-                                            ['contextid' => $context->id, 'component' => 'course', 'filearea' => 'section', 'itemid' => $sectionid,
-                                            ]);
+                            ['contextid' => $context->id, 'component' => 'course', 'filearea' => 'section', 'itemid' => $sectionid,
+                            ]);
                     if ($file) {
                         $section->imgurl = \moodle_url::make_pluginfile_url($context->id, 'course', 'section', $sectionid, '/',
-                                                                            $file->filename);
+                                $file->filename);
                     } else {
                         // TODO: Use placeholder image url.
                     }
