@@ -1,5 +1,5 @@
-// SCSS for marking areas width icons an colors
-// this is loaded from the post.scss.
+/* SCSS for marking areas width icons an colors*/
+/* this is loaded from the post.scss.*/
 
 /* Runde Bilder */
 .img-circle {
@@ -49,94 +49,94 @@
 
 .task-blue {
 	background-color: #30ade7;
-	background-image: url([[pix:theme|icons/task]]);
+	background-image: url([[pix:format_ocmooc|icons/task]]);
 }
 .book-grey {
 	background-color: #efefef;
-	background-image: url([[pix:theme|icons/book]]);
+	background-image: url([[pix:format_ocmooc|icons/book]]);
 }
 .paragraph-blue {
 	background-color: #c3dbea;
-	background-image: url([[pix:theme|icons/paragraph-dark]]);
+	background-image: url([[pix:format_ocmooc|icons/paragraph-dark]]);
 }
 .math-blue {
 	background-color: #bfd8d7;
-	background-image: url([[pix:theme|icons/formel]]);
+	background-image: url([[pix:format_ocmooc|icons/formel]]);
 }
 .example-green {
 	background-color: #a7d2ac;
-	background-image: url([[pix:theme|icons/example]]);
+	background-image: url([[pix:format_ocmooc|icons/example]]);
 }
 .quest-orange {
 	background-color: #f7941e;
-	background-image: url([[pix:theme|icons/question]]);
+	background-image: url([[pix:format_ocmooc|icons/question]]);
 }
 .cal-green {
 	background-color: #8cc63f;
-	background-image: url([[pix:theme|icons/calendar]]);
+	background-image: url([[pix:format_ocmooc|icons/calendar]]);
 }
 .download-blue {
 	background-color: #0c5374;
-	background-image: url([[pix:theme|icons/download]]);
+	background-image: url([[pix:format_ocmooc|icons/download]]);
 }
 .pay-green {
 	background-color: #006837;
-	background-image: url([[pix:theme|icons/euro]]);
+	background-image: url([[pix:format_ocmooc|icons/euro]]);
 }
 .important-purple {
 	background-color: #534c91;
-	background-image: url([[pix:theme|icons/important]]);
+	background-image: url([[pix:format_ocmooc|icons/important]]);
 }
 .education-orange {
 	background-color: #ea621f;
-	background-image: url([[pix:theme|icons/education]]);
+	background-image: url([[pix:format_ocmooc|icons/education]]);
 }
 .browsercheck-blue {
 	background-color: #687497;
-	background-image: url([[pix:theme|icons/check]]);
+	background-image: url([[pix:format_ocmooc|icons/check]]);
 }
 .quiz-green {
 	background-color: #0e9a8e;
-	background-image: url([[pix:theme|icons/quiz]]);
+	background-image: url([[pix:format_ocmooc|icons/quiz]]);
 	background-position:0px 8px;
 }
 .watch-turquoise {
 	background-color: #71b0b0;
-	background-image: url([[pix:theme|icons/eye]]);
+	background-image: url([[pix:format_ocmooc|icons/eye]]);
 }
 .link-pink {
 	background-color: #bf3e6f;
-	background-image: url([[pix:theme|icons/link]]);
+	background-image: url([[pix:format_ocmooc|icons/link]]);
 }
 .docs-grey {
 	background-color: #b2b2b2;
-	background-image: url([[pix:theme|icons/document]]);
+	background-image: url([[pix:format_ocmooc|icons/document]]);
 }
 .recommend-grey {
 	background-color: #a2a4af;
-	background-image: url([[pix:theme|icons/attention]]);
+	background-image: url([[pix:format_ocmooc|icons/attention]]);
 }
 .certificate-yellow {
 	background-color: #fdc60b;
-	background-image: url([[pix:theme|icons/certificate]]);
+	background-image: url([[pix:format_ocmooc|icons/certificate]]);
 }
 .forum-blue {
 	background-color: #26769d;
-	background-image: url([[pix:theme|icons/forum]]);
+	background-image: url([[pix:format_ocmooc|icons/forum]]);
 }
 .zitat-blue {
 	background-color: #2e90c0;
-	background-image: url([[pix:theme|icons/quote]]);
+	background-image: url([[pix:format_ocmooc|icons/quote]]);
 }
 .scorm-violet {
 	background-color: #80559d;
-	background-image: url([[pix:theme|icons/scorm]]);
+	background-image: url([[pix:format_ocmooc|icons/scorm]]);
 }
 .summary-dark {
 	background-color: #646879;
-	background-image: url([[pix:theme|icons/summary]]);
+	background-image: url([[pix:format_ocmooc|icons/summary]]);
 }
 .target-dark {
 	background-color: #76144a;
-	background-image: url([[pix:theme|icons/target]]);
+	background-image: url([[pix:format_ocmooc|icons/target]]);
 }
