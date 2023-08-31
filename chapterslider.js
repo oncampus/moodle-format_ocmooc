@@ -1,8 +1,7 @@
-var container = document.getElementById('oc-chapters-navigation')
+var container = document.getElementById('oc-chapters-navigation');
 var slider = document.getElementById('oc-chapters-slider');
 var slides = document.getElementsByClassName('oc-chapter-item').length;
 var buttons = document.getElementsByClassName('chapters-nav-btn');
-
 
 var currentPosition = 0;
 var currentMargin = 0;
@@ -21,29 +20,30 @@ function getAlleItems() {
 
 function getCurrentActiveIndex() {
     let items = getAlleItems();
-    for(let i = 0; i < items.length; i++) {
-        if(items[i].classList.contains('active')) {
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].classList.contains('active')) {
             return i;
         }
     }
     return -1;
-}
+};
+
 startPosition = getCurrentActiveIndex();
 currentPosition = getCurrentActiveIndex();
 
 function setOpacity(index) {
     let items = getAlleItems();
-    if(!!items[index]) {
-        items[index].firstElementChild.firstElementChild.setAttribute('style', 'opacity: 1 !important')
-    } 
+    if (items[index]) {
+        items[index].firstElementChild.firstElementChild.setAttribute('style', 'opacity: 1 !important');
+    }
 }
 
 function resetOpacity(index) {
     let items = getAlleItems();
-   
-    if(!!items[index]) {
-        items[index].firstElementChild.firstElementChild.setAttribute('style', 'opacity: 0.6 !important')
-    } 
+
+    if (items[index]) {
+        items[index].firstElementChild.firstElementChild.setAttribute('style', 'opacity: 0.6 !important');
+    }
 }
 
 /*
@@ -79,7 +79,7 @@ function slideLeft() {
         resetOpacity(currentPosition);
         currentPosition++;
         setOpacity(currentPosition);
-    };
+    }
     if (currentPosition == slidesCount) {
         buttons[1].classList.add('inactive');
     }

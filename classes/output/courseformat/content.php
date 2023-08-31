@@ -122,7 +122,7 @@ class content extends content_base {
                     $section->progress     = $this->get_progress_by_sections($section->sections);
                     $section->sectioncount = count($section->sections);
 
-                    $chapters[$chapter] = $section;
+                    $chapters[] = $section;
                 }
                 $chapter++;
             }
