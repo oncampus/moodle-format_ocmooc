@@ -81,11 +81,11 @@ class content extends content_base {
     public function get_chapters($output) {
         global $COURSE, $PAGE, $DB;
 
-        $chapters = array();
-        $context = \context_course::instance($COURSE->id);
+        $chapters = [];
+        $context  = \context_course::instance($COURSE->id);
 
         $modinfo = $this->format->get_modinfo();
-        $chapter = 0;
+        $chapter = 1;
         foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
             if ($sectionnum == 0) {
                 continue;
@@ -93,33 +93,36 @@ class content extends content_base {
 
             if ($section->parent === 0) {
                 if ($this->format->is_section_visible($section)) {
-                    $rawtitle = $section->name;
+                    $rawtitle  = $section->name;
                     $sectionid = $section->id;
 
                     $section = new $this->sectionclass($this->format, $section);
                     $section = $section->export_for_template($output);
 
-                    $section->rawtitle = $rawtitle;
-                    $params = ['id' => $COURSE->id, 'chapter' => $chapter, 'lection' => 0];
-                    $section->chapternum = $chapter + 1;
-                    $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
+                    $section->rawtitle   = $rawtitle;
+                    $params              = ['id' => $COURSE->id, 'chapter' => $chapter, 'lection' => 1];
+                    $section->chapternum = $chapter;
+                    $section->url        = (new \moodle_url('/course/view.php', $params))->out(false);
                     if ($PAGE->user_is_editing()) {
                         $section->editurl = (new \moodle_url('/course/editsection.php', ['id' => $sectionid]));
                     }
 
                     $file = $DB->get_record('files',
-                            ['contextid' => $context->id, 'component' => 'course', 'filearea' => 'section', 'itemid' => $sectionid]);
+                                            ['contextid' => $context->id, 'component' => 'course', 'filearea' => 'section', 'itemid' => $sectionid,
+                                            ]);
                     if ($file) {
-                        $section->imgurl = \moodle_url::make_pluginfile_url($context->id, 'course', 'section', $sectionid, '/', $file->filename);
+                        $section->imgurl = \moodle_url::make_pluginfile_url($context->id, 'course', 'section', $sectionid, '/',
+                                                                            $file->filename);
                     } else {
                         // TODO: Use placeholder image url.
                     }
 
-                    $section->sections = $this->get_chapter_sections($section, $chapter, $output);
-                    $section->progress = $this->get_progress_by_sections($section->sections);
+                    $section->section      = $sectionnum;
+                    $section->sections     = $this->get_chapter_sections($section, $chapter, $output);
+                    $section->progress     = $this->get_progress_by_sections($section->sections);
                     $section->sectioncount = count($section->sections);
 
-                    $chapters[] = $section;
+                    $chapters[$chapter] = $section;
                 }
                 $chapter++;
             }
@@ -128,33 +131,41 @@ class content extends content_base {
         return $chapters;
     }
 
+    /**
+     * @param $chapter section_info|stdClass|int the chapter section
+     * @param $chapternum
+     * @param $output
+     * @return array
+     * @throws \moodle_exception
+     */
     public function get_chapter_sections($chapter, $chapternum, $output) {
         global $COURSE;
 
-        $sections = array();
+        $sections = [];
 
         if (is_number($chapter)) {
-            $chapterid = $chapter;
+            $chaptersectionnumber = $chapter;
         } else {
-            $chapterid = $chapter->id;
+            $chaptersectionnumber = $chapter->section;
         }
 
-        $modinfo = $this->format->get_modinfo();
-        $sectionnum = 0;
+        $modinfo    = $this->format->get_modinfo();
+        $sectionnum = 1;
         foreach ($modinfo->get_section_info_all() as $section) {
-            if ($section != 0 && $section->parent == $chapterid) {
+            if ($section->section != 0 && $section->parent == $chaptersectionnumber) {
                 $rawtitle = $section->name;
 
                 $section = new $this->sectionclass($this->format, $section);
                 $section = $section->export_for_template($output);
 
-                $section->rawtitle = $rawtitle;
-                $section->sectionnum = $sectionnum + 1;
-                $section->progress = $this->get_progress_by_section($section);
-                $params = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
-                $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
+                $section->sectionreturnid = $sectionnum - 1;
+                $section->rawtitle        = $rawtitle;
+                $section->sectionnum      = $sectionnum;
+                $section->progress        = $this->get_progress_by_section($section);
+                $params                   = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
+                $section->url             = (new \moodle_url('/course/view.php', $params))->out(false);
 
-                $sections[] = $section;
+                $sections[$sectionnum] = $section;
 
                 $sectionnum++;
             }
@@ -174,6 +185,10 @@ class content extends content_base {
         return $progress;
     }
 
+    /**
+     * @param $section section_info|stdClass the section
+     * @return false|float|int
+     */
     private function get_progress_by_section($section) {
         global $USER, $COURSE;
 
@@ -191,8 +206,8 @@ class content extends content_base {
             return 100;
         }
 
-        $modules = $completion->get_activities();
-        $count = 0;
+        $modules   = $completion->get_activities();
+        $count     = 0;
         $completed = 0;
         foreach ($modules as $module) {
             if ($module->section == $section->id) {
