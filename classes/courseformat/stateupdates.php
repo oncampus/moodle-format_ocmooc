@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace format_ocmooc\output\courseformat;
+namespace format_ocmooc\courseformat;
 
 /**
  * class stateupdates
