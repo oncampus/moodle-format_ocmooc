@@ -297,8 +297,6 @@ class format_ocmooc extends core_courseformat\base {
         $this->get_section_manager()->delete_section_with_children($section);
         $neworder = array();
         $this->get_section_manager()->reorder_sections($neworder, 0);
-//        $url = course_get_url($this->courseid, $parent);
-//        redirect($url);
     }
 
     /**

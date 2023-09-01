@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace format_ocmooc\output\courseformat;
+namespace format_ocmooc\courseformat;
 
 use context_course;
 use core_courseformat\stateupdates;
@@ -24,45 +24,48 @@ use stdClass;
 /**
  * class stateactions
  *
- * @package   format_flexsections
+ * @package   format_ocmooc
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class stateactions extends  \core_courseformat\stateactions {
+class stateactions extends \core_courseformat\stateactions {
     /**
      * Moving a section
      *
      * @param \core_courseformat\stateupdates $updates
-     * @param stdClass $course
-     * @param array $ids
-     * @param int|null $targetsectionid if positive number, move AFTER this section under the same parent
-     *     if negative number, move TO the parent with id abs($targetsectionid) as the first child
-     *     if 0, move to parent=0 as the first child
-     *     (it's quite hacky but unfortunately we can only use one argument here so have to be creative)
-     * @param int|null $targetcmid
+     * @param stdClass                        $course
+     * @param array                           $ids
+     * @param int|null                        $targetsectionid if positive number, move AFTER this section under the
+     *                                                         same parent if negative number, move TO the parent with
+     *                                                         id abs($targetsectionid) as the first child if 0, move
+     *                                                         to parent=0 as the first child
+     *                                                         (it's quite hacky but unfortunately we can only use one
+     *                                                         argument here so have to be creative)
+     * @param int|null                        $targetcmid
      * @return void
      */
     public function section_move(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
-                                 ?int $targetsectionid = null, ?int $targetcmid = null): void {
+                                 ?int                            $targetsectionid = null, ?int $targetcmid = null): void {
         $this->validate_sections($course, $ids, __FUNCTION__);
 
         $coursecontext = context_course::instance($course->id);
         require_capability('moodle/course:movesections', $coursecontext);
 
-        /** @var \format_flexsections $format */
-        $format = course_get_format($course);
+        /** @var \format_ocmooc $format */
+        $format  = course_get_format($course);
         $modinfo = $format->get_modinfo();
 
         // Parent section and position.
         if ($targetsectionid > 0) {
             $this->validate_sections($course, [$targetsectionid], __FUNCTION__);
             $targetsection = $modinfo->get_section_info_by_id($targetsectionid, MUST_EXIST);
-            $before = $this->find_next_section($modinfo, $targetsection);
-            $parent = $targetsection->parent;
+            $before        = $this->find_next_section($modinfo, $targetsection);
+//            $parent        = $targetsection->parent;
+            $parent        = $targetsection->section;
         } else if ($targetsectionid < 0) {
             $this->validate_sections($course, [-$targetsectionid], __FUNCTION__);
             $targetsection = $modinfo->get_section_info_by_id(-$targetsectionid, MUST_EXIST);
-            $before = $this->get_first_child($modinfo, $targetsection->section);
-            $parent = $modinfo->get_section_info_by_id(-$targetsectionid, MUST_EXIST);
+            $before        = $this->get_first_child($modinfo, $targetsection->section);
+            $parent        = $modinfo->get_section_info_by_id(-$targetsectionid, MUST_EXIST);
         } else {
             $before = $this->get_first_child($modinfo, 0);
             $parent = 0;
@@ -71,8 +74,9 @@ class stateactions extends  \core_courseformat\stateactions {
         // Move sections.
         $sections = $this->get_section_info($modinfo, $ids);
         foreach ($sections as $section) {
-            if ($format->can_move_section_to($section, $parent, $before)) {
-                $format->move_section($section, $parent, $before);
+            $sectionmanager = $format->get_section_manager();
+            if ($sectionmanager->can_move_section_to($section, $parent, $before)) {
+                $sectionmanager->move_section($section, $parent, $before);
             }
         }
 
@@ -89,7 +93,7 @@ class stateactions extends  \core_courseformat\stateactions {
      * Find next section
      *
      * @param \course_modinfo $modinfo
-     * @param \section_info $thissection
+     * @param \section_info   $thissection
      * @return \section_info|null
      */
     protected function find_next_section(\course_modinfo $modinfo, \section_info $thissection): ?\section_info {
@@ -108,7 +112,7 @@ class stateactions extends  \core_courseformat\stateactions {
      * Get first subsection
      *
      * @param \course_modinfo $modinfo
-     * @param int $parent
+     * @param int             $parent
      * @return \section_info|null
      */
     protected function get_first_child(\course_modinfo $modinfo, int $parent): ?\section_info {
@@ -123,18 +127,18 @@ class stateactions extends  \core_courseformat\stateactions {
     /**
      * Delete course sections.
      *
-     * @param \format_ocmooc\output\courseformat\stateupdates $updates         the affected course elements track
-     * @param stdClass                                        $course          the course object
-     * @param int[]                                           $ids             section ids
-     * @param int                                             $targetsectionid not used
-     * @param int                                             $targetcmid      not used
+     * @param \format_ocmooc\courseformat\stateupdates $updates         the affected course elements track
+     * @param stdClass                                 $course          the course object
+     * @param int[]                                    $ids             section ids
+     * @param int                                      $targetsectionid not used
+     * @param int                                      $targetcmid      not used
      */
     public function section_delete(
         stateupdates $updates,
-        stdClass $course,
-        array $ids = [],
-        ?int $targetsectionid = null,
-        ?int $targetcmid = null
+        stdClass     $course,
+        array        $ids = [],
+        ?int         $targetsectionid = null,
+        ?int         $targetcmid = null
     ): void {
 
         if (empty($ids)) {
@@ -146,7 +150,7 @@ class stateactions extends  \core_courseformat\stateactions {
         require_capability('moodle/course:update', $coursecontext);
         require_capability('moodle/course:movesections', $coursecontext);
 
-        $modinfo = get_fast_modinfo($course);
+        $modinfo   = get_fast_modinfo($course);
         $sectionid = array_shift($ids);
 
         $section = $modinfo->get_section_info_by_id($sectionid, MUST_EXIST);
