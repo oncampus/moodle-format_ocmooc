@@ -291,14 +291,6 @@ class format_ocmooc extends core_courseformat\base {
         return $sectionnode;
     }
 
-    public function delete_section($section, $forcedeleteifnotempty = false) {
-        $section = $this->get_section($section, MUST_EXIST);
-        $parent  = $section->parent;
-        $this->get_section_manager()->delete_section_with_children($section);
-        $neworder = array();
-        $this->get_section_manager()->reorder_sections($neworder, 0);
-    }
-
     /**
      * If we are on course/view.php page return the 'section' attribute from query
      *
