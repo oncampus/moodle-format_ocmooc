@@ -190,6 +190,11 @@ ul#oc-coursenavlist {
 }
 
 /* MOOC Content Anpassungen */
+@media (min-width: 992px){
+	#page.drawers.show-drawer-left { 
+		padding-left:0px;
+	}
+}
 .course-content ul.ocmooc {
 	max-width: 880px;
 }
@@ -206,9 +211,18 @@ ul#oc-coursenavlist {
 .ocmooc .section .label .contentwithoutlink, .section .label .activityinstance {
     padding-right:0px;
 }
+.editing .ocmooc .section .activity .contentwithoutlink, 
+.editing .ocmooc .section .activity .activityinstance {
+    padding-right:40px;
+}
 .ocmooc .course-section-header .icons-collapse-expand {
     display:none;
 }
+.ocmooc .activity-item.hiddenactivity,
+.editing .ocmooc .activity-item:hover {
+    background-color: #ffffff;
+}
+
 /* ---- Neue Anpassungen --- */
 /* SCSS for course layout */
 /* Kapitelnavigation */
