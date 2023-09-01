@@ -138,10 +138,12 @@ class format_ocmooc extends core_courseformat\base {
                 ['context' => context_course::instance($this->courseid)]
             );
         } else {
-            if ($section->parent == 0) {
-                return "Chapter $section->section";
+            if ($section->section == 0) {
+                return get_string('rootsection', 'format_ocmooc');
+            }else            if ($section->parent == 0) {
+                return "Chapter " . $this->get_section_manager()->get_chapter_no_from_number($section->section);
             } else {
-                return $this->get_default_section_name($section);
+                return "Lection " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
             }
         }
     }
