@@ -23,6 +23,7 @@ define(['jquery', 'format_ocmooc/hvp_resizer'], function($) {
                     let queryString = window.location.search;
                     let urlParams = new URLSearchParams(queryString);
                     let id = urlParams.get('id');
+                    document.querySelector('.activity-header').style.display = "none";
                     // If height has changed (new content or screen resize)
                     if (document.getElementsByClassName('h5p-iframe-wrapper').length > 0 &&
                         height !== document.getElementsByClassName('h5p-iframe-wrapper')[0].offsetHeight) {
@@ -49,7 +50,7 @@ define(['jquery', 'format_ocmooc/hvp_resizer'], function($) {
                         // To avoid retroactively adding/using ids on iframes
                         let frame = document.getElementById(e.data.frameId);
                         // Adjust the height
-                        frame.style.height = `${e.data.frameHeight}px`;
+                        frame.style.height = `${e.data.frameHeight }px`;
                     }
                 };
             },

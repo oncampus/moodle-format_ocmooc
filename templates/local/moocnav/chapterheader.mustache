@@ -1,12 +1,14 @@
 <div>
-    <span class="">
+    <span class="mooc-name-chapter-quickedit">
         {{#str}}chapter, format_ocmooc{{/str}}{{currentchapter.chapternum}}: {{{currentchapter.header.title}}}
     </span>
     {{#currentchapter.editurl}}
-        <span>
+        <span class="mooc-name-chapter-edit">
             <a href="{{currentchapter.editurl}}">{{#str}}edit, format_ocmooc{{/str}}</a>
         </span>
     {{/currentchapter.editurl}}
-
+        <a class="delete_group cursor-pointer" href="{{currentchapter.deleteurl}}">
+            <i class="fa fa-trash"  title="{{#str}}delete{{/str}}"></i>
+        </a>
     <!-- currentchapter.progress for current progress -->
 </div>
