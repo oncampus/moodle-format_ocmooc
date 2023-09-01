@@ -10,12 +10,12 @@ ul#oc-coursenavlist {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 979px) {
-    .wrap {
+    #oc-chapters-navigation.wrap {
         max-width: 610px;
     }
 }
 
-.wrap {
+#oc-chapters-navigation.wrap {
     position: relative;
     margin: 20px auto 30px auto;
     width: calc(284px * 3);
@@ -23,16 +23,16 @@ ul#oc-coursenavlist {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 979px) {
-    .frame ul li {
+    #oc-chapters-nav-inner.frame ul li {
         width: 178px;
         margin: 20px 0px 20px auto;
     }
 }
 
-.frame ul li {
+#oc-chapters-nav-inner.frame ul li {
     float: left;
     width: 280px;
-    height: auto;
+    height: 156px;
     margin: 0px 4px 0px auto;
     padding: 0;
     background: #ddd;
@@ -42,7 +42,7 @@ ul#oc-coursenavlist {
     vertical-align: middle;
 }
 
-.frame ul {
+#oc-chapters-nav-inner.frame ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -50,7 +50,7 @@ ul#oc-coursenavlist {
     vertical-align: middle;
 }
 
-.frame ul li img {
+#oc-chapters-nav-inner.frame ul li img {
     width: 100%;
     height: 100%;
     padding: 0;
@@ -59,10 +59,10 @@ ul#oc-coursenavlist {
     object-fit: cover;
 }
 
-.frame ul li img.active {
+#oc-chapters-nav-inner.frame ul li img.active {
     opacity: 1 !important;
 }
-.frame ul li .icon {
+#oc-chapters-nav-inner.frame ul li .activicon {
     position: absolute;
     top: -1.25rem;
     font-size: 40px;
@@ -73,8 +73,18 @@ ul#oc-coursenavlist {
     text-shadow: 0.5px 2px 1px rgba(255, 255, 255,0.75);
     display:none;
 }
-.frame ul li.active .icon {
+#oc-chapters-nav-inner.frame ul li.active .activicon {
     display:block;
+}
+#oc-chapters-nav-inner.frame ul li .icon.noimage {
+    position: absolute;
+    top: 3.25rem;
+    font-size: 2.75rem;
+    width:280px;
+    height:45px;
+    text-align: center;
+    display:block;
+    opacity:0.25;
 }
 
 .chapters-control-prev, .chapters-control-next {
@@ -179,7 +189,26 @@ ul#oc-coursenavlist {
     background-color:#fff;
 }
 
-
+/* MOOC Content Anpassungen */
+.course-content ul.ocmooc {
+	max-width: 880px;
+}
+.section .label .contentwithoutlink, .section .label .activityinstance {
+	padding:0px;
+}
+.ocmooc .activity-item:not(.activityinline) { 
+	border:1px solid transparent;
+	padding:0 1.5rem;
+}
+.ocmooc .activity-item .activity-information {
+    margin-bottom:1rem;
+}
+.ocmooc .section .label .contentwithoutlink, .section .label .activityinstance {
+    padding-right:0px;
+}
+.ocmooc .course-section-header .icons-collapse-expand {
+    display:none;
+}
 /* ---- Neue Anpassungen --- */
 /* SCSS for course layout */
 /* Kapitelnavigation */
