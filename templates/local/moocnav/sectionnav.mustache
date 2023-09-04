@@ -14,23 +14,25 @@
 
             {{#chaptersections}}
                 <li class="ocmooc-nav-item">
-                    <a class="ocmooc-nav-link" href="{{url}}">
-                        <div class="text-container">
-                            {{#lectionname}}
-                                <div>{{#str}}lection, format_ocmooc{{/str}}</div>
-                            {{/lectionname}}
-                            {{^lectionname}}
-                                {{#rawtitle}}
-                                    <div>{{{rawtitle}}}</div>
-                                {{/rawtitle}}
-                                {{^rawtitle}}
+                    {{^hidden}}
+                        <a class="ocmooc-nav-link" href="{{url}}">
+                            <div class="text-container">
+                                {{#lectionname}}
                                     <div>{{#str}}lection, format_ocmooc{{/str}}</div>
-                                {{/rawtitle}}
-                            {{/lectionname}}
-                            <div>{{sectionnum}}</div>
-                            <!-- progress for current progress of lection -->
-                        </div>
-                    </a>
+                                {{/lectionname}}
+                                {{^lectionname}}
+                                    {{#rawtitle}}
+                                        <div>{{{rawtitle}}}</div>
+                                    {{/rawtitle}}
+                                    {{^rawtitle}}
+                                        <div>{{#str}}lection, format_ocmooc{{/str}}</div>
+                                    {{/rawtitle}}
+                                {{/lectionname}}
+                                <div>{{sectionnum}}</div>
+                                <!-- progress for current progress of lection -->
+                            </div>
+                        </a>
+                    {{/hidden}}
                 </li>
             {{/chaptersections}}
 
