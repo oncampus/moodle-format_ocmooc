@@ -156,8 +156,9 @@ ul#oc-coursenavlist {
 .ocmooc-navigation li a {
     width: 100%;
     height: 100%; /* Make the buttons and links fill the entire height of their parent */
-    background-color: #eaeaea;
-    border: none;
+    background-color: #f8f9fa;
+    border: 0px solid #f8f9fa;
+    border-width: 0px 1px;
     padding: 5px 10px;
     font-size: 14px;
     cursor: pointer;
@@ -170,15 +171,30 @@ ul#oc-coursenavlist {
 
 .ocmooc-navigation li button:hover,
 .ocmooc-navigation li a:hover {
-    background-color: #ccc;
+    background-color: #eaeaea;
+    border-color:#eaeaea;
 }
-
+.ocmooc-navigation li.active a {
+    background-color: #ffffff;
+    border-color: #dee2e6;
+}
 .ocmooc-nav-link .text-container {
     align-items: flex-start; /* Align elements to the top */
 }
 .course-content .ocmooc {
     padding-left:0px;
 }
+
+@media (max-width: 767.98px) {
+    .format-ocmooc .nav-tabs:not(.more-nav) .nav-link, .format-ocmooc .nav-pills .nav-link {
+        border:1px solid transparent;
+        background-color:transparent;
+        margin: 0 0 -1px 0;
+        padding:0.25rem;
+    }
+}
+
+
 /* Lektionsnavigation */
 #oc-section-navigation {
     border-top: 1px solid #dee2e6;
@@ -201,9 +217,17 @@ ul#oc-coursenavlist {
 .section .label .contentwithoutlink, .section .label .activityinstance {
 	padding:0px;
 }
+
 .ocmooc .activity-item:not(.activityinline) { 
-	border:1px solid transparent;
-	padding:0 1.5rem;
+    border:1px solid transparent;
+}
+@media (min-width: 768px) {
+    .ocmooc .course-section-header {
+        padding: 1rem 1.5rem 0.5rem 1.5rem;
+    }
+    .ocmooc .activity-item:not(.activityinline) { 
+	    padding:0.25rem 1.5rem;
+    }
 }
 .ocmooc .activity-item .activity-information {
     margin-bottom:1rem;
@@ -221,6 +245,9 @@ ul#oc-coursenavlist {
 .ocmooc .activity-item.hiddenactivity,
 .editing .ocmooc .activity-item:hover {
     background-color: #ffffff;
+}
+.editing .ocmooc .activity-item:hover {
+    border-color: #eaeaea;
 }
 
 /* ---- Neue Anpassungen --- */
@@ -270,6 +297,10 @@ ul#oc-coursenavlist {
 #page-course-view-ocmooc .secondary-navigation .navigation .nav-link:focus {
     border-bottom-color: transparent;
     background-color: #ffffff;
+}
+/* Content area */
+.section .activity.modtype_label.label {
+    outline:none;
 }
 
 /* ----------- LOL andere datei highlight ----------------  */
