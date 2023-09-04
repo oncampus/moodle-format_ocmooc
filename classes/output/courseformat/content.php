@@ -59,22 +59,25 @@ class content extends content_base {
             $maxlectionnavitems = 5;
             $countsides         = ($maxlectionnavitems - 1) / 2;
             $sectioncount       = count($sections);
+            if ($lection <= 1) {
+                $data->footerfirst = true;
+            } else if ($lection === $sectioncount) {
+                $data->lastfooter = true;
+            }
             if (count($sections) > $maxlectionnavitems) {
-                $countleft     = $lection - 3 < 0 ? 0 : $lection - 3;
-                $countright    = $countleft === 0 ? abs($lection - 3) : 0;
-                $navlectionarr += array_fill(0, $countright, ['lectionname' => "", 'rawtitle' => "", 'url' => "", 'hidden' => "1"]);
                 if ($lection - $countsides <= 1) {
                     $data->firstsection = true;
                 }
                 if ($lection + $countsides >= $sectioncount) {
                     $data->lastsection = true;
                 }
-                $itemcount     = ($sectioncount - ($lection - 3) - $maxlectionnavitems) > $maxlectionnavitems ?
-                        ($sectioncount - ($lection - 3) - $maxlectionnavitems) : $maxlectionnavitems;
-                $navlectionarr = array_merge($navlectionarr, array_slice($sections, $countleft, $itemcount - $countright));
-                $navlectionarr += array_fill(count($navlectionarr),
-                        ($sectioncount - $lection <= $countsides ? $countsides - ($sectioncount - $lection) : 0),
-                        ['lectionname' => "", 'rawtitle' => "", 'url' => "", 'hidden' => "1"]);
+                $countleft = $lection - 3 > 0 ? $lection - 3 : 0;
+                $overflow  = ($lection - 3) + $maxlectionnavitems >= $sectioncount ?
+                        ($lection - 3) + $maxlectionnavitems - $sectioncount : 0;
+                if ($overflow && $lection > 0) {
+                    $countleft -= $lection > $overflow ? $overflow : $lection;
+                }
+                $navlectionarr = array_slice($sections, $countleft, $maxlectionnavitems);
 
             } else {
                 $navlectionarr      += array_values($sections);

@@ -5,10 +5,10 @@
             <div class="d-flex justify-content-center">
                 
                 <div
-                        {{^firstsection}}id="oc-div-prevlection"{{/firstsection}}
-                    {{#firstsection}} id="oc-div-prevlection-inactive"{{/firstsection}}>
+                        {{^footerfirst}}id="oc-div-prevlection"{{/footerfirst}}
+                    {{#footerfirst}} id="oc-div-prevlection-inactive"{{/footerfirst}}>
                     <a class=" btn-secondary p-2 user-select-none"
-                        {{^firstsection}} href="{{prevsection}} "{{/firstsection}}>
+                        {{^footerfirst}} href="{{prevsection}} "{{/footerfirst}}>
                         &#60;
                         {{#str}} footernav:prev, format_ocmooc {{/str}}
                     </a>
@@ -21,9 +21,9 @@
                 </div>
 
                 <div
-                        {{^lastsection}}id="oc-div-nextlextion"{{/lastsection}}
-                    {{#lastsection}} id="oc-div-nextlextion-inactive"{{/lastsection}}>
-                    <a class="btn-secondary p-2 user-select-none"{{^lastsection}} href="{{nextsection}}" disabled="" {{/lastsection}}>
+                        {{^lastfooter}}id="oc-div-nextlextion"{{/lastfooter}}
+                    {{#lastfooter}} id="oc-div-nextlextion-inactive"{{/lastfooter}}>
+                    <a class="btn-secondary p-2 user-select-none"{{^lastfooter}} href="{{nextsection}}" disabled="" {{/lastfooter}}>
                         {{#str}} footernav:next, format_ocmooc {{/str}}
                         &#62;
                     </a>
