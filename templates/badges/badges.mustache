@@ -1,34 +1,38 @@
 <div class="ocmooc-badges">
-    <h2>{{#str}}badges, format_ocmooc{{/str}}</h2>
-    <div>
-        {{#str}}badge_overview_description{{/str}}
+    <div class="bage-intro mb-5">
+        <h2>{{#str}}badges, format_ocmooc{{/str}}</h2>
+        <div class="mb-3">
+            {{#str}}badge_overview_description, format_ocmooc{{/str}}
+        </div>
+        <ul class="mb-3">
+            <li>
+                <a href="{{profileurl}}">{{#str}}profile_badges, format_ocmooc{{/str}}</a>
+            </li>
+            <li>
+                <a href="{{mybackpack}}">{{#str}}mybackpack, format_ocmooc{{/str}}</a>
+            </li>
+        </ul>
     </div>
-    <ul class="">
-        <li>
-            <a href="{{profileurl}}">{{#str}}profile_badges, format_ocmooc{{/str}}</a>
-        </li>
-        <li>
-            <a href="{{mybackpack}}">{{#str}}mybackpack, format_ocmooc{{/str}}</a>
-        </li>
-    </ul>
-
-    <h2>{{#str}}all_badges, format_ocmooc{{/str}}</h2>
-    {{#allbadges}}
-        <ul>
-            {{> format_ocmooc/badges/singlebadge }}
-        </ul>
-    {{/allbadges}}
-    {{^allbadges}}
-        <div>{{#str}}no_badges_available, format_ocmooc{{/str}}</div>
-    {{/allbadges}}
-
-    <h2>{{#str}}my_badges, format_ocmooc{{/str}}</h2>
-    {{#badges}}
-        <ul>
-            {{> format_ocmooc/badges/singlebadge }}
-        </ul>
-    {{/badges}}
-    {{^badges}}
-        <div>{{#str}}no_badges_awarded, format_ocmooc{{/str}}</div>
-    {{/badges}}
+    <div class="bage-all-badges mb-5">
+        <h2>{{#str}}all_badges, format_ocmooc{{/str}}</h2>
+        {{#allbadges}}
+            <ul>
+                {{> format_ocmooc/badges/singlebadge }}
+            </ul>
+        {{/allbadges}}
+        {{^allbadges}}
+            <div>{{#str}}no_badges_available, format_ocmooc{{/str}}</div>
+        {{/allbadges}}
+    </div>
+    <div class="bage-my-badges mb-5">
+        <h2 class="mt-5">{{#str}}my_badges, format_ocmooc{{/str}}</h2>
+        {{#badges}}
+            <ul>
+                {{> format_ocmooc/badges/singlebadge }}
+            </ul>
+        {{/badges}}
+        {{^badges}}
+            <div>{{#str}}no_badges_awarded, format_ocmooc{{/str}}</div>
+        {{/badges}}
+    </div>
 </div>
