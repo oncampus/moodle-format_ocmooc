@@ -25,16 +25,103 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'OC MOOC';
-$string['addsections'] = 'Add section';
-$string['currentsection'] = 'This section';
-$string['deletesection'] = 'Delete section';
-$string['editsection'] = 'Edit section';
+$string['pluginname']      = 'OC MOOC';
+$string['addsections']     = 'Add section';
+$string['currentsection']  = 'This section';
+$string['deletesection']   = 'Delete section';
+$string['editsection']     = 'Edit section';
 $string['editsectionname'] = 'Edit section name';
-$string['hidefromothers'] = 'Hide section';
-$string['Manage'] = 'manage';
-$string['newsectionname'] = 'New name for section {$a}';
-$string['pluginname'] = 'OC MOOC';
-$string['sectionname'] = 'Section';
-$string['settings'] = 'Settings';
-$string['showfromothers'] = 'Show section';
+$string['hidefromothers']  = 'Hide section';
+$string['Manage']          = 'manage';
+$string['newsectionname']  = 'New name for section {$a}';
+$string['sectionname']     = 'Section';
+$string['settings']        = 'Settings';
+$string['showfromothers']  = 'Show section';
+
+/** forms **/
+/* htmlpageform.php */
+$string['title']   = 'Title';
+$string['content'] = 'content';
+/* participantsform.php */
+$string['anonymized']  = 'Anonymized user name';
+$string['namedisplay'] = 'Display method for the username';
+/* socialform.php */
+$string['url']      = 'URL:';
+$string['youtube']  = 'Youtube';
+$string['twitter']  = 'X';
+$string['facebook'] = 'Facebook';
+$string['mastodon'] = 'Mastodon';
+$string['linkedin'] = 'LinkedIn';
+$string['xing']     = 'Xing';
+$string['other']    = 'Other';
+$string['type']     = 'Type:';
+
+/**  classes/output **/
+/* content.php */
+$string['addchapter'] = 'Add an chapter';
+$string['addlection'] = 'Add an lection';
+
+/** classes/output/state **/
+/* addsection.php */
+
+/**  classes **/
+/* badges.php */
+$string['badges']            = 'Badges';
+$string['no_badges_awarded'] = 'No badges have been earned yet';
+/* base.php */
+$string['default_title'] = 'Default Title';
+$string['editor']        = 'Editor';
+$string['success']       = 'Success';
+$string['failed']        = 'Failed';
+/* htmlpage.php */
+$string['htmlpage'] = 'HTML page';
+$string['edit']     = 'Edit';
+$string['overview'] = 'Overview';
+$string['create']   = 'Create';
+$string['title']    = 'Title';
+$string['created']  = 'Created';
+$string['updated']  = 'Updated';
+$string['actions']  = 'Actions';
+$string['view']     = 'View';
+$string['delete']   = 'Delete';
+/* moocnav.php */
+$string['newsforum']       = 'Newsforum';
+$string['discussionforum'] = 'Discussionforum';
+$string['social']          = 'Social';
+/* sections.php */
+$string['deletesection'] = 'Delete section';
+/* social.php */
+$string['overview']   = 'Overview';
+$string['action']     = 'Action';
+$string['sesskey']    = 'Session key';
+$string['courseid']   = 'Course ID';
+$string['sectionnum'] = 'Section Number';
+
+/**  edit **/
+/* htmlpage.php */
+$string['error:nocapability'] = 'You do not have the capability to view this page';
+$string['participants']       = '';
+/* participants.php */
+$string['htmlpage'] = 'HTML page';
+/* social.php */
+
+/**  templates **/
+/* bagdes.mustache */
+$string['profile_badges'] = 'Profile badges';
+$string['mybackpack']     = 'My backpack';
+$string['all_badges']     = 'All Badges';
+/* chapterheader.mustache */
+$string['chapter'] = 'Chapter';
+/* sectionnav.mustache */
+$string['lection'] = 'Lection';
+/* sectionquicknav.mustache */
+$string['footernav:prev'] = 'Previous lection';
+$string['footernav:top']  = 'Top';
+$string['footernav:next'] = 'Next lection';
+
+/**  lib.php **/
+$string['edit:participants'] = 'Edit particitpants';
+$string['edit:social']       = 'Edit socials';
+$string['edit:htmlpage']     = 'Edit HTML page';
+
+$string['rootsection']     = 'Kurs Administration';

@@ -9,7 +9,7 @@ class socialform extends \moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        $mform->addElement('text', 'title', get_string('title', 'format_ocmooc'));
+        $mform->addElement('text', 'title', get_string('uploadlabel'));
         $mform->setType('title', PARAM_TEXT);
 
         $mform->addElement('text', 'url', get_string('url', 'format_ocmooc'));

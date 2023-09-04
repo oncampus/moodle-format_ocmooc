@@ -8,7 +8,7 @@ use format_ocmooc\forms\searchform;
 require_once($CFG->dirroot . '/enrol/locallib.php');
 
 require_once($CFG->libdir . '/tablelib.php');
-require_once($CFG->dirroot . '/blocks/online_users_map/lib.php');
+require_once($CFG->dirroot . '/blocks/online_users/lib.php');
 
 class participants extends base {
 
@@ -136,61 +136,61 @@ class participants extends base {
         if ($data->profilepicture) {
             $notsortable[] = 'profilepicture';
             $header[] = 'profilepicture';
-            $titles[] = get_string('profilepicture', 'format_ocmooc');
+            $titles[] = get_string('userpic', );
         }
 
         switch ($data->namedisplay) {
             case 1:
                 $header[] = 'username';
-                $titles[] = get_string('username', 'format_ocmooc');
+                $titles[] = get_string('username');
                 break;
             case 2:
                 $notsortable[] = 'name';
                 $header[] = 'name';
-                $titles[] = get_string('name', 'format_ocmooc');
+                $titles[] = get_string('name');
                 break;
             default:
                 $header[] = 'fullname';
-                $titles[] = get_string('fullname', 'format_ocmooc');
+                $titles[] = get_string('fullname');
                 break;
         }
 
         if ($data->email) {
             $header[] = 'email';
-            $titles[] = get_string('email', 'format_ocmooc');
+            $titles[] = get_string('email');
         }
 
         if ($data->town) {
             $header[] = 'town';
-            $titles[] = get_string('town', 'format_ocmooc');
+            $titles[] = get_string('city');
         }
 
         if ($data->country) {
             $header[] = 'country';
-            $titles[] = get_string('country', 'format_ocmooc');
+            $titles[] = get_string('country');
         }
 
         if ($data->roles) {
             $notsortable[] = 'roles';
             $header[] = 'roles';
-            $titles[] = get_string('roles', 'format_ocmooc');
+            $titles[] = get_string('roles');
         }
 
         if ($data->groups) {
             $notsortable[] = 'groups';
             $header[] = 'groups';
-            $titles[] = get_string('groups', 'format_ocmooc');
+            $titles[] = get_string('groups');
         }
 
         if ($data->badges) {
             $notsortable[] = 'badges';
             $header[] = 'badges';
-            $titles[] = get_string('badges', 'format_ocmooc');
+            $titles[] = get_string('badges');
         }
 
         if ($data->lastaccess) {
             $header[] = 'lastaccess';
-            $titles[] = get_string('lastaccess', 'format_ocmooc');
+            $titles[] = get_string('lastaccess');
         }
 
         return [$header, $titles, $notsortable];
