@@ -5,8 +5,8 @@ require_once(__DIR__ . "/../../../../config.php");
 $courseid = required_param('courseid', PARAM_INT);
 $coursecontext = context_course::instance($courseid);
 $course = get_course($courseid);
-
 require_login($courseid);
+$PAGE->set_pagelayout('report');
 
 if ($course->format != 'ocmooc') {
     redirect(new moodle_url('/course/view.php', ['id' => $courseid]));

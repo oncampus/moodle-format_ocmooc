@@ -2,6 +2,7 @@
 
 namespace format_ocmooc;
 
+use core_group\output\group_details;
 use format_ocmooc\forms\participantsform;
 use format_ocmooc\forms\searchform;
 
@@ -22,20 +23,20 @@ class participants extends base {
 
     public function __construct($courseid, $url) {
         parent::__construct($courseid, $url);
-        $this->mform = new participantsform($this->url, ['courseid' => $this->courseid]);
+        $this->mform     = new participantsform($this->url, ['courseid' => $this->courseid]);
         $this->setdatadb = 'format_ocmooc_parts';
 
-        $this->datestring = new \stdClass();
-        $this->datestring->year = get_string('year');
+        $this->datestring        = new \stdClass();
+        $this->datestring->year  = get_string('year');
         $this->datestring->years = get_string('years');
-        $this->datestring->day = get_string('day');
-        $this->datestring->days = get_string('days');
-        $this->datestring->hour = get_string('hour');
+        $this->datestring->day   = get_string('day');
+        $this->datestring->days  = get_string('days');
+        $this->datestring->hour  = get_string('hour');
         $this->datestring->hours = get_string('hours');
-        $this->datestring->min = get_string('min');
-        $this->datestring->mins = get_string('mins');
-        $this->datestring->sec = get_string('sec');
-        $this->datestring->secs = get_string('secs');
+        $this->datestring->min   = get_string('min');
+        $this->datestring->mins  = get_string('mins');
+        $this->datestring->sec   = get_string('sec');
+        $this->datestring->secs  = get_string('secs');
 
         $this->searchform = new searchform($this->url);
 
@@ -45,19 +46,19 @@ class participants extends base {
     protected function render_view_custom() {
         global $PAGE, $COURSE, $DB, $OUTPUT;
 
-        $page = optional_param('page', 0, PARAM_INT);
+        $page    = optional_param('page', 0, PARAM_INT);
         $perpage = optional_param('perpage', 10, PARAM_INT);
 
         $data = $this->get_data();
 
         if ($data->town && $data->country) {
-            $map = get_html_osmmap();
-            echo \html_writer::span($map, 'mb-2');
+            //   $map = get_html_osmmap();
+            //   echo \html_writer::span($map, 'mb-2');
         }
 
         $manager = new \course_enrolment_manager($PAGE, $COURSE);
 
-        list($header, $titles, $nosort) = $this->prepare_table_header();
+        [$header, $titles, $nosort] = $this->prepare_table_header();
 
         $table = new \flexible_table('user-index-participants-' . $this->courseid);
         $table->define_columns($header);
@@ -66,7 +67,7 @@ class participants extends base {
 
         $table->set_attribute('cellspacing', '0');
         $table->set_attribute('id', 'participants');
-        $table->set_attribute('class', 'generaltable generalbox');
+        $table->set_attribute('class', 'generaltable generalbox ');
 
         foreach ($nosort as $col) {
             $table->no_sorting($col);
@@ -77,7 +78,7 @@ class participants extends base {
         $table->setup();
 
         $instances = $manager->get_enrolment_instances();
-        $ids = array();
+        $ids       = [];
         foreach ($instances as $instance) {
             $ids[] = $instance->id;
         }
@@ -85,14 +86,14 @@ class participants extends base {
         unset($instance);
         unset($instances);
 
-        list($insql, $params) = $DB->get_in_or_equal($ids);
+        [$insql, $params] = $DB->get_in_or_equal($ids);
 
         $sql = "SELECT u.* FROM {user} u
                 INNER JOIN {user_enrolments} ue
                     ON u.id = ue.userid
                 WHERE enrolid $insql";
 
-        list($sql, $paramssearch) = $this->handle_search_data($sql);
+        [$sql, $paramssearch] = $this->handle_search_data($sql);
 
         if ($paramssearch) {
             $params = array_merge($params, $paramssearch);
@@ -129,14 +130,14 @@ class participants extends base {
     private function prepare_table_header() {
         $data = $this->get_data();
 
-        $header = [];
-        $titles = [];
+        $header      = [];
+        $titles      = [];
         $notsortable = [];
 
         if ($data->profilepicture) {
             $notsortable[] = 'profilepicture';
-            $header[] = 'profilepicture';
-            $titles[] = get_string('userpic', );
+            $header[]      = 'profilepicture';
+            $titles[]      = get_string('userpic',);
         }
 
         switch ($data->namedisplay) {
@@ -146,8 +147,8 @@ class participants extends base {
                 break;
             case 2:
                 $notsortable[] = 'name';
-                $header[] = 'name';
-                $titles[] = get_string('name');
+                $header[]      = 'name';
+                $titles[]      = get_string('name');
                 break;
             default:
                 $header[] = 'fullname';
@@ -172,20 +173,20 @@ class participants extends base {
 
         if ($data->roles) {
             $notsortable[] = 'roles';
-            $header[] = 'roles';
-            $titles[] = get_string('roles');
+            $header[]      = 'roles';
+            $titles[]      = get_string('roles');
         }
 
         if ($data->groups) {
             $notsortable[] = 'groups';
-            $header[] = 'groups';
-            $titles[] = get_string('groups');
+            $header[]      = 'groups';
+            $titles[]      = get_string('groups');
         }
 
         if ($data->badges) {
             $notsortable[] = 'badges';
-            $header[] = 'badges';
-            $titles[] = get_string('badges');
+            $header[]      = 'badges';
+            $titles[]      = get_string('badges');
         }
 
         if ($data->lastaccess) {
@@ -240,28 +241,31 @@ class participants extends base {
                 $images[] = \html_writer::img($imageurl, $badge->name, ['style' => 'width: 30px; heigth: 30px;']);
             }
 
-            $seperator = \html_writer::tag('span', ', ', ['class' => '']);
+            $seperator  = \html_writer::tag('span', ', ', ['class' => '']);
             $userdata[] = implode($seperator, $images);
         }
 
         if ($data->roles) {
-            $roles = get_user_roles(\context_course::instance($this->courseid), $user->id, false);
+            $roles     = get_user_roles(\context_course::instance($this->courseid), $user->id, false);
             $rolesdata = [];
             foreach ($roles as $role) {
                 $rolesdata[] = \html_writer::tag('span', $role->fullname ?? $role->shortname, ['class' => '']);
             }
-            $seperator = \html_writer::tag('span', ', ', ['class' => '']);
+            $seperator  = \html_writer::tag('span', ', ', ['class' => '']);
             $userdata[] = implode($seperator, $rolesdata);
         }
 
         if ($data->groups) {
-            $groups = groups_get_user_groups($this->courseid, $user->id);
+            $groupsarr     = \groups_get_user_groups($this->courseid, $user->id)[0];
             $groupsdata = [];
-            foreach ($groups as $group) {
-                $groupsdata[] = \html_writer::tag('span', $group->name, ['class' => '']);
+            foreach ($groupsarr as $group) {
+                if ($group) {
+                    $group=  \groups_get_group($group);
+                    $groupsdata[] = \html_writer::tag('span', $group->name, ['class' => '']);
+                }
             }
 
-            $seperator = \html_writer::tag('span', ', ', ['class' => '']);
+            $seperator  = \html_writer::tag('span', ', ', ['class' => '']);
             $userdata[] = implode($seperator, $groupsdata);
         }
 
@@ -278,19 +282,19 @@ class participants extends base {
         if (!isset($this->data)) {
             $data = $DB->get_record($this->setdatadb, ['courseid' => $this->courseid]);
             if (!$data) {
-                $data = new \stdClass();
-                $data->courseid = $this->courseid;
+                $data                 = new \stdClass();
+                $data->courseid       = $this->courseid;
                 $data->profilepicture = true;
-                $data->namedisplay = 0;
-                $data->email = $data->email ?? true;
-                $data->town = $data->town ?? true;
-                $data->country = $data->country ?? true;
-                $data->badges = $data->badges ?? true;
-                $data->roles = $data->roles ?? false;
-                $data->groups = $data->groups ?? false;
-                $data->lastaccess = $data->lastaccess ?? false;
-                $data->created = time();
-                $data->edited = time();
+                $data->namedisplay    = 0;
+                $data->email          = $data->email ?? true;
+                $data->town           = $data->town ?? true;
+                $data->country        = $data->country ?? true;
+                $data->badges         = $data->badges ?? true;
+                $data->roles          = $data->roles ?? false;
+                $data->groups         = $data->groups ?? false;
+                $data->lastaccess     = $data->lastaccess ?? false;
+                $data->created        = time();
+                $data->edited         = time();
 
                 $DB->insert_record('format_ocmooc_parts', $data);
             }
@@ -304,40 +308,40 @@ class participants extends base {
         if ($this->searchform->is_cancelled()) {
             redirect($this->url);
         } else if ($fromform = $this->searchform->get_data()) {
-            $data = $this->get_data();
+            $data       = $this->get_data();
             $searchtext = "%$fromform->searchtext%";
 
             $sql .= " AND ";
 
-            $sqlwhere = array();
+            $sqlwhere = [];
 
-            $params = array();
+            $params = [];
 
             switch ($data->displayname) {
                 case 1:
                     $sqlwhere[] = 'u.username LIKE ?';
-                    $params[] = $searchtext;
+                    $params[]   = $searchtext;
                     break;
                 default:
                     $sqlwhere[] = 'u.firstname LIKE ? OR u.lastname LIKE ?';
-                    $params[] = $searchtext;
-                    $params[] = $searchtext;
+                    $params[]   = $searchtext;
+                    $params[]   = $searchtext;
                     break;
             }
 
             if ($data->email) {
                 $sqlwhere[] = 'u.email LIKE ?';
-                $params[] = $searchtext;
+                $params[]   = $searchtext;
             }
 
             if ($data->town) {
                 $sqlwhere[] = 'u.city LIKE ?';
-                $params[] = $searchtext;
+                $params[]   = $searchtext;
             }
 
             if ($data->country) {
                 $sqlwhere[] = 'u.city LIKE ?';
-                $params[] = $searchtext;
+                $params[]   = $searchtext;
             }
 
             $sql .= '(' . implode(' OR ', $sqlwhere) . ')';
@@ -363,16 +367,16 @@ class participants extends base {
         if ($id) {
             $record->id = $id;
         }
-        $record->courseid = $this->courseid;
+        $record->courseid       = $this->courseid;
         $record->profilepicture = $data->profilepicture ?? false;
-        $record->namedisplay = $data->namedisplay;
-        $record->email = $data->email ?? false;
-        $record->town = $data->town ?? false;
-        $record->country = $data->country ?? false;
-        $record->badges = $data->badges ?? false;
-        $record->roles = $data->roles ?? false;
-        $record->groups = $data->groups ?? false;
-        $record->lastaccess = $data->lastaccess ?? false;
+        $record->namedisplay    = $data->namedisplay;
+        $record->email          = $data->email ?? false;
+        $record->town           = $data->town ?? false;
+        $record->country        = $data->country ?? false;
+        $record->badges         = $data->badges ?? false;
+        $record->roles          = $data->roles ?? false;
+        $record->groups         = $data->groups ?? false;
+        $record->lastaccess     = $data->lastaccess ?? false;
         if (!$id) {
             $record->created = time();
         }
