@@ -85,7 +85,7 @@ $string['actions']  = 'Aktionen';
 $string['view']     = 'Ansicht';
 $string['delete']   = 'Löschen';
 /* moocnav.php */
-$string['newsforum']       = 'Neuigkeitenforum';
+$string['newsforum']       = 'Neuigkeiten';
 $string['discussionforum'] = 'Diskussionsforum';
 $string['social']          = 'Soziale Medien';
 /* sections.php */
@@ -122,4 +122,9 @@ $string['edit:participants'] = 'Teilnehmer bearbeiten';
 $string['edit:social']       = 'Soziale Links bearbeiten';
 $string['edit:htmlpage']     = 'HTML-Seite bearbeiten';
 
-$string['rootsection']     = 'Course administration';
+$string['rootsection']     = 'Kurs Administration';
+
+/* badges.php */
+$string['badge_overview_description']  = 'Mit Kursbadges bzw. digitale Lernabzeichen wird der Fortschritt im Kurs belohnt und sichtbar gemacht.';
+$string['no_badges_available']  = 'Es sind keine Auszeichnungen verfügbar';
+$string['my_badges']  = 'Meine Auszeichnungen';

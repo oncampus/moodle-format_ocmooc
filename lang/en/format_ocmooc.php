@@ -85,7 +85,7 @@ $string['actions']  = 'Actions';
 $string['view']     = 'View';
 $string['delete']   = 'Delete';
 /* moocnav.php */
-$string['newsforum']       = 'Newsforum';
+$string['newsforum']       = 'News';
 $string['discussionforum'] = 'Discussionforum';
 $string['social']          = 'Social';
 /* sections.php */
@@ -124,4 +124,9 @@ $string['edit:participants'] = 'Edit particitpants';
 $string['edit:social']       = 'Edit socials';
 $string['edit:htmlpage']     = 'Edit HTML page';
 
-$string['rootsection']     = 'Kurs Administration';
+$string['rootsection']     = 'Course administration';
+
+/* badges.php */
+$string['badge_overview_description']  = 'Course badges reward and show progress in the course.';
+$string['no_badges_available']  = 'Their are no badges available.';
+$string['my_badges']  = 'My Badges';
