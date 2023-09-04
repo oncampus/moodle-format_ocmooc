@@ -34,7 +34,6 @@ $string['editsectionname'] = 'Edit section name';
 $string['hidefromothers']  = 'Hide section';
 $string['Manage']          = 'manage';
 $string['newsectionname']  = 'New name for section {$a}';
-$string['pluginname']      = 'OC MOOC';
 $string['sectionname']     = 'Section';
 $string['settings']        = 'Settings';
 $string['showfromothers']  = 'Show section';
@@ -44,7 +43,7 @@ $string['showfromothers']  = 'Show section';
 $string['title']   = 'Title';
 $string['content'] = 'content';
 /* participantsform.php */
-$string['anonymized'] = 'Anonymised user name';
+$string['anonymized']  = 'Anonymized user name';
 $string['namedisplay'] = 'Display method for the username';
 /* socialform.php */
 $string['url']      = 'URL:';
@@ -68,9 +67,9 @@ $string['addlection'] = 'Add an lection';
 /**  classes **/
 /* badges.php */
 $string['badges']            = 'Badges';
-$string['no_badges_awarded'] = 'Badges earned';
+$string['no_badges_awarded'] = 'No badges have been earned yet';
 /* base.php */
-$string['default_title'] = 'No badges have been earned yet';
+$string['default_title'] = 'Default Title';
 $string['editor']        = 'Editor';
 $string['success']       = 'Success';
 $string['failed']        = 'Failed';
@@ -108,9 +107,9 @@ $string['htmlpage'] = 'HTML page';
 
 /**  templates **/
 /* bagdes.mustache */
-$string['profile_badges']    = 'Profile badges';
-$string['mybackpack']        = 'My backpack';
-$string['all_badges']        = 'All Badges';
+$string['profile_badges'] = 'Profile badges';
+$string['mybackpack']     = 'My backpack';
+$string['all_badges']     = 'All Badges';
 /* chapterheader.mustache */
 $string['chapter'] = 'Chapter';
 /* sectionnav.mustache */
@@ -124,3 +123,5 @@ $string['footernav:next'] = 'Next lection';
 $string['edit:participants'] = 'Edit particitpants';
 $string['edit:social']       = 'Edit socials';
 $string['edit:htmlpage']     = 'Edit HTML page';
+
+$string['rootsection']     = 'Kurs Administration';
