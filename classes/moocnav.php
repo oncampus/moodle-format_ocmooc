@@ -24,10 +24,23 @@ class moocnav {
                 'url' => (new \moodle_url('/mod/forum/view.php', ['courseid' => $COURSE->id, 'f' => $forum->id]))->out(false)
             ];
         }
-        $moocnav[] = [
-                'name' => get_string('participants', 'format_ocmooc'),
-                'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
-        ];
+
+        $coursecontext = \context_course::instance($COURSE->id);
+        if (is_guest($coursecontext)) {
+            $allowed = get_config('format_ocmooc', 'participants_guest');
+            if ($allowed) {
+                $moocnav[] = [
+                        'name' => get_string('participants', 'format_ocmooc'),
+                        'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
+                ];
+            }
+        } else {
+            $moocnav[] = [
+                    'name' => get_string('participants', 'format_ocmooc'),
+                    'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
+            ];
+        }
+        
         //discussion forum
         $type = 'social';
         if (self::is_forum($type)){
@@ -36,17 +49,6 @@ class moocnav {
                 'name' => get_string('discussionforum', 'format_ocmooc'),
                 'url' => (new \moodle_url('/mod/forum/view.php', ['courseid' => $COURSE->id,'f' => $social->id]))->out(false),
             ];
-        }
-
-        $htmlpages = $DB->get_records('format_ocmooc_htmlsite', ['courseid' => $COURSE->id]);
-        if ($htmlpages) {
-            foreach ($htmlpages as $htmlpage) {
-                $moocnav[] = [
-                        'name' => $htmlpage->title,
-                        'url' => (new \moodle_url('/course/format/ocmooc/views/htmlpage.php',
-                                ['id' => $htmlpage->id, 'courseid' => $COURSE->id]))->out(false),
-                ];
-            }
         }
 
         if (self::is_social_area()) {
@@ -80,8 +82,8 @@ class moocnav {
         $pages = $DB->get_records('format_ocmooc_htmlsite', ['courseid' => $COURSE->id]);
         foreach ($pages as $page) {
             $moocnav[] = [
-                'name' => $pages->title,
-                'url' => new \moodle_url('/course/format/ocmooc/views/page.php', ['courseid' => $COURSE->id, 'id' => $page->id])
+                'name' => $page->title,
+                'url' => (new \moodle_url('/course/format/ocmooc/views/page.php', ['courseid' => $COURSE->id, 'id' => $page->id]))->out(false)
             ];
         }
         return $moocnav;

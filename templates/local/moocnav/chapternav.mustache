@@ -7,26 +7,26 @@
         <i class="icon fa fa-chevron-right fa-fw text-dark" title="Vor" aria-hidden="true"></i>
         <span class="sr-only">Next</span>
     </button>
-    <div id="oc-chapters-nav-inner" class="frame w-100 mx-auto" style="overflow: hidden; padding-top:20px;">
-        <ul id="oc-chapters-slider"class="clearfix" style="width: {{chaptersstartwidth}}px; transform: translateX({{chapterstarttransform}}px);">
-            {{#chapters}}
-                <li class="oc-chapter-item {{#selected}}active{{/selected}}">
-                    {{#imgurl}}
-                    <a class="chapter-card d-block h-100 w-100" href="{{url}}">
-                        <img src="{{imgurl}}" class="chapter-img {{#selected}}active{{/selected}}">
-                    </a>
-                    <i class="icon fa fa-map-marker fa-fw text-dark" title="Zurück" aria-hidden="true"></i>
-                    {{/imgurl}}
-                    {{^imgurl}}
-                        <a class="chapter-card d-block" href="{{url}}">
-                            <div class="bg-light border border-grey border-1" style="height:30px">
-                                <i class="icon fa fa-file-o fa-fw text-dark" title="Nothing" aria-hidden="true"></i>
-                            </div>
-                        </a>
-                        <i class="icon fa fa-map-marker fa-fw text-dark" title="Zurück" aria-hidden="true"></i>
-                    {{/imgurl}}
-                </li>
-            {{/chapters}}
-        </ul>
+    <div class="oc-chapter-mask">
+        <div id="oc-chapters-nav-inner" class="frame w-100 mx-auto" style="overflow: hidden; padding-top:20px;">
+            <ul id="oc-chapters-slider" class="clearfix" style="width: {{chaptersstartwidth}}px; transform: translateX({{chapterstarttransform}}px);">
+                {{#chapters}}
+                    <li class="oc-chapter-item {{#selected}}active{{/selected}}">
+                        {{#imgurl}}
+                            <a class="chapter-card d-block h-100 w-100" href="{{url}}">
+                                <img src="{{imgurl}}" class="chapter-img {{#selected}}active{{/selected}}">
+                            </a>
+                            <i class="icon activicon fa fa-map-marker fa-fw text-dark" title="Zurück" aria-hidden="true"></i>
+                        {{/imgurl}}
+                        {{^imgurl}}
+                            <a class="chapter-card d-block bg-light border border-grey border-1 w-100 h-100" href="{{url}}">
+                                <i class="icon noimage fa fa-file-o fa-fw text-dark" title="Nothing" aria-hidden="true"></i>
+                            </a>
+                            <i class="icon activicon fa fa-map-marker fa-fw text-dark" title="Zurück" aria-hidden="true"></i>
+                        {{/imgurl}}
+                    </li>
+                {{/chapters}}
+            </ul>
+        </div>
     </div>
 </div>

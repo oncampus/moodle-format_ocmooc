@@ -141,9 +141,9 @@ class format_ocmooc extends core_courseformat\base {
             if ($section->section == 0) {
                 return get_string('rootsection', 'format_ocmooc');
             } else if ($section->parent == 0) {
-                return "Chapter " . $this->get_section_manager()->get_chapter_no_from_number($section->section);
+               return get_string('chapter', 'format_ocmooc') . " " . $this->get_section_manager()->get_chapter_no_from_number($section->section);
             } else {
-                return "Lection " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
+               return get_string('lection', 'format_ocmooc') . " " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
             }
         }
     }
@@ -411,7 +411,15 @@ function format_ocmooc_inplace_editable($itemtype, $itemid, $newvalue) {
 }
 
 function format_ocmooc_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
-    if ($course->format != 'ocmooc' && !has_capability('format/ocmooc:edit', $context)) {
+    if ($course->format != 'ocmooc') {
+        return;
+    }
+
+    if (!has_capability('format/ocmooc:edit', $context)) {
+        return;
+    }
+
+    if (is_guest($context)) {
         return;
     }
 

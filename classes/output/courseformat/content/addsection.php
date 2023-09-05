@@ -8,7 +8,7 @@ use stdClass;
 class addsection extends addsection_base {
 
     public function export_for_template(\renderer_base $output): stdClass {
-        global $COURSE;
+        global $COURSE, $CFG;
 
         $data = new stdClass();
 
@@ -41,8 +41,13 @@ class addsection extends addsection_base {
             'newsection' => $maxsections - $lastsection,
         ];
 
+        $context = \context_course::instance($COURSE->id);
         if (count((array)$data)) {
-            $data->showaddsection = true;
+            if (has_capability('moodle/course:update', $context)){
+                $data->showaddsection = true;
+            } else {
+                $data->showaddsection = false;
+            }
         }
 
         return $data;

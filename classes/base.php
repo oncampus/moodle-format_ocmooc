@@ -85,6 +85,8 @@ abstract class base {
             $url = $this->url;
             $url->remove_all_params();
             $url->params(['courseid' => $this->courseid]);
+        } else{
+            $url = new \moodle_url('/course/view.php',['id'=>$this->courseid]);
         }
 
         if ($this->mform->is_cancelled()) {

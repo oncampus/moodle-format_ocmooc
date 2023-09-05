@@ -1,3 +1,32 @@
+// Layout Site
+#oc-chapters-navigation.wrap {
+    max-width: calc(100% - 1rem);
+}
+#page-course-view-ocmooc #page.drawers .main-inner { padding:1.5rem 0; }
+  
+#moocnav .secondary-navigation .navigation {margin:0;}
+#page-course-view-ocmooc #page.drawers div[role="main"] {
+    padding:0;
+}
+@media (max-width: 575px) {
+  #page-course-view-ocmooc #region-main {
+    padding: 0.25rem 0rem;
+  }
+}
+/* Kurstitel + Kapitelname */
+.header-maxwidth .page-context-header,
+#moocnav .chapter-name {
+    margin-left: 1.25rem;
+    margin-right: 1.25rem;
+}
+@media (min-width: 768px){
+  .header-maxwidth,
+  #moocnav .chapter-name {
+    padding: 0 15px;
+  }
+}
+
+
 ul#oc-coursenavlist {
     margin-left: auto;
     margin-right: auto;
@@ -10,29 +39,38 @@ ul#oc-coursenavlist {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 979px) {
-    .wrap {
+    #oc-chapters-navigation.wrap {
         max-width: 610px;
     }
 }
 
-.wrap {
+#oc-chapters-navigation.wrap {
     position: relative;
     margin: 20px auto 30px auto;
-    width: calc(284px * 3);
+    width: calc(284px * 3 + 76px);
     max-width:100%
 }
-
-@media only screen and (min-width: 768px) and (max-width: 979px) {
-    .frame ul li {
-        width: 178px;
-        margin: 20px 0px 20px auto;
-    }
+.oc-chapter-mask {
+    display:flex;
+    max-width:calc(100% - 76px);
+    overflow:hidden;
+    margin:0 auto;
+    -webkit-box-pack: center!important;
+    -ms-flex-pack: center!important;
+    justify-content: center!important;
+}
+#oc-chapters-nav-inner.frame {
+    width:calc(284px * 3) !important;
+    min-width:calc(284px * 3) !important;
+}
+#oc-chapters-slider {
+    transition:margin-left 0.5s ease-in-out 0s;
 }
 
-.frame ul li {
+#oc-chapters-nav-inner.frame ul li {
     float: left;
     width: 280px;
-    height: auto;
+    height: 156px;
     margin: 0px 4px 0px auto;
     padding: 0;
     background: #ddd;
@@ -42,7 +80,7 @@ ul#oc-coursenavlist {
     vertical-align: middle;
 }
 
-.frame ul {
+#oc-chapters-nav-inner.frame ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -50,7 +88,7 @@ ul#oc-coursenavlist {
     vertical-align: middle;
 }
 
-.frame ul li img {
+#oc-chapters-nav-inner.frame ul li img {
     width: 100%;
     height: 100%;
     padding: 0;
@@ -58,11 +96,15 @@ ul#oc-coursenavlist {
     opacity: 0.6;
     object-fit: cover;
 }
-
-.frame ul li img.active {
-    opacity: 1 !important;
+#oc-chapters-nav-inner.frame ul li a:hover img {
+    opacity: 1;
 }
-.frame ul li .icon {
+
+#oc-chapters-nav-inner.frame ul li.active img,
+#oc-chapters-nav-inner.frame ul li.center img {
+    opacity: 1;
+}
+#oc-chapters-nav-inner.frame ul li .activicon {
     position: absolute;
     top: -1.25rem;
     font-size: 40px;
@@ -73,8 +115,18 @@ ul#oc-coursenavlist {
     text-shadow: 0.5px 2px 1px rgba(255, 255, 255,0.75);
     display:none;
 }
-.frame ul li.active .icon {
+#oc-chapters-nav-inner.frame ul li.active .activicon {
     display:block;
+}
+#oc-chapters-nav-inner.frame ul li .icon.noimage {
+    position: absolute;
+    top: 3.25rem;
+    font-size: 2.75rem;
+    width:280px;
+    height:45px;
+    text-align: center;
+    display:block;
+    opacity:0.25;
 }
 
 .chapters-control-prev, .chapters-control-next {
@@ -85,7 +137,7 @@ ul#oc-coursenavlist {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
+    width: 38px;
     padding: 0;
     color: #fff;
     text-align: center;
@@ -102,10 +154,12 @@ ul#oc-coursenavlist {
     height:40px;
 }
 .chapters-control-prev {
-    left:-50px;
+    left:0;
+    padding:0 0.75rem 0 0 !important;
 }
 .chapters-control-next {
-    right:-50px;
+    right:0;
+    padding:0 0 0 0.75rem !important;
 }
 .chapters-control-prev:target, .chapters-control-next:target {
     scroll-margin-top: unset;
@@ -146,8 +200,9 @@ ul#oc-coursenavlist {
 .ocmooc-navigation li a {
     width: 100%;
     height: 100%; /* Make the buttons and links fill the entire height of their parent */
-    background-color: #eaeaea;
-    border: none;
+    background-color: #f8f9fa;
+    border: 0px solid #f8f9fa;
+    border-width: 0px 1px;
     padding: 5px 10px;
     font-size: 14px;
     cursor: pointer;
@@ -160,15 +215,27 @@ ul#oc-coursenavlist {
 
 .ocmooc-navigation li button:hover,
 .ocmooc-navigation li a:hover {
-    background-color: #ccc;
+    background-color: #eaeaea;
+    border-color:#eaeaea;
 }
-
+.ocmooc-navigation li.active a {
+    background-color: #ffffff;
+    border-color: #dee2e6;
+}
 .ocmooc-nav-link .text-container {
     align-items: flex-start; /* Align elements to the top */
 }
-.course-content .ocmooc {
-    padding-left:0px;
+
+@media (max-width: 767.98px) {
+    .format-ocmooc .nav-tabs:not(.more-nav) .nav-link, .format-ocmooc .nav-pills .nav-link {
+        border:1px solid transparent;
+        background-color:transparent;
+        margin: 0 0 -1px 0;
+        padding:0.25rem;
+    }
 }
+
+
 /* Lektionsnavigation */
 #oc-section-navigation {
     border-top: 1px solid #dee2e6;
@@ -179,22 +246,95 @@ ul#oc-coursenavlist {
     background-color:#fff;
 }
 
+/* MOOC Content Anpassungen */
+@media (min-width: 992px){
+	#page.drawers.show-drawer-left { 
+		padding-left:0px;
+	}
+}
+.course-content ul.ocmooc {
+	max-width: 880px;
+    margin:0 auto 1rem auto;
+}
+/* Content area */
+.course-content .ocmooc {
+    padding-left:0px;
+}
+.section .label .contentwithoutlink, .section .label .activityinstance {
+	padding:0px;
+}
+
+.ocmooc .activity-item:not(.activityinline) { 
+    border:1px solid transparent;
+}
+
+.ocmooc .course-section-header,
+.ocmooc .chapter-name {
+    padding: 1rem 1.25rem 0.5rem 1.25rem;
+}
+.format-ocmooc.path-course-view li.activity > .activity-item {
+    padding:0.25rem 1.25rem;
+}
+@media (min-width: 768px) {
+    .ocmooc .course-section-header {
+        padding: 1rem 1.5rem 0.5rem 1.5rem;
+    }
+    .format-ocmooc.path-course-view li.activity > .activity-item { 
+	    padding:0.75rem 1.5rem;
+    }
+}
+
+.ocmooc .activity-item .activity-information {
+    margin-bottom:0.5rem;
+}
+.ocmooc .section .label .contentwithoutlink, .section .label .activityinstance {
+    padding-right:0px;
+}
+.editing .ocmooc .section .activity .contentwithoutlink, 
+.editing .ocmooc .section .activity .activityinstance {
+    padding-right:40px;
+}
+.ocmooc .course-section-header .icons-collapse-expand {
+    display:none;
+}
+.ocmooc .activity-item.hiddenactivity,
+.editing .ocmooc .activity-item:hover {
+    background-color: #ffffff;
+}
+.editing .ocmooc .activity-item:hover {
+    border-color: #eaeaea;
+}
+
+
+/* Footer Navigation */
+.oc-div-footerlinks #oc-div-prevlection, .oc-div-footerlinks #oc-div-nextlection {
+    min-width:175px;
+} 
+.oc-div-footerlinks .btn.inactive {
+    cursor:default !important;
+    -webkit-user-select: none !important;
+    -ms-user-select: none;
+    opacity:0.7;
+}
 
 /* ---- Neue Anpassungen --- */
 /* SCSS for course layout */
 /* Kapitelnavigation */
-#page-course-view-ocmooc.format-ocmooc #topofscroll > .secondary-navigation {
+#page-course-view-ocmooc.format-ocmooc #topofscroll > .secondary-navigation,
+.format-ocmooc.path-course #topofscroll > .secondary-navigation {
     max-width: 100px;
     float: right;
     padding-bottom:0px;
     margin-right:15px;
     display:none;
 }
-#page-course-view-ocmooc.editing #topofscroll > .secondary-navigation {
+#page-course-view-ocmooc.editing #topofscroll > .secondary-navigation,
+.format-ocmooc.path-course.editing #topofscroll > .secondary-navigation {
     display:block;
 }
 
-#page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation  {
+#page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation,
+.format-ocmooc.path-course #topofscroll > .secondary-navigation .navigation  {
     padding: 0;
     background-color:transparent;    
 }
@@ -203,18 +343,20 @@ ul#oc-coursenavlist {
     padding-top:10px;
     border-top: 1px solid transparent;
 }
-#page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation .nav-link.active:hover {
+#page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation .nav-link.active:hover,
+.format-ocmooc.path-course #topofscroll > .secondary-navigation .navigation .nav-link.active:hover {
     border-top: 1px solid #dee2e6;
 }
-#page-course-view-ocmooc.format-ocmooc #region-main .secondary-navigation {
 
-}
 #page-course-view-ocmooc #region-main .secondary-navigation .navigation {
     background-color:#f8f9fa;
     border-top: 1px solid #dee2e6;  
 }
 #page-course-view-ocmooc .secondary-navigation .navigation .nav-tabs {
     background-color:transparent;
+}
+#page-course-view-ocmooc .topofscoll .secondary-navigation .navigation .nav-tabs {
+    flex-wrap:nowrap;
 }
 #page-course-view-ocmooc #region-main .moremenu .nav-link:hover, 
 #page-course-view-ocmooc #region-main .moremenu .nav-link:focus {
@@ -225,6 +367,38 @@ ul#oc-coursenavlist {
 #page-course-view-ocmooc .secondary-navigation .navigation .nav-link:focus {
     border-bottom-color: transparent;
     background-color: #ffffff;
+}
+/* Content area */
+.section .activity.modtype_label.label {
+    outline:none;
+}
+/* -- Badge-Seite -- */
+.ocmooc-badges {
+    max-width:1080px;
+    margin:0 auto;
+    padding:1.5rem;
+}
+.ocmooc-badges .bage-all-badges ul,
+.ocmooc-badges .bage-my-badges ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding:0;
+}
+.ocmooc-badges .bage-all-badges li,
+.ocmooc-badges .bage-my-badges li {
+    list-style: none;
+    display: list-item;
+    text-align:center;
+    padding:0.75rem;
+    min-width:20%;
+}
+.ocmooc-badges .bage-all-badges li img,
+.ocmooc-badges .bage-my-badges li img {
+    max-width:75px;   
+}
+.ocmooc-badges .badge-name {
+    display:block;
 }
 
 /* ----------- LOL andere datei highlight ----------------  */
