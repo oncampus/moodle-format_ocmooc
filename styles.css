@@ -250,6 +250,17 @@ ul#oc-coursenavlist {
     border-color: #eaeaea;
 }
 
+/* Footer Navigation */
+.oc-div-footerlinks #oc-div-prevlection, .oc-div-footerlinks #oc-div-nextlection {
+    min-width:175px;
+} 
+.oc-div-footerlinks .btn.inactive {
+    cursor:default !important;
+    -webkit-user-select: none !important;
+    -ms-user-select: none;
+    opacity:0.7;
+}
+
 /* ---- Neue Anpassungen --- */
 /* SCSS for course layout */
 /* Kapitelnavigation */

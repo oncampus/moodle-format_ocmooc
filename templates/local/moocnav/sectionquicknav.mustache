@@ -1,33 +1,25 @@
 {{#quicknav}}
     <hr>
-    <div id="" class="oc-div-footerlinks-outer card-text content">
-        <div id="" class="oc-div-footerlinks ">
-            <div class="d-flex justify-content-center">
+    <div id="oc-footer-moocnav" class="oc-div-footerlinks-outer card-text content">
+        <div class="oc-div-footerlinks ">
+            <div class="d-flex justify-content-center">  
+                <a id="oc-div-prevlection" class="btn btn-secondary p-2 pr-3 
+                oc-div-prev {{#footerfirst}}inactive{{/footerfirst}}"
+                href="{{^footerfirst}}{{prevsection}}{{/footerfirst}}">
+                    <i class="icon fa fa-chevron-left fa-fw text-dark mr-2 ml-0" aria-hidden="true"></i>
+                    {{#str}} footernav:prev, format_ocmooc {{/str}}
+                </a>
                 
-                <div
-                        {{^footerfirst}}id="oc-div-prevlection"{{/footerfirst}}
-                    {{#footerfirst}} id="oc-div-prevlection-inactive"{{/footerfirst}}>
-                    <a class=" btn-secondary p-2 user-select-none"
-                        {{^footerfirst}} href="{{prevsection}} "{{/footerfirst}}>
-                        &#60;
-                        {{#str}} footernav:prev, format_ocmooc {{/str}}
-                    </a>
-                </div>
-                
-                <div id="oc-div-up" class="mx-2">
-                    <a class="btn-primary p-2 user-select-none" href="#moocnav">
-                        {{#str}} footernav:top, format_ocmooc {{/str}}
-                    </a>
-                </div>
+                <a id="oc-div-up" class="btn btn-primary mx-2 p-2" href="#moocnav">
+                    {{#str}} footernav:top, format_ocmooc {{/str}}
+                </a>
 
-                <div
-                        {{^lastfooter}}id="oc-div-nextlextion"{{/lastfooter}}
-                    {{#lastfooter}} id="oc-div-nextlextion-inactive"{{/lastfooter}}>
-                    <a class="btn-secondary p-2 user-select-none"{{^lastfooter}} href="{{nextsection}}" disabled="" {{/lastfooter}}>
-                        {{#str}} footernav:next, format_ocmooc {{/str}}
-                        &#62;
-                    </a>
-                </div>
+                <a id="oc-div-nextlextion" class="btn btn-secondary p-2 pl-3 
+                oc-div-next {{#lastfooter}}inactive{{/lastfooter}}"
+                href="{{^lastfooter}}{{nextsection}}{{/lastfooter}}">
+                    {{#str}} footernav:next, format_ocmooc {{/str}}
+                    <i class="icon fa fa-chevron-right fa-fw text-dark mr-0 ml-2" aria-hidden="true"></i>
+                </a>
             </div>
         </div>
     </div>
