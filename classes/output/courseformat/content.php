@@ -131,15 +131,13 @@ class content extends content_base {
                     if ($PAGE->user_is_editing()) {
                         $section->editurl = (new \moodle_url('/course/editsection.php', ['id' => $sectionid]));
                     }
-
-                    $file = $DB->get_record('files',
-                            ['contextid' => $context->id, 'component' => 'course', 'filearea' => 'section', 'itemid' => $sectionid,
-                            ]);
-                    if ($file) {
-                        $section->imgurl = \moodle_url::make_pluginfile_url($context->id, 'course', 'section', $sectionid, '/',
-                                $file->filename);
-                    } else {
-                        // TODO: Use placeholder image url.
+                    //get images
+                    if ($section->summary->summarytext){
+                        $img_link = explode('src="', $section->summary->summarytext);
+                        if (count($img_link) > 1){
+                            $img = substr($img_link[1],0, strpos($img_link[1], '"' ));
+                            $section->imgurl = $img;
+                        }
                     }
 
                     $section->section      = $sectionnum;
