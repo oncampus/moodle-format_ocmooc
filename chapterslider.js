@@ -15,7 +15,7 @@ var startPosition = 0;
 /* window.addEventListener("resize", checkWidth); */
 
 function getAlleItems() {
-    return document.getElementById('oc-chapters-slider').getElementsByTagName('li');
+    return document.getElementById('oc-chapters-slider').getElementsByClassName('oc-chapter-item');
 }
 
 function getCurrentActiveIndex() {
@@ -46,16 +46,6 @@ function resetOpacity(index) {
     }
 }
 
-/*
-function checkWidth() {
-    containerWidth = container.offsetWidth;
-    setParams(containerWidth);
-}
-function setParams() {
-}
-setParams(); 
-*/
-
 function slideRight() {
     if (currentPosition != 0) {
         slider.style.marginLeft = currentMargin + 284 + 'px';
@@ -73,14 +63,14 @@ function slideRight() {
 }
 
 function slideLeft() {
-    if (currentPosition != slidesCount) {
+    if (currentPosition < slides) {
         slider.style.marginLeft = currentMargin - 284 + 'px';
         currentMargin -= 284;
         resetOpacity(currentPosition);
         currentPosition++;
         setOpacity(currentPosition);
     }
-    if (currentPosition == slidesCount) {
+    if (currentPosition == slides) {
         buttons[1].classList.add('inactive');
     }
     if (currentPosition > 0) {
