@@ -125,6 +125,8 @@ $string['edit:social']       = 'Edit socials';
 $string['edit:htmlpage']     = 'Edit HTML page';
 
 $string['rootsection']     = 'Course administration';
+$string['numberedchapter'] = 'Chapter {a}';
+$string['numberedlection'] = 'Lection {a}';
 
 /* badges.php */
 $string['badge_overview_description']  = 'Course badges reward and show progress in the course.';

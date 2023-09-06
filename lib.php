@@ -140,10 +140,10 @@ class format_ocmooc extends core_courseformat\base {
         } else {
             if ($section->section == 0) {
                 return get_string('rootsection', 'format_ocmooc');
-            }else            if ($section->parent == 0) {
-                return "Chapter " . $this->get_section_manager()->get_chapter_no_from_number($section->section);
+            } else if ($section->parent == 0) {
+               return get_string('chapter', 'format_ocmooc') . " " . $this->get_section_manager()->get_chapter_no_from_number($section->section);
             } else {
-                return "Lection " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
+               return get_string('lection', 'format_ocmooc') . " " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
             }
         }
     }

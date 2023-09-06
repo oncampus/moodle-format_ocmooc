@@ -123,6 +123,8 @@ $string['edit:social']       = 'Soziale Links bearbeiten';
 $string['edit:htmlpage']     = 'HTML-Seite bearbeiten';
 
 $string['rootsection']     = 'Kurs Administration';
+$string['numberedchapter'] = 'Kapitel {a}';
+$string['numberedlection'] = 'Lektion {a}';
 
 /* badges.php */
 $string['badge_overview_description']  = 'Mit Kursbadges bzw. digitale Lernabzeichen wird der Fortschritt im Kurs belohnt und sichtbar gemacht.';
