@@ -15,7 +15,7 @@
             {{#chaptersections}}
                 <li class="ocmooc-nav-item {{#selected}}active{{/selected}}">
                     {{^hidden}}
-                        <a class="ocmooc-nav-link" href="{{url}}">
+                        <a class="ocmooc-nav-link flex flex-column" href="{{url}}">
                             <div class="text-container">
                                 {{#lectionname}}
                                     <div>{{#str}}lection, format_ocmooc{{/str}}</div>
@@ -31,6 +31,18 @@
                                 <div>{{sectionnum}}</div>
                                 <!-- progress for current progress of lection -->
                             </div>
+                            {{#progress}}
+                                <div class="oc-progress-div w-100 mx-1" style="float: bottom; position: relative;  background: gray;">
+                                    <div class="w-100 m-0 p-0 float-left position-absolute" style="height: 15px;">
+                                        <div style="width: {{progress}}%; height: 15px; background: #7fce24; text-align: center; float: left;" id="oc-progress-{{sectionnum}}">
+                                            <div class="position-absolute w-100 p-0" style=" font-size: 12px; line-height: 14px;color: #222; text-align: center;"
+                                                 id="oc-progress-text-{{sectionnum}}">
+                                                {{progress}}%
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/progress}}
                         </a>
                     {{/hidden}}
                 </li>
