@@ -18,17 +18,22 @@ ul#oc-coursenavlist {
 #oc-chapters-navigation.wrap {
     position: relative;
     margin: 20px auto 30px auto;
-    width: calc(284px * 3);
+    width: calc(284px * 3 + 76px);
     max-width:100%
 }
-
-@media only screen and (min-width: 768px) and (max-width: 979px) {
-    #oc-chapters-nav-inner.frame ul li {
-        width: 178px;
-        margin: 20px 0px 20px auto;
-    }
+.oc-chapter-mask {
+    display:flex;
+    max-width:calc(100% - 76px);
+    overflow:hidden;
+    margin:0 auto;
+    -webkit-box-pack: center!important;
+    -ms-flex-pack: center!important;
+    justify-content: center!important;
 }
-
+#oc-chapters-nav-inner.frame {
+    width:calc(284px * 3) !important;
+    min-width:calc(284px * 3) !important;
+}
 #oc-chapters-nav-inner.frame ul li {
     float: left;
     width: 280px;
@@ -95,7 +100,7 @@ ul#oc-coursenavlist {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
+    width: 38px;
     padding: 0;
     color: #fff;
     text-align: center;
@@ -112,10 +117,12 @@ ul#oc-coursenavlist {
     height:40px;
 }
 .chapters-control-prev {
-    left:-50px;
+    left:0;
+    padding:0 0.75rem 0 0 !important;
 }
 .chapters-control-next {
-    right:-50px;
+    right:0;
+    padding:0 0 0 0.75rem !important;
 }
 .chapters-control-prev:target, .chapters-control-next:target {
     scroll-margin-top: unset;
