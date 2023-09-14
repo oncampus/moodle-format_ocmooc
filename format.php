@@ -51,3 +51,4 @@ echo $renderer->render($widget);
 
 // Include any format js module here using $PAGE->requires->js.
 $PAGE->requires->js('/course/format/ocmooc/chapterslider.js');
+$PAGE->requires->js('/course/format/ocmooc/amd/build/hvp_resizer_parent.min.js',true);
