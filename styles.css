@@ -1,3 +1,33 @@
+// Layout Site
+#oc-chapters-navigation.wrap {
+    max-width: calc(100% - 1rem);
+}
+#page-course-view-ocmooc #page.drawers .main-inner { padding:1.5rem 0; }
+  
+#moocnav .secondary-navigation .navigation {margin:0;}
+#page-course-view-ocmooc #page.drawers div[role="main"] {
+    padding:0;
+}
+@media (max-width: 575px) {
+  #page-course-view-ocmooc #region-main {
+    padding: 0.25rem 0rem;
+  }
+}
+.header-maxwidth {
+    margin-left: 1.25rem;
+    margin-right: 1.25rem;
+}
+@media (min-width: 768px){
+  .header-maxwidth {
+    padding: 0 15px;
+  }
+  .mooc-name-chapter-quickedit {
+      padding:0 15px;
+  }
+}
+// Ende Layout
+
+
 ul#oc-coursenavlist {
     margin-left: auto;
     margin-right: auto;
