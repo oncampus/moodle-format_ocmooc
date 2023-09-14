@@ -74,7 +74,7 @@ class htmlpage extends base {
         $createurl = new \moodle_url($this->url);
         $createurl->remove_all_params();
         $createurl->params(['courseid' => $this->courseid, 'action' => 'create']);
-        echo \html_writer::link($createurl, get_string('create', 'format_ocmoooc'), ['class' => 'btn btn-primary my-2']);
+        echo \html_writer::link($createurl, get_string('create', 'format_ocmooc'), ['class' => 'btn btn-primary my-2']);
 
         $table = new \flexible_table('format_ocmooc_htmlsites_overview');
         $table->define_columns(array(
