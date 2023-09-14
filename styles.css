@@ -13,19 +13,18 @@
     padding: 0.25rem 0rem;
   }
 }
-.header-maxwidth {
+/* Kurstitel + Kapitelname */
+.header-maxwidth .page-context-header,
+#moocnav .chapter-name {
     margin-left: 1.25rem;
     margin-right: 1.25rem;
 }
 @media (min-width: 768px){
-  .header-maxwidth {
+  .header-maxwidth,
+  #moocnav .chapter-name {
     padding: 0 15px;
   }
-  .mooc-name-chapter-quickedit {
-      padding:0 15px;
-  }
 }
-// Ende Layout
 
 
 ul#oc-coursenavlist {
@@ -226,9 +225,6 @@ ul#oc-coursenavlist {
 .ocmooc-nav-link .text-container {
     align-items: flex-start; /* Align elements to the top */
 }
-.course-content .ocmooc {
-    padding-left:0px;
-}
 
 @media (max-width: 767.98px) {
     .format-ocmooc .nav-tabs:not(.more-nav) .nav-link, .format-ocmooc .nav-pills .nav-link {
@@ -258,6 +254,11 @@ ul#oc-coursenavlist {
 }
 .course-content ul.ocmooc {
 	max-width: 880px;
+    margin:0 auto 1rem auto;
+}
+/* Content area */
+.course-content .ocmooc {
+    padding-left:0px;
 }
 .section .label .contentwithoutlink, .section .label .activityinstance {
 	padding:0px;
@@ -266,16 +267,25 @@ ul#oc-coursenavlist {
 .ocmooc .activity-item:not(.activityinline) { 
     border:1px solid transparent;
 }
+
+.ocmooc .course-section-header,
+.ocmooc .chapter-name {
+    padding: 1rem 1.25rem 0.5rem 1.25rem;
+}
+.format-ocmooc.path-course-view li.activity > .activity-item {
+    padding:0.25rem 1.25rem;
+}
 @media (min-width: 768px) {
     .ocmooc .course-section-header {
         padding: 1rem 1.5rem 0.5rem 1.5rem;
     }
-    .ocmooc .activity-item:not(.activityinline) { 
-	    padding:0.25rem 1.5rem;
+    .format-ocmooc.path-course-view li.activity > .activity-item { 
+	    padding:0.75rem 1.5rem;
     }
 }
+
 .ocmooc .activity-item .activity-information {
-    margin-bottom:1rem;
+    margin-bottom:0.5rem;
 }
 .ocmooc .section .label .contentwithoutlink, .section .label .activityinstance {
     padding-right:0px;
@@ -294,6 +304,7 @@ ul#oc-coursenavlist {
 .editing .ocmooc .activity-item:hover {
     border-color: #eaeaea;
 }
+
 
 /* Footer Navigation */
 .oc-div-footerlinks #oc-div-prevlection, .oc-div-footerlinks #oc-div-nextlection {
@@ -343,6 +354,9 @@ ul#oc-coursenavlist {
 }
 #page-course-view-ocmooc .secondary-navigation .navigation .nav-tabs {
     background-color:transparent;
+}
+#page-course-view-ocmooc .topofscoll .secondary-navigation .navigation .nav-tabs {
+    flex-wrap:nowrap;
 }
 #page-course-view-ocmooc #region-main .moremenu .nav-link:hover, 
 #page-course-view-ocmooc #region-main .moremenu .nav-link:focus {
