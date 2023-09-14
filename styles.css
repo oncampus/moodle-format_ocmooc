@@ -372,6 +372,34 @@ ul#oc-coursenavlist {
 .section .activity.modtype_label.label {
     outline:none;
 }
+/* -- Badge-Seite -- */
+.ocmooc-badges {
+    max-width:1080px;
+    margin:0 auto;
+    padding:1.5rem;
+}
+.ocmooc-badges .bage-all-badges ul,
+.ocmooc-badges .bage-my-badges ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding:0;
+}
+.ocmooc-badges .bage-all-badges li,
+.ocmooc-badges .bage-my-badges li {
+    list-style: none;
+    display: list-item;
+    text-align:center;
+    padding:0.75rem;
+    min-width:20%;
+}
+.ocmooc-badges .bage-all-badges li img,
+.ocmooc-badges .bage-my-badges li img {
+    max-width:75px;   
+}
+.ocmooc-badges .badge-name {
+    display:block;
+}
 
 /* ----------- LOL andere datei highlight ----------------  */
 /* SCSS for marking areas width icons an colors*/

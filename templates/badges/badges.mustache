@@ -15,22 +15,22 @@
     </div>
     <div class="bage-all-badges mb-5">
         <h2>{{#str}}all_badges, format_ocmooc{{/str}}</h2>
-        {{#allbadges}}
-            <ul>
+        <ul class="badge-list-all badge-list">
+        {{#allbadges}}        
                 {{> format_ocmooc/badges/singlebadge }}
-            </ul>
         {{/allbadges}}
+         </ul>
         {{^allbadges}}
             <div>{{#str}}no_badges_available, format_ocmooc{{/str}}</div>
         {{/allbadges}}
     </div>
     <div class="bage-my-badges mb-5">
         <h2 class="mt-5">{{#str}}my_badges, format_ocmooc{{/str}}</h2>
+        <ul class="badge-list-my badge-list">
         {{#badges}}
-            <ul>
-                {{> format_ocmooc/badges/singlebadge }}
-            </ul>
+            {{> format_ocmooc/badges/singlebadge }}
         {{/badges}}
+        </ul>
         {{^badges}}
             <div>{{#str}}no_badges_awarded, format_ocmooc{{/str}}</div>
         {{/badges}}
