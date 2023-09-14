@@ -100,7 +100,7 @@ $string['sectionnum'] = 'Section Number';
 /**  edit **/
 /* htmlpage.php */
 $string['error:nocapability'] = 'You do not have the capability to view this page';
-$string['participants']       = '';
+$string['participants']       = 'Participants';
 /* participants.php */
 $string['htmlpage'] = 'HTML page';
 /* social.php */
