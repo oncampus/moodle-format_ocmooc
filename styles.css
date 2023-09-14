@@ -64,6 +64,10 @@ ul#oc-coursenavlist {
     width:calc(284px * 3) !important;
     min-width:calc(284px * 3) !important;
 }
+#oc-chapters-slider {
+    transition:margin-left 0.5s ease-in-out 0s;
+}
+
 #oc-chapters-nav-inner.frame ul li {
     float: left;
     width: 280px;
@@ -93,9 +97,13 @@ ul#oc-coursenavlist {
     opacity: 0.6;
     object-fit: cover;
 }
+#oc-chapters-nav-inner.frame ul li a:hover img {
+    opacity: 1;
+}
 
-#oc-chapters-nav-inner.frame ul li img.active {
-    opacity: 1 !important;
+#oc-chapters-nav-inner.frame ul li.active img,
+#oc-chapters-nav-inner.frame ul li.center img {
+    opacity: 1;
 }
 #oc-chapters-nav-inner.frame ul li .activicon {
     position: absolute;
