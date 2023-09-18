@@ -134,8 +134,10 @@ class htmlpage extends base {
         }
 
         $data = $DB->get_record($this->setdatadb, $params);
+        if($data){
         $data->content = ['text' => $data->content, 'format' => 1];
         $this->mform->set_data($data);
+        }
     }
 
     protected function handle_data($data) {
