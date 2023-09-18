@@ -38,17 +38,6 @@ class moocnav {
             ];
         }
 
-        $htmlpages = $DB->get_records('format_ocmooc_htmlsite', ['courseid' => $COURSE->id]);
-        if ($htmlpages) {
-            foreach ($htmlpages as $htmlpage) {
-                $moocnav[] = [
-                        'name' => $htmlpage->title,
-                        'url' => (new \moodle_url('/course/format/ocmooc/views/htmlpage.php',
-                                ['id' => $htmlpage->id, 'courseid' => $COURSE->id]))->out(false),
-                ];
-            }
-        }
-
         if (self::is_social_area()) {
             $moocnav[] = [
                     'name' => get_string('social', 'format_ocmooc'),
