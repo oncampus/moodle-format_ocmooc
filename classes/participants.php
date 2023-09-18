@@ -232,19 +232,6 @@ class participants extends base {
             $userdata[] = $user->country;
         }
 
-        if ($data->badges) {
-            $badges = badges_get_user_badges($user->id, $this->courseid);
-            $images = [];
-            foreach ($badges as $badge) {
-                $imageurl = \moodle_url::make_pluginfile_url(\context_course::instance($this->courseid)->id, 'badges', 'badgeimage',
-                        $badge->id, '/', 'f1', false);
-                $images[] = \html_writer::img($imageurl, $badge->name, ['style' => 'width: 30px; heigth: 30px;']);
-            }
-
-            $seperator  = \html_writer::tag('span', ', ', ['class' => '']);
-            $userdata[] = implode($seperator, $images);
-        }
-
         if ($data->roles) {
             $roles     = get_user_roles(\context_course::instance($this->courseid), $user->id, false);
             $rolesdata = [];
@@ -267,6 +254,19 @@ class participants extends base {
 
             $seperator  = \html_writer::tag('span', ', ', ['class' => '']);
             $userdata[] = implode($seperator, $groupsdata);
+        }
+
+        if ($data->badges) {
+            $badges = badges_get_user_badges($user->id, $this->courseid);
+            $images = [];
+            foreach ($badges as $badge) {
+                $imageurl = \moodle_url::make_pluginfile_url(\context_course::instance($this->courseid)->id, 'badges', 'badgeimage',
+                        $badge->id, '/', 'f1', false);
+                $images[] = \html_writer::img($imageurl, $badge->name, ['style' => 'width: 30px; heigth: 30px;']);
+            }
+
+            $seperator  = \html_writer::tag('span', ', ', ['class' => '']);
+            $userdata[] = implode($seperator, $images);
         }
 
         if ($data->lastaccess) {
