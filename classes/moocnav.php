@@ -80,8 +80,8 @@ class moocnav {
         $pages = $DB->get_records('format_ocmooc_htmlsite', ['courseid' => $COURSE->id]);
         foreach ($pages as $page) {
             $moocnav[] = [
-                'name' => $pages->title,
-                'url' => new \moodle_url('/course/format/ocmooc/views/page.php', ['courseid' => $COURSE->id, 'id' => $page->id])
+                'name' => $page->title,
+                'url' => (new \moodle_url('/course/format/ocmooc/views/page.php', ['courseid' => $COURSE->id, 'id' => $page->id]))->out(false)
             ];
         }
         return $moocnav;
