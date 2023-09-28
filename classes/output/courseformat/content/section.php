@@ -9,8 +9,11 @@ use stdClass;
 class section extends section_base {
 
     public function export_for_template(renderer_base $output): stdClass {
+        global $PAGE;
         $data = parent::export_for_template($output);
-
+        if ($PAGE->user_is_editing()) {
+            $data->insertafter = false;
+        }
         return $data;
     }
 

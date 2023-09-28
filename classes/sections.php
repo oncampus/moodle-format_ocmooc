@@ -565,6 +565,20 @@ class sections {
         return $lection;
     }
 
+    public function get_sections() {
+        $modinfo  = $this->format->get_modinfo();
+        $chapters = [];
+        foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
+            if ($section->parent === 0 || $sectionnum == 0) {
+                $section->subsections        = [];
+                $chapters[$section->section] = $section;
+            } else {
+                $chapters[$section->parent]->subsections[] = $section;
+            }
+        }
+        return $chapters;
+    }
+
     public function get_subsections($section) {
         $sectionnum  = $this->resolve_section_number($section);
         $subsections = array();

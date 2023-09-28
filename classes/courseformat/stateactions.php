@@ -170,4 +170,27 @@ class stateactions extends \core_courseformat\stateactions {
         $this->course_state($updates, $course);
     }
 
+    /**
+     * Adding a subsection
+     *
+     * @param \core_courseformat\stateupdates $updates
+     * @param stdClass $course
+     * @param array $ids not used
+     * @param int|null $targetsectionid parent section id
+     * @param int|null $targetcmid not used
+     * @return void
+     */
+    public function section_add_subsection(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
+                                           ?int $targetsectionid = null, ?int $targetcmid = null): void {
+        $this->validate_sections($course, [$targetsectionid], __FUNCTION__);
+        require_capability('moodle/course:update', context_course::instance($course->id));
+        /** @var \format_flexsections $format */
+        $format = course_get_format($course);
+        $modinfo = $format->get_modinfo();
+        $targetsection = $modinfo->get_section_info_by_id($targetsectionid, MUST_EXIST);
+        $format->create_new_section($targetsection);
+
+        // Adding subsection affects the full course structure.
+        $this->course_state($updates, $course);
+    }
 }

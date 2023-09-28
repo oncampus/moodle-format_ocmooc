@@ -43,20 +43,50 @@ class fullcontent extends content_base {
      * @return \stdClass data context for a mustache template
      */
     public function export_for_template(\renderer_base $output) {
-        global $PAGE, $DB;
+        global $PAGE, $DB, $COURSE;
         $isediting = $PAGE->user_is_editing();
 
-        $data = parent::export_for_template($output);
+        $data               = parent::export_for_template($output);
         $data->editoradvice = [];
 
         $courseformatoptions = $this->format->get_format_options();
-
+        $data->editing       = $isediting;
         // TODO for now this class is only used if user is editing but check anyway as one day it will be used when not editing.
         if ($isediting) {
-            $course = $this->format->get_course();
+            $course          = $this->format->get_course();
+            $section_handler = $this->format->get_section_manager();
+            $data->chapters  = $section_handler->get_sections();
 
+            $format      = $this->format;
+            $lastsection = $format->get_last_section_number();
+            $maxsections = $format->get_max_sections();
+            foreach ($data->chapters as $chapternumber => $chapter) {
+
+                $params              = [
+                    'courseid' => $COURSE->id,
+                    'action'   => 'addchapter',
+                    'sesskey'  => sesskey(),
+                    'position' => $maxsections - $lastsection
+
+                ];
+                $chapter->addchapter = [
+                    'url'        => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
+                    'title'      => get_string('addchapter', 'format_ocmooc'),
+                    'newsection' => $maxsections - $lastsection,
+                ];
+
+                $params['action']               = 'addlection';
+                $params['chaptersectionnumber'] = $this->get_chapter_section_number($chapternumber);
+
+                $chapter->addlection = [
+                    'url'        => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
+                    'title'      => get_string('addlection', 'format_ocmooc'),
+                    'newsection' => $maxsections - $lastsection,
+                ];
+
+            }
             if (get_config('format_ocmooc', 'allowsubocmoocview')
-            && isset($courseformatoptions['courseusesubocmooc']) && $courseformatoptions['courseusesubocmooc']) {
+                && isset($courseformatoptions['courseusesubocmooc']) && $courseformatoptions['courseusesubocmooc']) {
                 // TODO for now (Beta version) we warn editor about sub ocmooc only appearing in non-edit view.
                 $messgage = get_string('editoradvicesubocmooc', 'format_ocmooc');
                 if (has_capability('moodle/site:config', \context_system::instance())) {
@@ -70,20 +100,20 @@ class fullcontent extends content_base {
             // If completion tracking is on but nothing to track at activity level, display help to teacher.
             $hasnotrackableactivities = $DB->record_exists('course_modules', ['course' => $course->id, 'visible' => 1])
                 && !$DB->record_exists_sql(
-                "SELECT id FROM {course_modules} WHERE course = ? AND visible = 1 AND completion != 0",
-                [$course->id]
-            );
-            if ($hasnotrackableactivities) {
-                $bulklink = \html_writer::link(
-                  new \moodle_url('/course/bulkcompletion.php', array('id' => $course->id)),
-                  get_string('completionwarning_changeinbulk', 'format_ocmooc')
+                    "SELECT id FROM {course_modules} WHERE course = ? AND visible = 1 AND completion != 0",
+                    [$course->id]
                 );
-                $helplink = \html_writer::link(
+            if ($hasnotrackableactivities) {
+                $bulklink             = \html_writer::link(
+                    new \moodle_url('/course/bulkcompletion.php', array('id' => $course->id)),
+                    get_string('completionwarning_changeinbulk', 'format_ocmooc')
+                );
+                $helplink             = \html_writer::link(
                     get_docs_url('Activity_completion_settings#Changing_activity_completion_settings_in_bulk'),
                     $output->pix_icon('help', '', 'core')
                 );
                 $data->editoradvice[] = [
-                    'text' => get_string('completionwarning', 'format_ocmooc') . ' '  . $bulklink . ' ' . $helplink,
+                    'text' => get_string('completionwarning', 'format_ocmooc') . ' ' . $bulklink . ' ' . $helplink,
                     'icon' => 'exclamation-triangle', 'class' => 'warning'
                 ];
             }
@@ -92,13 +122,32 @@ class fullcontent extends content_base {
         return $data;
     }
 
+    private function get_chapter_section_number($chapter) {
+        $modinfo = $this->format->get_modinfo();
+
+        $chaptercount = 1;
+        foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
+            if ($sectionnum == 0) {
+                continue;
+            }
+
+            if ($section->parent === 0) {
+                if ($chapter == $chaptercount) {
+                    return $section->section;
+                }
+                $chaptercount++;
+            }
+        }
+        return false;
+    }
+
     /**
      * Get the release details of this version of ocmooc.
      * @return string
      */
     private static function get_ocmooc_plugin_release(): string {
         global $CFG;
-        $plugin = new \stdClass();
+        $plugin          = new \stdClass();
         $plugin->release = '';
         require("$CFG->dirroot/course/format/ocmooc/version.php");
         return $plugin->release;
