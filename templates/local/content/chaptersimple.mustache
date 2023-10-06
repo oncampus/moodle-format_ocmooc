@@ -1,3 +1,6 @@
+{{$ format_ocmooc/local/content/section}}
+    {{> format_ocmooc/local/content/section}}
+{{/ format_ocmooc/local/content/section}}
 {{#sections}}
     {{$ format_ocmooc/local/content/section}}
         {{> format_ocmooc/local/content/section}}
@@ -5,16 +8,12 @@
 {{/sections}}
 <div class="mdl-left py-2 changenumsections">
     {{#addchapter}}
-        <a
-                href="{{{url}}}"
-        >
+        <a href="{{{url}}}">
             {{title}}
         </a>
     {{/addchapter}}
     {{#addlection}}
-        <a
-                href="{{{url}}}"
-        >
+        <a href="{{{url}}}">
             {{title}}
         </a>
     {{/addlection}}
