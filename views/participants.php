@@ -15,6 +15,8 @@ if ($course->format != 'ocmooc') {
 $url = new moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $courseid]);
 $participants = new \format_ocmooc\participants($courseid, $url);
 
+$participants->check_guest_access();
+
 $participants->setup_page();
 echo $OUTPUT->header();
 

@@ -24,10 +24,23 @@ class moocnav {
                 'url' => (new \moodle_url('/mod/forum/view.php', ['courseid' => $COURSE->id, 'f' => $forum->id]))->out(false)
             ];
         }
-        $moocnav[] = [
-                'name' => get_string('participants', 'format_ocmooc'),
-                'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
-        ];
+
+        $coursecontext = \context_course::instance($COURSE->id);
+        if (is_guest($coursecontext)) {
+            $allowed = get_config('format_ocmooc', 'participants_guest');
+            if ($allowed) {
+                $moocnav[] = [
+                        'name' => get_string('participants', 'format_ocmooc'),
+                        'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
+                ];
+            }
+        } else {
+            $moocnav[] = [
+                    'name' => get_string('participants', 'format_ocmooc'),
+                    'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
+            ];
+        }
+        
         //discussion forum
         $type = 'social';
         if (self::is_forum($type)){

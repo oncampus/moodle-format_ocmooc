@@ -43,17 +43,27 @@ class participants extends base {
         $this->title = get_string('participants', 'format_ocmooc');
     }
 
+    public function check_guest_access() {
+        $coursecontext = \context_course::instance($this->courseid);
+        if (is_guest($coursecontext)) {
+            $allowed = get_config('format_ocmooc', 'participants_guest');
+            if (!$allowed) {
+                redirect(new \moodle_url('/course/view.php', ['id' => $this->courseid]));
+            }
+        }
+    }
+
     protected function render_view_custom() {
         global $PAGE, $COURSE, $DB, $OUTPUT;
 
-        $page    = optional_param('page', 0, PARAM_INT);
+        $page = optional_param('page', 0, PARAM_INT);
         $perpage = optional_param('perpage', 10, PARAM_INT);
 
         $data = $this->get_data();
 
         if ($data->town && $data->country) {
-            //   $map = get_html_osmmap();
-            //   echo \html_writer::span($map, 'mb-2');
+            #$map = get_html_osmmap();
+            #echo \html_writer::span($map, 'mb-2');
         }
 
         $manager = new \course_enrolment_manager($PAGE, $COURSE);
@@ -280,23 +290,38 @@ class participants extends base {
         global $DB;
 
         if (!isset($this->data)) {
-            $data = $DB->get_record($this->setdatadb, ['courseid' => $this->courseid]);
-            if (!$data) {
-                $data                 = new \stdClass();
-                $data->courseid       = $this->courseid;
-                $data->profilepicture = true;
-                $data->namedisplay    = 0;
-                $data->email          = $data->email ?? true;
-                $data->town           = $data->town ?? true;
-                $data->country        = $data->country ?? true;
-                $data->badges         = $data->badges ?? true;
-                $data->roles          = $data->roles ?? false;
-                $data->groups         = $data->groups ?? false;
-                $data->lastaccess     = $data->lastaccess ?? false;
-                $data->created        = time();
-                $data->edited         = time();
+            $context = \context_course::instance($this->courseid);
+            if (is_guest(($context))) {
+                $data = new \stdClass();
 
-                $DB->insert_record('format_ocmooc_parts', $data);
+                $data->profilepicture = get_config('format_ocmooc', 'profilepicture_guest');
+                $data->namedisplay = get_config('format_ocmooc', 'namedisplay_guest');
+                $data->email = get_config('format_ocmooc', 'email_guest');
+                $data->town = get_config('format_ocmooc', 'town_guest');
+                $data->country = get_config('format_ocmooc', 'country_guest');
+                $data->badges = get_config('format_ocmooc', 'badges_guest');
+                $data->roles = get_config('format_ocmooc', 'roles_guest');
+                $data->groups = get_config('format_ocmooc', 'groups_guest');
+                $data->lastaccess = get_config('format_ocmooc', 'lastaccess_guest');
+            } else {
+                $data = $DB->get_record($this->setdatadb, ['courseid' => $this->courseid]);
+                if (!$data) {
+                    $data = new \stdClass();
+                    $data->courseid = $this->courseid;
+                    $data->profilepicture = get_config('format_ocmooc', 'profilepicture');
+                    $data->namedisplay = get_config('format_ocmooc', 'namedisplay');
+                    $data->email = get_config('format_ocmooc', 'town');
+                    $data->town = get_config('format_ocmooc', 'town');
+                    $data->country = get_config('format_ocmooc', 'country');
+                    $data->badges = get_config('format_ocmooc', 'badges');
+                    $data->roles = get_config('format_ocmooc', 'roles');
+                    $data->groups = get_config('format_ocmooc', 'groups');
+                    $data->lastaccess = get_config('format_ocmooc', 'lastaccess');
+                    $data->created = time();
+                    $data->edited = time();
+
+                    $DB->insert_record('format_ocmooc_parts', $data);
+                }
             }
             $this->data = $data;
         }

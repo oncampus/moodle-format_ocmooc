@@ -411,7 +411,15 @@ function format_ocmooc_inplace_editable($itemtype, $itemid, $newvalue) {
 }
 
 function format_ocmooc_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
-    if ($course->format != 'ocmooc' && !has_capability('format/ocmooc:edit', $context)) {
+    if ($course->format != 'ocmooc') {
+        return;
+    }
+
+    if (!has_capability('format/ocmooc:edit', $context)) {
+        return;
+    }
+
+    if (is_guest($context)) {
         return;
     }
 
