@@ -132,3 +132,6 @@ $string['numberedlection'] = 'Lection {a}';
 $string['badge_overview_description']  = 'Course badges reward and show progress in the course.';
 $string['no_badges_available']  = 'Their are no badges available.';
 $string['my_badges']  = 'My Badges';
+
+$string['participants_default'] = 'Participants Default';
+$string['participants_guest'] = 'Participants Guest';

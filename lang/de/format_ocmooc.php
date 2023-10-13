@@ -130,3 +130,6 @@ $string['numberedlection'] = 'Lektion {a}';
 $string['badge_overview_description']  = 'Mit Kursbadges bzw. digitale Lernabzeichen wird der Fortschritt im Kurs belohnt und sichtbar gemacht.';
 $string['no_badges_available']  = 'Es sind keine Auszeichnungen verfügbar';
 $string['my_badges']  = 'Meine Auszeichnungen';
+
+$string['participants_default'] = 'Teilnehmerliste Default';
+$string['participants_guest'] = 'Teilnehmerliste Gast';
