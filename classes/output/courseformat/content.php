@@ -59,11 +59,13 @@ class content extends content_base {
             $maxlectionnavitems = 5;
             $countsides         = ($maxlectionnavitems - 1) / 2;
             $sectioncount       = count($sections);
+
             if ($lection <= 1) {
                 $data->footerfirst = true;
             } else if ($lection === $sectioncount) {
                 $data->lastfooter = true;
             }
+
             if (count($sections) > $maxlectionnavitems) {
                 if ($lection - $countsides <= 1) {
                     $data->firstsection = true;
@@ -86,12 +88,34 @@ class content extends content_base {
             }
             $data->chaptersections = $navlectionarr;
 
-            $params            = ['id' => $COURSE->id, 'chapter' => $chapter];
-            $params['lection'] = $lection + 1;
-            $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
+            $params = ['id' => $COURSE->id, 'chapter' => $chapter];
+            if ($data->lastfooter) {
+                if ($chapter < count($chapters)) {
+                    $data->lastfooter = false;
 
-            $params['lection'] = $lection - 1;
-            $data->prevsection = (new \moodle_url('/course/view.php', $params))->out(false);
+                    $params['chapter'] = $chapter + 1;
+                    $params['lection'] = 1;
+                    $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
+                }
+            } else {
+                $params['lection'] = $lection + 1;
+                $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
+            }
+
+            $params = ['id' => $COURSE->id, 'chapter' => $chapter];
+            if ($data->footerfirst) {
+                if ($chapter > 1) {
+                    $data->footerfirst = false;
+                    $prevsections = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
+
+                    $params['chapter'] = $chapter - 1;
+                    $params['lection'] = count($prevsections);
+                    $data->prevsection = (new \moodle_url('/course/view.php', $params))->out(false);
+                }
+            } else {
+                $params['lection'] = $lection - 1;
+                $data->prevsection = (new \moodle_url('/course/view.php', $params))->out(false);
+            }
         }
 
         #$data->chapters = $this->get_chapters($output);
