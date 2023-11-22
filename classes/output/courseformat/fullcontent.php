@@ -133,7 +133,7 @@ class fullcontent extends content_base {
     private function get_chapter_section_number($chapter) {
         $modinfo = $this->format->get_modinfo();
 
-        $chaptercount = 1;
+        $chaptercount = 0;
         foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
             if ($sectionnum == 0) {
                 continue;

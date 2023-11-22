@@ -26,6 +26,7 @@ switch ($action) {
         break;
     case 'addlection':
         $chaptersectionnumber = required_param('chaptersectionnumber', PARAM_INT);
+        $position = required_param('position', PARAM_INT);
         list($chapterno, $lectiono) = $sectionmanager->add_lection($chaptersectionnumber);
         $redirecturl->param('chapter', $chapterno);
         $redirecturl->param('lection', $lectiono);
