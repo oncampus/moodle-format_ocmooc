@@ -15,8 +15,10 @@ class content extends content_base {
 
         $data = parent::export_for_template($output);
 
-        $chapter  = optional_param('chapter', 1, PARAM_INT);
-        $chapters = $this->get_chapters($output);
+        $chapter           = optional_param('chapter', 1, PARAM_INT);
+        $chapters          = $this->get_chapters($output);
+        $data->lastfooter  = false;
+        $data->footerfirst = false;
 
         if ($chapter <= 0 || $chapter > count($chapters)) {
             $chapter = 1;
@@ -106,7 +108,7 @@ class content extends content_base {
             if ($data->footerfirst) {
                 if ($chapter > 1) {
                     $data->footerfirst = false;
-                    $prevsections = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
+                    $prevsections      = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
 
                     $params['chapter'] = $chapter - 1;
                     $params['lection'] = count($prevsections);
@@ -156,10 +158,10 @@ class content extends content_base {
                         $section->editurl = (new \moodle_url('/course/editsection.php', ['id' => $sectionid]));
                     }
                     //get images
-                    if ($section->summary->summarytext){
+                    if ($section->summary->summarytext) {
                         $img_link = explode('src="', $section->summary->summarytext);
-                        if (count($img_link) > 1){
-                            $img = substr($img_link[1],0, strpos($img_link[1], '"' ));
+                        if (count($img_link) > 1) {
+                            $img             = substr($img_link[1], 0, strpos($img_link[1], '"'));
                             $section->imgurl = $img;
                         }
                     }
@@ -209,6 +211,7 @@ class content extends content_base {
                 $section->rawtitle        = $rawtitle;
                 $section->sectionnum      = $sectionnum;
                 $section->progress        = $this->get_progress_by_section($section);
+                $section->hasnoprogress     = $section->progress === false;
                 $params                   = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
                 $section->url             = (new \moodle_url('/course/view.php', $params))->out(false);
 

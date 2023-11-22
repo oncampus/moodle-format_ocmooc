@@ -143,7 +143,7 @@ class format_ocmooc extends core_courseformat\base {
             } else if ($section->parent == 0) {
                return get_string('chapter', 'format_ocmooc') . " " . $this->get_section_manager()->get_chapter_no_from_number($section->section);
             } else {
-               return get_string('lection', 'format_ocmooc') . " " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
+                return get_string('lection', 'format_ocmooc') . " " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
             }
         }
     }
@@ -198,7 +198,7 @@ class format_ocmooc extends core_courseformat\base {
             // By default assume that sections are never displayed on separate pages.
             return null;
         }
-        if ($this->uses_sections() && $sectionno !== null) {
+        if ($this->uses_sections() && !empty($sectionno)) {
             $url->remove_params('section');
             $url->param('chapter', $chapterno);
             $url->param('lection', $lectionno);

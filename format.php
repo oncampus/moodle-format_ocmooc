@@ -28,8 +28,8 @@ require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
 // Retrieve course format option fields and add them to the $course object.
-$format = course_get_format($course);
-$course = $format->get_course();
+$format  = course_get_format($course);
+$course  = $format->get_course();
 $context = context_course::instance($course->id);
 
 // Add any extra logic here.
@@ -43,12 +43,17 @@ $renderer = $format->get_renderer($PAGE);
 if (!empty($displaysection)) {
     $format->set_section_number($displaysection);
 }
-
+$isediting = $PAGE->user_is_editing();
+if ($isediting) {
+    $templateable = new \format_ocmooc\output\courseformat\fullcontent($format);
+    $data         = $templateable->export_for_template($renderer);
+    echo $renderer->render_from_template('format_ocmooc/local/content/content', $data);
+} else {
 // Output course content.
-$outputclass = $format->get_output_classname('content');
-$widget = new $outputclass($format);
-echo $renderer->render($widget);
-
+    $outputclass = $format->get_output_classname('content');
+    $widget      = new $outputclass($format);
+    echo $renderer->render($widget);
+}
 // Include any format js module here using $PAGE->requires->js.
 $PAGE->requires->js('/course/format/ocmooc/chapterslider.js');
 $PAGE->requires->js('/course/format/ocmooc/amd/build/hvp_resizer_parent.min.js',true);

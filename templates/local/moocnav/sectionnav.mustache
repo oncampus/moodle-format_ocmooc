@@ -30,7 +30,7 @@
                                 {{/lectionname}}
                                 <div>{{sectionnum}}</div>
                             </div>
-                            {{#progress}}
+                            {{^hasnoprogress}}
                                 <!-- progress for current progress of lection -->
                                 <div class="oc-progress-div w-100 mx-1" style="float: bottom; position: relative;  background: gray;">
                                     <div class="w-100 m-0 p-0 float-left position-absolute" style="height: 15px;">
@@ -42,7 +42,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            {{/progress}}
+                            {{/hasnoprogress}}
                         </a>
                     {{/hidden}}
                 </li>
