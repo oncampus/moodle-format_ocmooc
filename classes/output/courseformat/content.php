@@ -17,6 +17,8 @@ class content extends content_base {
 
         $chapter  = optional_param('chapter', 1, PARAM_INT);
         $chapters = $this->get_chapters($output);
+        $data->lastfooter = false;
+        $data->footerfirst = false;
 
         if ($chapter <= 0 || $chapter > count($chapters)) {
             $chapter = 1;

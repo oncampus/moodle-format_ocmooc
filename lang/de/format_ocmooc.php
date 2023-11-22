@@ -133,3 +133,5 @@ $string['my_badges']  = 'Meine Auszeichnungen';
 
 $string['participants_default'] = 'Teilnehmerliste Default';
 $string['participants_guest'] = 'Teilnehmerliste Gast';
+$string['completionwarning'] = 'Bearbeitet';
+$string['completionwarning_changeinbulk'] = 'Mehrere Elemente bearbeiten';

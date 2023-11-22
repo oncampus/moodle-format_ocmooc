@@ -135,3 +135,5 @@ $string['my_badges']  = 'My Badges';
 
 $string['participants_default'] = 'Participants Default';
 $string['participants_guest'] = 'Participants Guest';
+$string['completionwarning'] = 'Edeting';
+$string['completionwarning_changeinbulk'] = 'Bulk edit activities';
