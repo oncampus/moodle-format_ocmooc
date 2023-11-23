@@ -41,10 +41,10 @@ class content extends content_base {
         $data->chaptersstartwidth = count($chapters) * $elementsize;
 
         $data->chapterstarttransform = (($chapter - 1) * -$elementsize) + $elementsize;
-        $data->quicknav = true;
+        $data->quicknav              = true;
 
         $lection = optional_param('lection', 1, PARAM_INT);
-        $params = ['id' => $COURSE->id, 'chapter' => $chapter];
+        $params  = ['id' => $COURSE->id, 'chapter' => $chapter];
         if (empty($sections)) {
             $data->sections     = [];
             $data->firstsection = true;
@@ -54,6 +54,7 @@ class content extends content_base {
                 $params['lection'] = 1;
                 $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
             }
+            $params  = ['id' => $COURSE->id, 'chapter' => $chapter];
             if ($chapter > 1) {
                 $data->footerfirst = false;
                 $prevsections      = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
@@ -69,15 +70,14 @@ class content extends content_base {
             $sections[$lection]->selected = true;
             $data->sections               = [$sections[$lection]];
 
-
             $navlectionarr      = [];
             $maxlectionnavitems = 5;
             $countsides         = ($maxlectionnavitems - 1) / 2;
             $sectioncount       = count($sections);
 
-            if ($lection <= 1 && $chapter === 1 ) {
+            if ($lection <= 1 && $chapter === 1) {
                 $data->footerfirst = true;
-            } 
+            }
             if ($chapter === count($chapters) && $lection === count($sections)) {
                 $data->lastfooter = true;
             }
@@ -112,17 +112,13 @@ class content extends content_base {
                 $params['lection'] = $lection + 1;
                 $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
             }
+            $params  = ['id' => $COURSE->id, 'chapter' => $chapter];
+            if ($chapter > 1 && $lection <= 1) {
+                $prevsections      = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
 
-            $params = ['id' => $COURSE->id, 'chapter' => $chapter];
-            if ($data->footerfirst) {
-                if ($chapter > 1) {
-                    $data->footerfirst = false;
-                    $prevsections      = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
-
-                    $params['chapter'] = $chapter - 1;
-                    $params['lection'] = count($prevsections);
-                    $data->prevsection = (new \moodle_url('/course/view.php', $params))->out(false);
-                }
+                $params['chapter'] = $chapter - 1;
+                $params['lection'] = count($prevsections);
+                $data->prevsection = (new \moodle_url('/course/view.php', $params))->out(false);
             } else {
                 $params['lection'] = $lection - 1;
                 $data->prevsection = (new \moodle_url('/course/view.php', $params))->out(false);
@@ -138,7 +134,8 @@ class content extends content_base {
         return $data;
     }
 
-    public function get_chapters($output) {
+    public
+    function get_chapters($output) {
         global $COURSE, $PAGE, $DB;
 
         $chapters = [];
@@ -196,7 +193,8 @@ class content extends content_base {
      * @return array
      * @throws \moodle_exception
      */
-    public function get_chapter_sections($chapter, $chapternum, $output) {
+    public
+    function get_chapter_sections($chapter, $chapternum, $output) {
         global $COURSE;
 
         $sections = [];
@@ -233,7 +231,8 @@ class content extends content_base {
         return $sections;
     }
 
-    private function get_progress_by_sections($sections) {
+    private
+    function get_progress_by_sections($sections) {
         $progress = 0;
         if (!empty($sections)) {
             foreach ($sections as $section) {
@@ -248,7 +247,8 @@ class content extends content_base {
      * @param $section section_info|stdClass the section
      * @return false|float|int
      */
-    private function get_progress_by_section($section) {
+    private
+    function get_progress_by_section($section) {
         global $USER, $COURSE;
 
         $completion = new \completion_info($COURSE);
@@ -287,7 +287,8 @@ class content extends content_base {
         return ($completed / $count) * 100;
     }
 
-    public function get_template_name(\renderer_base $renderer): string {
+    public
+    function get_template_name(\renderer_base $renderer): string {
         return 'format_ocmooc/local/content';
     }
 
