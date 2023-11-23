@@ -1,0 +1,15 @@
+<div class="ocmooc-forumlist">
+    <div class="fl-intro mb-5">
+        <h2>{{#str}}name_forumlist, format_ocmooc{{/str}}</h2>
+    </div>
+    <div class="forumlist-items">
+        <ul class="forumlist-all forumlist">
+            {{#forumslist}}
+                {{> format_ocmooc/forumlist/activity}}
+            {{/forumslist}}
+            {{^forumslist}}
+                <div>{{#str}}no_forumlist_available, format_ocmooc{{/str}}</div>
+            {{/forumslist}}
+        </ul>
+    </div>
+</div>
