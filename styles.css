@@ -422,9 +422,10 @@ ul#oc-coursenavlist {
     margin: 1rem;
 }
 .ocmooc-forumlist .forumlist-all li img{
-    background-color: #f7634d;
-    border: 0.7rem solid #f7634d;
+    background-color: #089cb2;
+    border: 0.7rem solid #089cb2;
     border-radius: 5px;
+    filter: invert(100%);
 }
 
 
