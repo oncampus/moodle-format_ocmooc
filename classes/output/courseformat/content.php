@@ -17,8 +17,8 @@ class content extends content_base {
 
         $chapter           = optional_param('chapter', 1, PARAM_INT);
         $chapters          = $this->get_chapters($output);
-        $data->lastfooter  = false;
         $data->footerfirst = false;
+        $data->lastfooter  = true;
 
         if ($chapter <= 0 || $chapter > count($chapters)) {
             $chapter = 1;
@@ -91,15 +91,14 @@ class content extends content_base {
             $data->chaptersections = $navlectionarr;
 
             $params = ['id' => $COURSE->id, 'chapter' => $chapter];
-            if ($data->lastfooter) {
-                if ($chapter < count($chapters)) {
-                    $data->lastfooter = false;
+            if ($chapter < count($chapters)) {
+                $data->lastfooter = false;
 
-                    $params['chapter'] = $chapter + 1;
-                    $params['lection'] = 1;
-                    $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
-                }
+                $params['chapter'] = $chapter + 1;
+                $params['lection'] = 1;
+                $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
             } else {
+                $data->lastfooter  = true;
                 $params['lection'] = $lection + 1;
                 $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
             }
@@ -211,7 +210,7 @@ class content extends content_base {
                 $section->rawtitle        = $rawtitle;
                 $section->sectionnum      = $sectionnum;
                 $section->progress        = $this->get_progress_by_section($section);
-                $section->hasnoprogress     = $section->progress === false;
+                $section->hasnoprogress   = $section->progress === false;
                 $params                   = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
                 $section->url             = (new \moodle_url('/course/view.php', $params))->out(false);
 
