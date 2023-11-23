@@ -41,12 +41,26 @@ class content extends content_base {
         $data->chaptersstartwidth = count($chapters) * $elementsize;
 
         $data->chapterstarttransform = (($chapter - 1) * -$elementsize) + $elementsize;
+        $data->quicknav = true;
 
         $lection = optional_param('lection', 1, PARAM_INT);
+        $params = ['id' => $COURSE->id, 'chapter' => $chapter];
         if (empty($sections)) {
             $data->sections     = [];
             $data->firstsection = true;
             $data->lastsection  = true;
+            if ($chapter < count($chapters)) {
+                $params['chapter'] = $chapter + 1;
+                $params['lection'] = 1;
+                $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
+            }
+            if ($chapter > 1) {
+                $data->footerfirst = false;
+                $prevsections      = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
+                $params['chapter'] = $chapter - 1;
+                $params['lection'] = count($prevsections);
+                $data->prevsection = (new \moodle_url('/course/view.php', $params))->out(false);
+            }
         } else {
             if ($lection <= 0 || $lection > count($sections)) {
                 $lection = 1;
@@ -55,7 +69,6 @@ class content extends content_base {
             $sections[$lection]->selected = true;
             $data->sections               = [$sections[$lection]];
 
-            $data->quicknav = true;
 
             $navlectionarr      = [];
             $maxlectionnavitems = 5;
@@ -91,7 +104,6 @@ class content extends content_base {
             }
             $data->chaptersections = $navlectionarr;
 
-            $params = ['id' => $COURSE->id, 'chapter' => $chapter];
             if ($chapter < count($chapters) && $lection === count($navlectionarr)) {
                 $params['chapter'] = $chapter + 1;
                 $params['lection'] = 1;
