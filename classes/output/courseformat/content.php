@@ -62,9 +62,10 @@ class content extends content_base {
             $countsides         = ($maxlectionnavitems - 1) / 2;
             $sectioncount       = count($sections);
 
-            if ($lection <= 1) {
+            if ($lection <= 1 && $chapter === 1 ) {
                 $data->footerfirst = true;
-            } else if ($chapter === count($chapters) && $lection === count($sections)) {
+            } 
+            if ($chapter === count($chapters) && $lection === count($sections)) {
                 $data->lastfooter = true;
             }
 
