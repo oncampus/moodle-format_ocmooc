@@ -18,7 +18,7 @@ class content extends content_base {
         $chapter           = optional_param('chapter', 1, PARAM_INT);
         $chapters          = $this->get_chapters($output);
         $data->footerfirst = false;
-        $data->lastfooter  = true;
+        $data->lastfooter  = false;
 
         if ($chapter <= 0 || $chapter > count($chapters)) {
             $chapter = 1;
@@ -64,7 +64,7 @@ class content extends content_base {
 
             if ($lection <= 1) {
                 $data->footerfirst = true;
-            } else if ($lection === $sectioncount) {
+            } else if ($chapter === count($chapters) && $lection === count($sections)) {
                 $data->lastfooter = true;
             }
 
@@ -91,14 +91,11 @@ class content extends content_base {
             $data->chaptersections = $navlectionarr;
 
             $params = ['id' => $COURSE->id, 'chapter' => $chapter];
-            if ($chapter < count($chapters)) {
-                $data->lastfooter = false;
-
+            if ($chapter < count($chapters) && $lection === count($navlectionarr)) {
                 $params['chapter'] = $chapter + 1;
                 $params['lection'] = 1;
                 $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
             } else {
-                $data->lastfooter  = true;
                 $params['lection'] = $lection + 1;
                 $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
             }
