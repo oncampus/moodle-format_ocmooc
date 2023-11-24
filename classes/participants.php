@@ -137,7 +137,7 @@ class participants extends base {
         if ($enrol = $DB->get_record('enrol', array('courseid' => $this->courseid, 'enrol' => 'autoenrol', 'status' => 0))) {
             if ($user_enrolment = $DB->get_record('user_enrolments', array('enrolid' => $enrol->id, 'userid' => $USER->id))) {
                 $unenrolurl = new \moodle_url('/enrol/autoenrol/unenrolself.php', ['enrolid'=>$enrol->id]);
-                echo $OUTPUT->single_button($unenrolurl, get_string('participants_unenrol', 'format_ocmooc'), 'get');
+                echo $OUTPUT->single_button($unenrolurl, get_string('participants_unenrol', 'format_ocmooc'), 'post');
             }
         }
 
