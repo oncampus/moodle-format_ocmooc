@@ -54,7 +54,7 @@ class participants extends base {
     }
 
     protected function render_view_custom() {
-        global $PAGE, $COURSE, $DB, $OUTPUT;
+        global $PAGE, $COURSE, $DB, $OUTPUT, $CFG, $USER;
 
         $page = optional_param('page', 0, PARAM_INT);
         $perpage = optional_param('perpage', 10, PARAM_INT);
@@ -127,12 +127,19 @@ class participants extends base {
         $total = count($total);
 
         $this->searchform->display();
-
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
 
         $table->finish_html();
 
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
+
+        // insert button to unenrol yourself from course with autoenroll
+        if ($enrol = $DB->get_record('enrol', array('courseid' => $this->courseid, 'enrol' => 'autoenrol', 'status' => 0))) {
+            if ($user_enrolment = $DB->get_record('user_enrolments', array('enrolid' => $enrol->id, 'userid' => $USER->id))) {
+                $unenrolurl = new \moodle_url("$CFG->wwwroot/enrol/autoenrol/unenrolself.php?enrolid=$enrol->id");
+                echo $OUTPUT->single_button($unenrolurl, get_string('participants_unenrol', 'format_ocmooc'), 'get');
+            }
+        }
 
         unset($table);
     }

@@ -100,6 +100,7 @@ $string['sectionnum'] = 'Sektionsnummer';
 /* htmlpage.php */
 $string['error:nocapability'] = 'Do hast nicht die benötigten berechtigungen';
 $string['participants']       = 'Teilnehmer/in';
+$string['participants_unenrol'] = 'Selber aus dem Kurs ausschreiben';
 /* participants.php */
 /* social.php */
 
