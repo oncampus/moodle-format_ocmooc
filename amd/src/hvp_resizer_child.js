@@ -12,9 +12,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-define(['jquery', 'format_ocmooc/hvp_resizer_child'], function ($) {
+define(['jquery', 'format_ocmooc/hvp_resizer_child'], function($) {
         /**
-         * sends a post message to the parent window
+         * Sends a post message to the parent window
          */
         function sendPostMessage() {
             let queryString = window.location.search;
@@ -28,7 +28,7 @@ define(['jquery', 'format_ocmooc/hvp_resizer_child'], function ($) {
         }
 
         return {
-            handleFrame: function () {
+            handleFrame: function() {
                 // Wait for document
                 // Options for the observer (which mutations to observe)
                 const config = {attributes: true, childList: false, subtree: false};
@@ -42,12 +42,14 @@ define(['jquery', 'format_ocmooc/hvp_resizer_child'], function ($) {
                 };
                 const observer = new MutationObserver(callback);
                 // Wait for iframe
-                $('.h5p-iframe').ready(function () {
-                    let iFrame = document.querySelector('.h5p-iframe');
-                    if (iFrame.classList.contains('h5p-initialized')) {
-                        sendPostMessage();
+                $('.h5p-iframe').ready(function() {
+                    let iFrame;
+                    if ((iFrame = document.querySelector('.h5p-iframe'))) {
+                        if (iFrame.classList.contains('h5p-initialized')) {
+                            sendPostMessage();
+                        }
+                        observer.observe(iFrame, config);
                     }
-                    observer.observe(iFrame, config);
                 });
             },
         };
