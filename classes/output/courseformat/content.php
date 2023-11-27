@@ -257,10 +257,6 @@ class content extends content_base {
             return false;
         }
 
-        if (!$completion->is_tracked_user($USER->id)) {
-            return false;
-        }
-
         if ($completion->is_course_complete($USER->id)) {
             return 100;
         }
