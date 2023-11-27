@@ -101,6 +101,8 @@ $string['sectionnum'] = 'Section Number';
 /* htmlpage.php */
 $string['error:nocapability'] = 'You do not have the capability to view this page';
 $string['participants']       = 'Participants';
+$string['participants_unenrol'] = 'Unenrol yourself from course';
+
 /* participants.php */
 $string['htmlpage'] = 'HTML page';
 /* social.php */
@@ -137,3 +139,8 @@ $string['participants_default'] = 'Participants Default';
 $string['participants_guest'] = 'Participants Guest';
 $string['completionwarning'] = 'Edeting';
 $string['completionwarning_changeinbulk'] = 'Bulk edit activities';
+
+/*forumlist.php*/
+$string['forumlist'] = 'Forum list';
+$string['no_forumlist_available'] = 'No Forums are available in this course.';
+$string['name_forumlist'] = 'List of all forums';

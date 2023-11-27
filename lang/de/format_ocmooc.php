@@ -100,6 +100,7 @@ $string['sectionnum'] = 'Sektionsnummer';
 /* htmlpage.php */
 $string['error:nocapability'] = 'Do hast nicht die benötigten berechtigungen';
 $string['participants']       = 'Teilnehmer/in';
+$string['participants_unenrol'] = 'Selber aus dem Kurs ausschreiben';
 /* participants.php */
 /* social.php */
 
@@ -135,3 +136,8 @@ $string['participants_default'] = 'Teilnehmerliste Default';
 $string['participants_guest'] = 'Teilnehmerliste Gast';
 $string['completionwarning'] = 'Bearbeitet';
 $string['completionwarning_changeinbulk'] = 'Mehrere Elemente bearbeiten';
+
+/* forumlist.php */
+$string['forumlist'] = 'Forenliste';
+$string['no_forumlist_available'] = 'Es sind keine Foren im Kurs verfügbar';
+$string['name_forumlist'] = 'Liste aller Foren';

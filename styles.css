@@ -401,6 +401,40 @@ ul#oc-coursenavlist {
     display:block;
 }
 
+/* -- Forum List Seite -- */
+.ocmooc-forumlist {
+    max-width:920px;
+    margin:0 auto;
+    padding:1.5rem;
+}
+
+.ocmooc-forumlist .forumlist-all ul{
+    list-style: none;
+}
+
+.ocmooc-forumlist .forumlist-all li{
+    list-style: none;
+    display: list-item;
+    text-align:left;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 1rem;
+}
+.ocmooc-forumlist .forumlist-all li img{
+    background-color: #089cb2;
+    border: 0.7rem solid #089cb2;
+    border-radius: 5px;
+    filter: invert(100%);
+}
+
+
+.ocmooc-forumlist .fl-intro {
+    text-align: left;
+}
+
+
+
 /* ----------- LOL andere datei highlight ----------------  */
 /* SCSS for marking areas width icons an colors*/
 /* this is loaded from the post.scss.*/

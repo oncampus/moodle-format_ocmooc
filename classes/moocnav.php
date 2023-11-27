@@ -63,6 +63,11 @@ class moocnav {
                 'url' => new \moodle_url('/course/format/ocmooc/views/badges.php', ['courseid' => $COURSE->id]),
         ];
 
+        $moocnav[] = [
+            'name' => get_string('forumlist', 'format_ocmooc'),
+            'url' => new \moodle_url('/course/format/ocmooc/views/forumlist.php', ['courseid' => $COURSE->id]),
+        ];
+
         $moocnav = array_merge_recursive($moocnav, self::get_html_pages());
 
         return $moocnav;
