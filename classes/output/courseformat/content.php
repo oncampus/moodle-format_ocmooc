@@ -11,7 +11,7 @@ use stdClass;
 class content extends content_base {
 
     public function export_for_template(\renderer_base $output) {
-        global $COURSE;
+        global $COURSE, $USER;
 
         $data = parent::export_for_template($output);
 
@@ -130,7 +130,6 @@ class content extends content_base {
         #$data->sectionreturn = $data->singlesection;
 
         $data->moocnav = moocnav::get_moocnav_entries();
-
         return $data;
     }
 
