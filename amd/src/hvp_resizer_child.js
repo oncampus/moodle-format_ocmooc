@@ -43,8 +43,8 @@ define(['jquery', 'format_ocmooc/hvp_resizer_child'], function($) {
                 const observer = new MutationObserver(callback);
                 // Wait for iframe
                 $('.h5p-iframe').ready(function() {
-                    let iFrame;
-                    if ((iFrame = document.querySelector('.h5p-iframe'))) {
+                    let iFrame = document.querySelector('.h5p-iframe');
+                    if (iFrame) {
                         if (iFrame.classList.contains('h5p-initialized')) {
                             sendPostMessage();
                         }

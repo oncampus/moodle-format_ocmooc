@@ -44,7 +44,7 @@ class moocnav {
         //discussion forum
         $type = 'social';
         if (self::is_forum($type)){
-            $social = $DB->get_record('forum', ['course' => $COURSE->id, 'type'=> $type]);
+            $social = $DB->get_record('forum', ['course' => $COURSE->id, 'type'=> $type],'*',IGNORE_MULTIPLE );
             $moocnav[]= [
                 'name' => get_string('discussionforum', 'format_ocmooc'),
                 'url' => (new \moodle_url('/mod/forum/view.php', ['courseid' => $COURSE->id,'f' => $social->id]))->out(false),

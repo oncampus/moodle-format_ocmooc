@@ -56,4 +56,4 @@ if ($isediting) {
 }
 // Include any format js module here using $PAGE->requires->js.
 $PAGE->requires->js('/course/format/ocmooc/chapterslider.js');
-$PAGE->requires->js('/course/format/ocmooc/amd/build/hvp_resizer_parent.min.js',true);
+$PAGE->requires->js_call_amd('format_ocmooc/hvp_resizer_parent');
