@@ -68,7 +68,6 @@ $string['addlection'] = 'Add an lection';
 /* badges.php */
 $string['badges']            = 'Badges';
 $string['no_badges_awarded'] = 'No badges have been earned yet';
-$string['cert_descr_general'] = ;
 
 /* base.php */
 $string['default_title'] = 'Default Title';
@@ -119,6 +118,7 @@ $string['cert_descr'] = 'Congratulations! You have answered at least {$a}% of al
 $string['cert_descr_general']         = 'Congratulations! You have answered enough questions correctly and can download your certificate here.';
 $string['certificate'] = 'Course certificate';
 $string['only_for_trainers'] = 'Only admins and trainers can see this';
+
 /* chapterheader.mustache */
 $string['chapter'] = 'Chapter';
 /* sectionnav.mustache */
