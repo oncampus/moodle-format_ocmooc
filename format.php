@@ -23,7 +23,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
+global $PAGE,$CFG;
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
@@ -56,4 +56,4 @@ if ($isediting) {
 }
 // Include any format js module here using $PAGE->requires->js.
 $PAGE->requires->js('/course/format/ocmooc/chapterslider.js');
-$PAGE->requires->js_call_amd('format_ocmooc/hvp_resizer_parent');
+$PAGE->requires->js('/course/format/ocmooc/amd/build/hvp_resizer_parent.min.js');
