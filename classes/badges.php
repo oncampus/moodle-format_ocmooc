@@ -68,6 +68,7 @@ class badges extends base {
         $certificate_m = $DB->get_record('modules', array('name' => 'coursecertificate'));
         $issue_count   = 0;
 
+        echo \html_writer::start_div('ocmooc-certificates');
         if ($ildcert_m) {
             if ($ildcert_cm = $DB->get_record('course_modules', array('module' => $ildcert_m->id, 'course' => $courseid, 'visible' => 1))) {
                 if (has_capability('mod/ildcertificate:addinstance', $context)) {
@@ -181,6 +182,7 @@ class badges extends base {
                 }
             }
         }
+        echo \html_writer::end_div();
 
     }
     private function prepare_all_badges_awarded(&$allbadges, $badges) {
