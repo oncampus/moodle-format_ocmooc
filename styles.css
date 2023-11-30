@@ -372,8 +372,15 @@ ul#oc-coursenavlist {
 .section .activity.modtype_label.label {
     outline:none;
 }
+/* Certificates */
+.ocmooc-certificates{
+    max-width:1080px;
+    margin:0 auto;
+    padding:1.5rem;
+}
+
 /* -- Badge-Seite -- */
-.ocmooc-badges {
+.ocmooc-badges{
     max-width:1080px;
     margin:0 auto;
     padding:1.5rem;
