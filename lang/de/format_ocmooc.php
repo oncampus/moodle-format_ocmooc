@@ -68,6 +68,12 @@ $string['addlection'] = 'Abschnitt hinzufügen';
 /* badges.php */
 $string['badges']            = 'Abzeichen';
 $string['no_badges_awarded'] = 'Bisher wurden keine Abzeichen verdient';
+// Zertifikate
+$string['cert_descr']                 = 'Herzlichen Glückwunsch! Sie haben mindestens {$a} Prozent der im Kurs enthaltenen Selbsttests erfolgreich bearbeitet und können sich hier Ihre Teilnahmebestätigung herunterladen.';
+$string['cert_descr_general'] = 'Herzlichen Glückwunsch! Sie haben die im Kurs enthaltenen Selbsttests erfolgreich bearbeitet und können sich hier Ihre Teilnahmebestätigung herunterladen.';
+$string['certificate']                = 'Teilnahmebestätigung';
+$string['only_for_trainers']          = 'Nur für Admins und Trainer sichtbar';
+
 /* base.php */
 $string['default_title'] = 'Standart Title';
 $string['editor']        = 'Editor';
