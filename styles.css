@@ -373,7 +373,8 @@ ul#oc-coursenavlist {
     outline:none;
 }
 /* -- Badge-Seite -- */
-.ocmooc-badges {
+.ocmooc-badges,
+.ocmooc-certificates{
     max-width:1080px;
     margin:0 auto;
     padding:1.5rem;
