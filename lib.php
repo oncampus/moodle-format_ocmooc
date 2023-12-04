@@ -171,7 +171,7 @@ class format_ocmooc extends core_courseformat\base {
     }
 
     public function get_view_url($section, $options = array()) {
-        global $CFG,$PAGE;
+        global $CFG, $USER;
         $course = $this->get_course();
         $url    = new moodle_url('/course/view.php', array('id' => $course->id));
 
@@ -207,6 +207,11 @@ class format_ocmooc extends core_courseformat\base {
             $url->param('chapter', $chapterno);
             $url->param('lection', $lectionno);
         }
+
+        if($USER->editing){
+            $url->set_anchor('section-' . $sectionno);
+        }
+
         return $url;
     }
 
