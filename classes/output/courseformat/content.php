@@ -279,7 +279,7 @@ class content extends content_base {
             return false;
         }
 
-        return ($completed / $count) * 100;
+        return round(($completed / $count) * 100);
     }
 
     public
