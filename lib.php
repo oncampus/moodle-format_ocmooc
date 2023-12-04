@@ -171,13 +171,17 @@ class format_ocmooc extends core_courseformat\base {
     }
 
     public function get_view_url($section, $options = array()) {
-        global $CFG;
+        global $CFG, $USER;
         $course = $this->get_course();
         $url    = new moodle_url('/course/view.php', array('id' => $course->id));
 
         if (array_key_exists('sr', $options)) {
-            $sectionno = $options['sr'];
-
+            if($section){
+                $sectionno =$section;
+                $url->set_anchor('section-'. $sectionno);
+            }else {
+                $sectionno = $options['sr'];
+            }
             $modinfo = get_fast_modinfo($course);
             $section = $modinfo->get_section_info($sectionno, MUST_EXIST);
         } else if (is_object($section)) {
@@ -203,6 +207,11 @@ class format_ocmooc extends core_courseformat\base {
             $url->param('chapter', $chapterno);
             $url->param('lection', $lectionno);
         }
+
+        if($USER->editing){
+            $url->set_anchor('section-' . $sectionno);
+        }
+
         return $url;
     }
 

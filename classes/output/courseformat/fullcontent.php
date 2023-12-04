@@ -60,7 +60,7 @@ class fullcontent extends content_base {
             // We NEED index from 0 to x. Otherwise mustache templates would not iterate through the array.
             // It would only use the first element. All other would be ignored.
             $data->chapters  = array_values($content->get_chapters($output));
-
+            
             $format      = $this->format;
             $lastsection = $format->get_last_section_number();
             $maxsections = $format->get_max_sections();
