@@ -97,7 +97,8 @@ class participants extends base {
         unset($instances);
 
         [$insql, $params] = $DB->get_in_or_equal($ids);
-
+        //raise memory limit for big courses
+        raise_memory_limit(MEMORY_EXTRA);
         $sql = "SELECT u.* FROM {user} u
                 INNER JOIN {user_enrolments} ue
                     ON u.id = ue.userid
