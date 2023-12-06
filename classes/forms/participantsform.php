@@ -18,10 +18,10 @@ class participantsform extends \moodleform {
                 2 => get_string('anonymized', 'format_ocmooc'),
         ];
         $form->addElement('select', 'namedisplay', get_string('namedisplay', 'format_ocmooc'), $options);
-        $form->setDefault('namedisplay', 0);
+        $form->setDefault('namedisplay', 2);
 
         $form->addElement('checkbox', 'email', get_string('email'));
-        $form->setDefault('email', true);
+        $form->setDefault('email', false);
 
         $form->addElement('checkbox', 'town', get_string('city'));
         $form->setDefault('town', true);
