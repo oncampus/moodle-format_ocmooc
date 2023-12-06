@@ -102,11 +102,11 @@ class content extends content_base {
                 $data->firstsection = true;
                 $data->lastsection  = true;
             }
-            var_dump($navlectionarr);
+
             $data->chaptersections = $navlectionarr;
 
             if ($chapter < count($chapters) && $lection === count($navlectionarr)) {
-                echo count($navlectionarr);
+                var_dump($data);
                 $params['chapter'] = $chapter + 1;
                 $params['lection'] = 1;
                 $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
