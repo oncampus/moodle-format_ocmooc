@@ -102,10 +102,10 @@ class content extends content_base {
                 $data->firstsection = true;
                 $data->lastsection  = true;
             }
+            var_dump($navlectionarr);
             $data->chaptersections = $navlectionarr;
 
             if ($chapter < count($chapters) && $lection === count($navlectionarr)) {
-                echo $lection;
                 echo count($navlectionarr);
                 die();
                 $params['chapter'] = $chapter + 1;
