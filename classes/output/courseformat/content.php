@@ -71,7 +71,7 @@ class content extends content_base {
             $data->sections               = [$sections[$lection]];
 
             $navlectionarr      = [];
-            $maxlectionnavitems = 20;
+            $maxlectionnavitems = 25;
             $countsides         = ($maxlectionnavitems - 1) / 2;
             $sectioncount       = count($sections);
 
