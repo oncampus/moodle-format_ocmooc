@@ -71,7 +71,7 @@ class content extends content_base {
             $data->sections               = [$sections[$lection]];
 
             $navlectionarr      = [];
-            $maxlectionnavitems = 25;
+            $maxlectionnavitems = 5;
             $countsides         = ($maxlectionnavitems - 1) / 2;
             $sectioncount       = count($sections);
 
@@ -105,7 +105,7 @@ class content extends content_base {
 
             $data->chaptersections = $navlectionarr;
 
-            if ($chapter < count($chapters) && $lection === count($navlectionarr)) {
+            if ($chapter < count($chapters) && $lection === $sectioncount) {
                 $params['chapter'] = $chapter + 1;
                 $params['lection'] = 1;
                 $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
