@@ -71,7 +71,7 @@ class content extends content_base {
             $data->sections               = [$sections[$lection]];
 
             $navlectionarr      = [];
-            $maxlectionnavitems = 5;
+            $maxlectionnavitems = 25;
             $countsides         = ($maxlectionnavitems - 1) / 2;
             $sectioncount       = count($sections);
 
@@ -102,6 +102,7 @@ class content extends content_base {
                 $data->firstsection = true;
                 $data->lastsection  = true;
             }
+
             $data->chaptersections = $navlectionarr;
 
             if ($chapter < count($chapters) && $lection === count($navlectionarr)) {
