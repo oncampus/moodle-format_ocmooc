@@ -177,7 +177,11 @@ class format_ocmooc extends core_courseformat\base {
 
         if (array_key_exists('sr', $options)) {
             if($section){
-                $sectionno =$section;
+                if (is_object($section)){
+                    $sectionno = $section->section;
+                } else {
+                    $sectionno =$section;
+                }
                 $url->set_anchor('section-'. $sectionno);
             }else {
                 $sectionno = $options['sr'];
