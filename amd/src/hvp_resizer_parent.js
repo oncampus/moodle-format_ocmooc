@@ -6,7 +6,6 @@ window.onmessage = (e) => {
         e.data.hasOwnProperty("percentage")) {
         document.getElementById(e.data.progressDiv).style.width = e.data.percentage;
         document.getElementById(e.data.textDiv).innerHTML = e.data.percentage;
-        window.console.log(e);
     } else if (e.data.hasOwnProperty("frameHeight") && e.data.hasOwnProperty("frameId")) {
         // To avoid retroactively adding/using ids on iframes
         let frame = document.getElementById(e.data.frameId);
