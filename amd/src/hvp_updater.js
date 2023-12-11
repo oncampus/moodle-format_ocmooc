@@ -446,15 +446,18 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         // Trigger completed if last slide is reached
         const handleXAPIcall = function(event) {
             if (event.getVerb() === 'progressed') {
-                const currentSlide = event.data.statement.object.definition.extensions['http://id.tincanapi.com/extension/ending-point'];
+                const currentSlide = event.data.statement.object.
+                    definition.extensions['http://id.tincanapi.com/extension/ending-point'];
 
                 if (currentSlide === lastSlideNumber) {
                     ILD.setResult(contentId, 100, 100);
+                    // eslint-disable-next-line no-undef
                     H5P.externalDispatcher.off('xAPI', handleXAPIcall);
                 }
             }
         };
 
+        // eslint-disable-next-line no-undef
         H5P.externalDispatcher.on('xAPI', handleXAPIcall);
     };
 
@@ -477,7 +480,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
             // Can't access the iframe content
             return;
         }
-
+        // eslint-disable-next-line consistent-return
         return contentWindowH5P.H5P;
     };
 
@@ -486,6 +489,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
      *
      * @param {H5P.XAPIEvent} event
      */
+    // eslint-disable-next-line complexity
     ILD.xAPIAnsweredListener = function(event) {
         var contentId = event.getVerifiedStatementValue([
             'object',
@@ -495,7 +499,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         );
         var isInteraction = false;
 
-        if (event.data.statement.object.objectType == 'Activity') {
+        if (event.data.statement.object.objectType === 'Activity') {
             isInteraction = true;
         }
 
@@ -507,25 +511,26 @@ define(['jquery', 'core/ajax'], function($, ajax) {
             typeof ILD.BranchingScenario[contentId] === 'undefined'
         ) {
 
-            var score = event.getScore();
-            var maxScore = event.getMaxScore();
-            var subContentId = event.data.statement.object.id;
+            let score = event.getScore();
+            let maxScore = event.getMaxScore();
+            let subContentId = event.data.statement.object.id;
             subContentId = subContentId.split('subContentId=');
             subContentId = subContentId[1];
 
-            if (ILD.subIds.indexOf(subContentId) != -1) {
+            if (ILD.subIds.indexOf(subContentId) !== -1) {
                 if (typeof ILD.interactions[contentId] === 'undefined') {
                     ILD.interactions[contentId] = 1;
                 }
 
                 // ILD.score += score;
                 // ILD.maxScore += maxScore;
-                var interactions = ILD.interactions[contentId];
+                let interactions = ILD.interactions[contentId];
 
                 ILD.percentage = ILD.percentage + ((score / maxScore) / interactions) * 100;
                 ILD.setResult(contentId, ILD.percentage, 100);
-            } else if (ILD.subIds.indexOf(subContentId) == -1 && ILD.subIds.length == 0) {
-                var percentage = (score / maxScore) * 100;
+            } else if (ILD.subIds.indexOf(subContentId) === -1 && ILD.subIds.length === 0) {
+                // eslint-disable-next-line block-scoped-var
+                let percentage = (score / maxScore) * 100;
 
                 ILD.setResult(contentId, percentage, 100);
             }
@@ -535,10 +540,10 @@ define(['jquery', 'core/ajax'], function($, ajax) {
 
         // Check if QuestionSet is completed and percentage is set.
         if (typeof ILD.questionSetPassPercentage[contentId] !== 'undefined' && event.getVerb() === 'completed') {
-            var score = event.getScore();
-            var maxScore = event.getMaxScore();
-            var percentage = (score / maxScore) * 100;
-            var passPercentage = ILD.questionSetPassPercentage[contentId];
+            let score = event.getScore();
+            let maxScore = event.getMaxScore();
+            let percentage = (score / maxScore) * 100;
+            let passPercentage = ILD.questionSetPassPercentage[contentId];
 
             if (percentage >= passPercentage) {
                 ILD.setResult(contentId, 100, 100);
@@ -547,18 +552,18 @@ define(['jquery', 'core/ajax'], function($, ajax) {
 
         // Check if Essay is scored.
         if (typeof ILD.EssayPassPercentage[contentId] !== 'undefined' && event.getVerb() === 'scored') {
-            var score = event.getScore();
-            var maxScore = event.getMaxScore();
-            var percentage = (score / maxScore) * 100;
+            let score = event.getScore();
+            let maxScore = event.getMaxScore();
+            let percentage = (score / maxScore) * 100;
 
             ILD.setResult(contentId, percentage, 100);
         }
 
         // Check if SingelChoiceSet is completed.
         if (typeof ILD.singleChoiceInteractions[contentId] !== 'undefined' && event.getVerb() === 'completed') {
-            var score = event.getScore();
-            var maxScore = event.getMaxScore();
-            var percentage = (score / maxScore) * 100;
+            let score = event.getScore();
+            let maxScore = event.getMaxScore();
+            let percentage = (score / maxScore) * 100;
 
             ILD.setResult(contentId, percentage, 100);
         }
@@ -594,6 +599,9 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                 textDiv: textDivId,
                 percentage: percentage
             });
+            percentage = String(percentage + '%');
+            $('#' + divId, window.parent.document).css('width', percentage);
+            $('#' + textDivId, window.parent.document).html(percentage);
         }).fail(function(result) {
             window.console.warn('format_ocmooc_setgrade:', result);
         });
@@ -603,7 +611,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
      * Count interactions layers from interactive video element.
      *
      * @param {number} contentId
-     * @param content
+     * @param {object} content
      */
     ILD.getVideoInteractions = function(contentId, content) {
         var interactions = content.interactiveVideo.assets.interactions;
@@ -641,13 +649,14 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         }
 
         if (typeof interactions === 'undefined' || (typeof interactions === 'object' && interactionsCounter === 0)) {
-            $('.h5p-iframe')[0].contentWindow.onload = function() {
-                $('.h5p-iframe')[0].contentWindow.H5P.instances[0].video.on('stateChange', function(event) {
-                    if (event.data === 0) {
-                        ILD.setResult(contentId, 100, 100);
-                    }
-                });
-            };
+            let iFrameWindow = $('.h5p-iframe')[0].contentWindow;
+            let video = iFrameWindow.H5P.instances[0].video;
+            video.on('stateChange', function(event) {
+                window.console.log(event);
+                if (event.data === 0) {
+                    ILD.setResult(contentId, 100, 100);
+                }
+            });
         }
 
         if (summaries.length) {
@@ -672,7 +681,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
      * Count interactions layers from SingleChoice element.
      *
      * @param {number} contentId
-     * @param content
+     * @param {object} content
      */
     ILD.getSingleChoiceInteractions = function(contentId, content) {
         var interactions = content.choices;
@@ -688,7 +697,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
     /**
      *
      * @param {number} contentId
-     * @param content
+     * @param {object} content
      */
     ILD.getQuestionSetPercentage = function(contentId, content) {
         ILD.questionSetPassPercentage[contentId] = content.passPercentage;
@@ -697,7 +706,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
     /**
      *
      * @param {number} contentId
-     * @param content
+     * @param {object} content
      */
     ILD.getEssayPercentage = function(contentId, content) {
         ILD.EssayPassPercentage[contentId] = content.behaviour.percentagePassing;
@@ -729,9 +738,10 @@ define(['jquery', 'core/ajax'], function($, ajax) {
     ILD.checkLibrary = function() {
         var contentId = $('.h5p-iframe.h5p-initialized').data('content-id');
         if (typeof contentId !== 'undefined') {
-            var contentData = H5PIntegration.contents['cid-' + contentId];
-            var content = JSON.parse(contentData.jsonContent); // Needs try/catch
-            var library = contentData.library; // H5P.FooBar x.y
+            // eslint-disable-next-line no-undef
+            let contentData = H5PIntegration.contents['cid-' + contentId];
+            let content = JSON.parse(contentData.jsonContent); // Needs try/catch
+            let library = contentData.library; // H5P.FooBar x.y
 
             const machineName = ILD.getMachineName(library); // H5P.FooBar
             const handlerName = ILD.getHandlerName(library); // FooBar
@@ -767,6 +777,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         init: function() {
             ILD.checkLibrary();
             // TODO: Launch this conditionally, so only if needed
+            // eslint-disable-next-line no-undef
             H5P.externalDispatcher.on('xAPI', ILD.xAPIAnsweredListener);
         }
     };
