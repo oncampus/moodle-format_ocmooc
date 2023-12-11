@@ -650,15 +650,17 @@ define(['jquery', 'core/ajax'], function($, ajax) {
 
         if (typeof interactions === 'undefined' || (typeof interactions === 'object' && interactionsCounter === 0)) {
             let iFrameWindow = $('.h5p-iframe')[0].contentWindow;
-            let video = iFrameWindow.H5P.instances[0].video;
-            video.on('stateChange', function(event) {
-                if (event.data === 0) {
-                    ILD.setResult(contentId, 100, 100);
-                }
+            $(iFrameWindow).ready(() => {
+                let video = iFrameWindow.H5P.instances[0].video;
+                video.on('stateChange', function(event) {
+                    if (event.data === 0) {
+                        ILD.setResult(contentId, 100, 100);
+                    }
+                });
             });
         }
 
-        if (summaries.length) {
+        if (summaries && summaries.length) {
             var summary = false;
 
             $.each(summaries, function(s) {
