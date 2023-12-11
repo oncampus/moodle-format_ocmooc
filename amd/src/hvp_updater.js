@@ -599,9 +599,6 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                 textDiv: textDivId,
                 percentage: percentage
             });
-            percentage = String(percentage + '%');
-            $('#' + divId, window.parent.document).css('width', percentage);
-            $('#' + textDivId, window.parent.document).html(percentage);
         }).fail(function(result) {
             window.console.warn('format_ocmooc_setgrade:', result);
         });
