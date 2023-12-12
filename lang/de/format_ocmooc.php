@@ -44,6 +44,7 @@ $string['title']   = 'Title';
 $string['content'] = 'Inhalt';
 /* participantsform.php */
 $string['anonymized']  = 'Anonymer Nutzername';
+$string['shortened_surname'] = 'Vorname und gekürzter Nachname';
 $string['namedisplay'] = 'Anzeigeart des Nutzernamens';
 /* socialform.php */
 $string['url']      = 'URL:';

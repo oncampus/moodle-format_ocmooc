@@ -16,6 +16,7 @@ class participantsform extends \moodleform {
                 0 => get_string('fullname'),
                 1 => get_string('username'),
                 2 => get_string('anonymized', 'format_ocmooc'),
+                3 => get_string('shortened_surname', 'format_ocmooc'),
         ];
         $form->addElement('select', 'namedisplay', get_string('namedisplay', 'format_ocmooc'), $options);
         $form->setDefault('namedisplay', 2);

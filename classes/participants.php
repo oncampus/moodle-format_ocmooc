@@ -164,6 +164,7 @@ class participants extends base {
                 $titles[] = get_string('username');
                 break;
             case 2:
+            case 3:
                 $notsortable[] = 'name';
                 $header[]      = 'name';
                 $titles[]      = get_string('name');
@@ -233,6 +234,9 @@ class participants extends base {
             case 2:
                 $userdata[] = "User $this->counter";
                 $this->counter++;
+                break;
+            case 3:
+                $userdata[] = $user->firstname . ' ' . mb_substr($user->lastname, 0, 1) . '.';
                 break;
             default:
                 $userdata[] = fullname($user);
