@@ -10,14 +10,16 @@ class badges extends base {
     }
 
     protected function render_view_custom() {
-        global $OUTPUT, $USER;
+        global $DB, $OUTPUT, $USER;
 
         $data = array();
         $data['profileurl'] = new \moodle_url('/user/profile.php', ['id' => $USER->id]);
         $data['mybackpack'] = new \moodle_url('/badges/mybackpack.php');
 
-        //Zertifikate
-        $this->show_certificates($this->courseid);
+        //show certificates if they exists via oc_mooc_nav
+        if ($DB->record_exists('block_instances', ['blockname' => 'oc_mooc_nav'])){
+            $this->show_certificates($this->courseid);
+        }
 
         $badges = badges_get_user_badges($USER->id, $this->courseid);
         $this->prepare_badges($badges);
