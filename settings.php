@@ -35,6 +35,7 @@ if ($hassiteconfig) {
                 0 => get_string('fullname'),
                 1 => get_string('username'),
                 2 => get_string('anonymized', 'format_ocmooc'),
+                3 => get_string('shortened_surname', 'format_ocmooc'),
         ];
 
         //////////////////////////////////////////////////////////
