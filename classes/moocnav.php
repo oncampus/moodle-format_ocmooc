@@ -10,8 +10,9 @@ class moocnav {
         // static entries.
         $moocnav = [
                 [
-                        'name' => get_string('course'),
-                        'url' => new \moodle_url('/course/view.php', ['id' => $COURSE->id])
+                        'name' => get_string('coursetab', 'format_ocmooc'),
+                        'url' => new \moodle_url('/course/view.php', ['id' => $COURSE->id]),
+                        'class' => 'coursetab'
                 ],
         ];
 
@@ -21,7 +22,8 @@ class moocnav {
             $forum = $DB->get_record('forum', ['course' => $COURSE->id, 'type' => $type]);
             $moocnav[] = [
                 'name' => get_string('newsforum', 'format_ocmooc'),
-                'url' => (new \moodle_url('/mod/forum/view.php', ['courseid' => $COURSE->id, 'f' => $forum->id]))->out(false)
+                'url' => (new \moodle_url('/mod/forum/view.php', ['courseid' => $COURSE->id, 'f' => $forum->id]))->out(false),
+                'class' => 'forumtab'
             ];
         }
 
@@ -32,15 +34,17 @@ class moocnav {
                 $moocnav[] = [
                         'name' => get_string('participants', 'format_ocmooc'),
                         'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
+                        'class' => 'participantstab'
                 ];
             }
         } else {
             $moocnav[] = [
                     'name' => get_string('participants', 'format_ocmooc'),
                     'url' => new \moodle_url('/course/format/ocmooc/views/participants.php', ['courseid' => $COURSE->id]),
+                    'class' => 'participantstab'
             ];
         }
-        
+
         //discussion forum
         $type = 'social';
         if (self::is_forum($type)){
@@ -48,6 +52,7 @@ class moocnav {
             $moocnav[]= [
                 'name' => get_string('discussionforum', 'format_ocmooc'),
                 'url' => (new \moodle_url('/mod/forum/view.php', ['courseid' => $COURSE->id,'f' => $social->id]))->out(false),
+                'class' => 'discussiontab'
             ];
         }
 
@@ -55,22 +60,23 @@ class moocnav {
             $moocnav[] = [
                     'name' => get_string('social', 'format_ocmooc'),
                     'url' => new \moodle_url('/course/format/ocmooc/views/social.php', ['courseid' => $COURSE->id]),
+                    'class' => 'socialtab'
             ];
         }
 
         $moocnav[] = [
                 'name' => get_string('badges', 'format_ocmooc'),
                 'url' => new \moodle_url('/course/format/ocmooc/views/badges.php', ['courseid' => $COURSE->id]),
+                'class' => 'badgestab'
         ];
 
         $moocnav[] = [
             'name' => get_string('forumlist', 'format_ocmooc'),
             'url' => new \moodle_url('/course/format/ocmooc/views/forumlist.php', ['courseid' => $COURSE->id]),
+            'class' => 'forumlisttab'
         ];
 
-        $moocnav = array_merge_recursive($moocnav, self::get_html_pages());
-
-        return $moocnav;
+        return array_merge_recursive($moocnav, self::get_html_pages());
     }
 
     private static function is_social_area() {

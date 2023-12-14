@@ -92,6 +92,7 @@ $string['actions']  = 'Actions';
 $string['view']     = 'View';
 $string['delete']   = 'Delete';
 /* moocnav.php */
+$string['coursetab']       = 'Course content';
 $string['newsforum']       = 'News';
 $string['discussionforum'] = 'Discussionforum';
 $string['social']          = 'Social';
