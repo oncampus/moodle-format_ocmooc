@@ -116,7 +116,7 @@ $string['participants_unenrol'] = 'Selber aus dem Kurs ausschreiben';
 /* bagdes.mustache */
 $string['profile_badges'] = 'Profil Auszeichnungen';
 $string['mybackpack']     = 'Mein Rucksack';
-$string['all_badges']     = 'Alle Auszeichnugnen';
+$string['all_badges']     = 'Alle Auszeichnungen';
 /* chapterheader.mustache */
 $string['chapter'] = 'Kapitel';
 /* sectionnav.mustache */
