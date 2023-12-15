@@ -38,6 +38,10 @@ $string['sectionname']     = 'Abschnitt';
 $string['settings']        = 'Einstellungen';
 $string['showfromothers']  = 'Abschnitt anzeigen';
 
+/** course options **/
+$string['certpercentage']  = 'Teilnahmebestätigung verfügbar ab (%) ';
+$string['certpercentage_help']  = 'Anzahl korrekter Antworten in Prozent, damit eine Teilnahmebestätigung herunterladbar ist ';
+
 /** forms **/
 /* htmlpageform.php */
 $string['title']   = 'Title';

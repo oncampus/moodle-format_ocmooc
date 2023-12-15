@@ -38,6 +38,10 @@ $string['sectionname']     = 'Section';
 $string['settings']        = 'Settings';
 $string['showfromothers']  = 'Show section';
 
+/** course options **/
+$string['certpercentage']  = 'Certificate available at (%) ';
+$string['certpercentage_help']  = 'Amount of correct answers required to download a for certificate of participation (%) ';
+
 /** forms **/
 /* htmlpageform.php */
 $string['title']   = 'Title';

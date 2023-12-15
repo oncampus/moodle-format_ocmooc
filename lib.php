@@ -397,6 +397,36 @@ class format_ocmooc extends core_courseformat\base {
         $section = $this->get_section($section);
         return $section->available && $this->is_section_real_available($section->parent);
     }
+
+    /**
+     * Definitions of the additional options that site uses
+     *
+     * @param bool $foreditform
+     * @return array of options
+     */
+    public function course_format_options($foreditform = false) {
+        static $courseformatoptions = false;
+        if ($courseformatoptions === false) {
+            $courseformatoptions = array(
+                'certpercentage' => array(
+                    'default' => 0,
+                    'type' => PARAM_INT,
+                ),
+            );
+        }
+        if ($foreditform && !isset($courseformatoptions['certpercentage']['label'])) {
+            $courseformatoptionsedit = array(
+                'certpercentage' => array(
+                    'label' => new lang_string('certpercentage', 'format_ocmooc'),
+                    'help' => 'certpercentage',
+                    'help_component' => 'format_ocmooc',
+                    'element_type' => 'text',
+                ),
+            );
+            $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
+        }
+        return $courseformatoptions;
+    }
 }
 
 /**
