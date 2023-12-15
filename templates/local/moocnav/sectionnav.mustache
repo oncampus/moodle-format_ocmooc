@@ -11,7 +11,7 @@
                     <a href="{{prevsection}}"><i class="icon fa fa-chevron-left fa-fw text-dark" title="Vor" aria-hidden="true"></i></a>
                 </li>
             {{/firstsection}}
-            
+
             {{#chaptersections}}
                 <li class="ocmooc-nav-item {{#selected}}active{{/selected}}">
                     {{^hidden}}
@@ -28,7 +28,10 @@
                                         <div>{{#str}}lection, format_ocmooc{{/str}}</div>
                                     {{/rawtitle}}
                                 {{/lectionname}}
-                                <div>{{sectionnum}}</div>
+                                <!-- only display section numbering if I dont have a custom title -->
+                                {{^rawtitle}}
+                                    <div>{{sectionnum}}</div>
+                                {{/rawtitle}}
                             </div>
                             {{^hasnoprogress}}
                                 <!-- progress for current progress of lection -->
