@@ -64,7 +64,6 @@ class badges extends base {
         $total         = $blockinstance->config->capira_questions;//0;
         $min_prozent   = $blockinstance->config->capira_min;
 
-        $min_prozent   = $blockinstance->config->capira_min;
         $simplecert_m  = $DB->get_record('modules', array('name' => 'simplecertificate'));
         $ildcert_m     = $DB->get_record('modules', array('name' => 'ildcertificate'));
         $certificate_m = $DB->get_record('modules', array('name' => 'coursecertificate'));
