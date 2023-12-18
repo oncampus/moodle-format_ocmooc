@@ -79,6 +79,8 @@ $string['cert_descr_general'] = 'Herzlichen Glückwunsch! Sie haben die im Kurs 
 $string['certificate']                = 'Teilnahmebestätigung';
 $string['cert_need']                = 'In diesem Kurs können Sie sich die Teilnahmebestätigung herunterladen, wenn Sie mindestens {$a->min_per} Prozent der erforderlichen Online-Selbsttests bestanden haben. Aktuell stehen Sie bei {$a->current} Prozent.';
 $string['only_for_trainers']          = 'Nur für Admins und Trainer sichtbar';
+$string['cert_addtext']          = 'Lorem ipsum';
+$string['cert_nocert'] = 'In diesem Kurs kann man keine Teilnahmebestätigung erwerben.';
 
 /* base.php */
 $string['default_title'] = 'Standart Title';

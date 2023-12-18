@@ -80,6 +80,8 @@ $string['cert_descr_general']         = 'Congratulations! You have answered enou
 $string['certificate'] = 'Course certificate';
 $string['cert_need']                = 'In this course you can download the confirmation of participation if you have passed at least {$a->min_per} percent of the required online self-tests. You are currently at {$a->current} percent.';
 $string['only_for_trainers'] = 'Only admins and trainers can see this';
+$string['cert_addtext']          = 'Lorem ipsum';
+$string['cert_nocert'] = 'It is not possible to obtain a certificate of attendance for this course.';
 /* base.php */
 $string['default_title'] = 'Default Title';
 $string['editor']        = 'Editor';

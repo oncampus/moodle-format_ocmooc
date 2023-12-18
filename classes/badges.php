@@ -120,6 +120,7 @@ class badges extends base {
         }
         if ($simplecert_m) {
             if ($min_prozent > 0 && $simplecert_cm = $DB->get_record('course_modules', array('module' => $simplecert_m->id, 'course' => $courseid, 'visible' => 1))) {
+                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_addtext', 'format_ocmooc'), array('class' => 'oc_badges_text')));
                 $percentage = 0;
                 $mod_count  = 0;
 
@@ -160,6 +161,8 @@ class badges extends base {
                 } else {
                     echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_need', 'format_ocmooc', array('min_per' => $min_prozent, 'current' => $percentage))));
                 }
+            } else {
+                echo html_writer::tag('div', html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
             }
         }
         echo \html_writer::end_div();
