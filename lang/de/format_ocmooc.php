@@ -74,6 +74,7 @@ $string['addlection'] = 'Abschnitt hinzufügen';
 $string['badges']            = 'Abzeichen';
 $string['no_badges_awarded'] = 'Bisher wurden keine Abzeichen verdient';
 // Zertifikate
+$string['certificate_and_badges'] = 'Teilnahmebestätigung & Badges';
 $string['cert_descr']                 = 'Herzlichen Glückwunsch! Sie haben mindestens {$a} Prozent der im Kurs enthaltenen Selbsttests erfolgreich bearbeitet und können sich hier Ihre Teilnahmebestätigung herunterladen.';
 $string['cert_descr_general'] = 'Herzlichen Glückwunsch! Sie haben die im Kurs enthaltenen Selbsttests erfolgreich bearbeitet und können sich hier Ihre Teilnahmebestätigung herunterladen.';
 $string['certificate']                = 'Teilnahmebestätigung';
