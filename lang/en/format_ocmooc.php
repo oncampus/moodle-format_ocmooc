@@ -78,6 +78,7 @@ $string['no_badges_awarded'] = 'No badges have been earned yet';
 $string['cert_descr'] = 'Congratulations! You have answered at least {$a}% of all video questions correctly. You can now download your certificate for course completion.';
 $string['cert_descr_general']         = 'Congratulations! You have answered enough questions correctly and can download your certificate here.';
 $string['certificate'] = 'Course certificate';
+$string['cert_need']                = 'In this course you can download the confirmation of participation if you have passed at least {$a->min_per} percent of the required online self-tests. You are currently at {$a->current} percent.';
 $string['only_for_trainers'] = 'Only admins and trainers can see this';
 /* base.php */
 $string['default_title'] = 'Default Title';

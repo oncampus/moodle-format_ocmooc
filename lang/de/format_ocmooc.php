@@ -77,6 +77,7 @@ $string['no_badges_awarded'] = 'Bisher wurden keine Abzeichen verdient';
 $string['cert_descr']                 = 'Herzlichen Glückwunsch! Sie haben mindestens {$a} Prozent der im Kurs enthaltenen Selbsttests erfolgreich bearbeitet und können sich hier Ihre Teilnahmebestätigung herunterladen.';
 $string['cert_descr_general'] = 'Herzlichen Glückwunsch! Sie haben die im Kurs enthaltenen Selbsttests erfolgreich bearbeitet und können sich hier Ihre Teilnahmebestätigung herunterladen.';
 $string['certificate']                = 'Teilnahmebestätigung';
+$string['cert_need']                = 'In diesem Kurs können Sie sich die Teilnahmebestätigung herunterladen, wenn Sie mindestens {$a->min_per} Prozent der erforderlichen Online-Selbsttests bestanden haben. Aktuell stehen Sie bei {$a->current} Prozent.';
 $string['only_for_trainers']          = 'Nur für Admins und Trainer sichtbar';
 
 /* base.php */

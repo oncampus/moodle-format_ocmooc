@@ -16,10 +16,7 @@ class badges extends base {
         $data['profileurl'] = new \moodle_url('/user/profile.php', ['id' => $USER->id]);
         $data['mybackpack'] = new \moodle_url('/badges/mybackpack.php');
 
-        //show certificates if they exists via oc_mooc_nav
-        if ($DB->record_exists('block_instances', ['blockname' => 'oc_mooc_nav'])){
-            $this->show_certificates($this->courseid);
-        }
+        $this->show_certificates($this->courseid);
 
         $badges = badges_get_user_badges($USER->id, $this->courseid);
         $this->prepare_badges($badges);
@@ -58,11 +55,11 @@ class badges extends base {
 
         $context = \context_course::instance($courseid);
 
-        $blockrecord = $DB->get_record('block_instances', array('blockname' => 'oc_mooc_nav', 'parentcontextid' => $context->id), '*', MUST_EXIST);
-
-        $blockinstance = block_instance('oc_mooc_nav', $blockrecord);
-        $total         = $blockinstance->config->capira_questions;//0;
-        $min_prozent   = $blockinstance->config->capira_min;
+        $min_prozent   = 0;
+        $record = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'certpercentage'));
+        if ($record) {
+            $min_prozent   = $record->value;
+        }
 
         $simplecert_m  = $DB->get_record('modules', array('name' => 'simplecertificate'));
         $ildcert_m     = $DB->get_record('modules', array('name' => 'ildcertificate'));
@@ -75,7 +72,6 @@ class badges extends base {
                 if (has_capability('mod/ildcertificate:addinstance', $context)) {
                     $ild_cert    = $DB->get_record('ildcertificate', array('course' => $courseid, 'id' => $ildcert_cm->instance));
                     $issue_count += count($DB->get_records('ildcertificate_issues', array('certificateid' => $ild_cert->id)));
-//            echo 'Anzahl ausgestellter Zertifikate (' . get_string('only_for_trainers', 'format_ocmooc') . '): ' . count($cert_issues);
                 }
             }
         }
@@ -92,7 +88,6 @@ class badges extends base {
         }
 
         echo \html_writer::tag('h2', \html_writer::tag('div', get_string('certificate', 'format_ocmooc'), array('class' => 'oc_badges_text')));
-// echo html_writer::tag('div', html_writer::tag('div', get_string('cert_addtext', 'format_ocmooc'), array('class' => 'oc_badges_text')));
         if ($certificate_m && ($coursecert_cm = $DB->get_record('course_modules', array('module' => $certificate_m->id, 'course' => $courseid, 'visible' => 1)))) {
             $course_cert = $DB->get_records('tool_certificate_issues', array('courseid' => $courseid, 'userid' => $USER->id));
             if ($course_cert) {
@@ -114,20 +109,11 @@ class badges extends base {
                 && (has_capability('mod/ildcertificate:manage', $module_context) || $DB->record_exists('ildcertificate_issues', array('certificateid' => $ildcert_cm->instance, 'userid' => $USER->id)))
             ) {
 
-                $url       = new \moodle_url('/mod/ildcertificate/view.php', array(
-                    'id' => $ildcert_cm->id,
-                    'tab' => 0,
-                    'page' => 0,
-                    'perpage' => 30,
-                ));
-                $canmanage = 0;//has_capability('mod/ildcertificate:manage', $module_context);
-
                 $link   = new \moodle_url('/mod/ildcertificate/view.php', array('id' => $ildcert_cm->id, 'action' => 'get'));
                 $button = new \single_button($link, get_string('certificate', 'format_ocmooc'));
                 $button->add_action(
                     new \popup_action('click', $link, 'view' . $ildcert_cm->id,
                         array('height' => 600, 'width' => 800)));
-                #echo html_writer::tag('h2', html_writer::tag('div', get_string('certificate', 'format_ocmooc'), array('class' => 'oc_badges_text')));
                 echo \html_writer::tag('div', get_string('cert_descr_general', 'format_ocmooc'));
                 echo \html_writer::tag('div', $OUTPUT->render($button), array('style' => 'text-align:left'));
             }
@@ -164,22 +150,15 @@ class badges extends base {
                     $module_context = \context_module::instance($simplecert_cm->id);
                     require_capability('mod/simplecertificate:view', $module_context);
 
-                    $url       = new \moodle_url('/mod/simplecertificate/view.php', array(
-                        'id' => $simplecert_cm->id,
-                        'tab' => 0,
-                        'page' => 0,
-                        'perpage' => 30,
-                    ));
-                    $canmanage = 0;//has_capability('mod/simplecertificate:manage', $module_context);
-
                     $link   = new \moodle_url('/mod/simplecertificate/view.php', array('id' => $simplecert_cm->id, 'action' => 'get'));
                     $button = new \single_button($link, get_string('certificate', 'format_ocmooc'));
                     $button->add_action(
                         new \popup_action('click', $link, 'view' . $simplecert_cm->id,
                             array('height' => 600, 'width' => 800)));
-                    #echo html_writer::tag('h2', html_writer::tag('div', get_string('certificate', 'format_ocmooc'), array('class' => 'oc_badges_text')));
                     echo \html_writer::tag('div', get_string('cert_descr', 'format_ocmooc', $min_prozent));
                     echo \html_writer::tag('div', $OUTPUT->render($button), array('style' => 'text-align:left'));
+                } else {
+                    echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_need', 'format_ocmooc', array('min_per' => $min_prozent, 'current' => $percentage))));
                 }
             }
         }
