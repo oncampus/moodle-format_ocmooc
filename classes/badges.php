@@ -163,7 +163,7 @@ class badges extends base {
                     echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_need', 'format_ocmooc', array('min_per' => $min_prozent, 'current' => $percentage))));
                 }
             } else {
-                echo html_writer::tag('div', html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
+                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
             }
         }
         echo \html_writer::end_div();
