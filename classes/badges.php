@@ -145,7 +145,7 @@ class badges extends base {
                 }
                 /* hvp end */
 
-                $percentage = $percentage / $mod_count;
+                $percentage = (int) ($percentage / $mod_count);
 
                 if ($percentage >= $min_prozent) {
                     // zertifikat anzeigen
