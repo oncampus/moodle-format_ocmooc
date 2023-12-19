@@ -73,6 +73,7 @@ $string['addlection'] = 'Add an lection';
 /**  classes **/
 /* badges.php */
 $string['badges']            = 'Badges';
+$string['badges_nav']        = 'Badges';
 $string['no_badges_awarded'] = 'No badges have been earned yet';
 //certifcates
 $string['certificate_and_badges'] = 'Certificate & badges';

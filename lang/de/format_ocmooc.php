@@ -72,6 +72,7 @@ $string['addlection'] = 'Abschnitt hinzufügen';
 /**  classes **/
 /* badges.php */
 $string['badges']            = 'Abzeichen';
+$string['badges_nav']        = 'Abzeichen';
 $string['no_badges_awarded'] = 'Bisher wurden keine Abzeichen verdient';
 // Zertifikate
 $string['certificate_and_badges'] = 'Teilnahmebestätigung & Badges';

@@ -65,7 +65,7 @@ class moocnav {
         }
 
         $moocnav[] = [
-                'name' => get_string('badges', 'format_ocmooc'),
+                'name' => get_string('badges_nav', 'format_ocmooc'),
                 'url' => new \moodle_url('/course/format/ocmooc/views/badges.php', ['courseid' => $COURSE->id]),
                 'class' => 'badgestab'
         ];
