@@ -27,6 +27,11 @@
 }
 
 
+/* Kursdraweranpassung */
+.courseindex [data-number="0"]{
+    display: none;
+}
+
 ul#oc-coursenavlist {
     margin-left: auto;
     margin-right: auto;
