@@ -2,8 +2,8 @@
  * Function called to toggle the collapse <span> Elements (Collapse All / Expand All)
  * Example call in: templates/local/content/section/content.mustache
  */
-function toggleCollapse() {
-    let collapseSection = document.getElementById('collapsesections');
+function toggleCollapse(id) {
+    let collapseSection = document.getElementById(id);
     //Check if collapse Section Button is expanded
     let isExpanded = collapseSection.getAttribute('aria-expanded') === 'true';
     //The collapse all span Element
