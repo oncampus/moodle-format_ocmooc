@@ -300,8 +300,7 @@ ul#oc-coursenavlist {
     padding-right:40px;
 }
 
-/*TODO: Check why .icons-collapse-expand should use display:none */
-.ocmooc .course-section-header .icons-collapse-expand {
+.ocmooc .course-section-header {
     display:none;
 }
 .ocmooc .activity-item.hiddenactivity,
