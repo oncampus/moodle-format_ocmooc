@@ -110,23 +110,30 @@ function showNewSpanTitleIfAllCollapseAreClosedOrOpen(){
  * Init the Toggle Functionality 
  */
 function initToggle(){
-    showNewSpanTitleIfAllCollapseAreClosedOrOpen();
-
-
-    //Observe all contentElements to change the collapseAll/ExpandAll status when a contentcollapse opens/closes
-    //Example: When all contentElements are closed, set the collapseAll -> expandAll
-    let contentCollapseElements = document.querySelectorAll('[id^="coursecontentcollapse"]');
-    contentCollapseElements.forEach(element => {
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                if (mutation.attributeName === 'class') {
-                    showNewSpanTitleIfAllCollapseAreClosedOrOpen();
-                }
-            });
+    //Check if a User is in Editmode
+    if(document.querySelector('[id$="editingswitch"]').checked){
+        showNewSpanTitleIfAllCollapseAreClosedOrOpen();
+        
+        let collapseIcons = document.querySelectorAll(".icons-collapse-expand");
+        collapseIcons.forEach(icon => {
+            icon.style.display = "block";
         });
-        observer.observe(element, { attributes: true });
-    });
 
+
+        //Observe all contentElements to change the collapseAll/ExpandAll status when a contentcollapse opens/closes
+        //Example: When all contentElements are closed, set the collapseAll -> expandAll
+        let contentCollapseElements = document.querySelectorAll('[id^="coursecontentcollapse"]');
+        contentCollapseElements.forEach(element => {
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    if (mutation.attributeName === 'class') {
+                        showNewSpanTitleIfAllCollapseAreClosedOrOpen();
+                    }
+                });
+            });
+            observer.observe(element, { attributes: true });
+        });
+    }
 }
 
 //Init the Toggle Functionality
