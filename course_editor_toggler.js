@@ -120,6 +120,36 @@ function initToggle(){
         });
 
 
+        //Enables the collapseSection Button in header.mustache 
+        document.querySelectorAll('[id^="editcollapssesection"]').forEach(function(element) {
+            element.onclick = function() {
+                //Get Selectors of a collapseSection Element
+                var expandedIcon = this.querySelector(".expanded-icon");
+                var collapsedIcon = this.querySelector(".collapsed-icon");
+                var currentIndexNum = this.getAttribute("data-toggle");
+                //Get the corresponding section element
+                var contentBlock = document.getElementById("coursecontentcollapse" + currentIndexNum);
+
+                //If the current Section is collapsed remove the tag, show the corresponding section and change the icon
+                if (this.classList.contains("collapsed")) {
+                    this.classList.remove("collapsed");
+                    contentBlock.classList.add("show");
+                    expandedIcon.style.display = "block"; 
+                    collapsedIcon.style.display = "none"; 
+                    this.setAttribute("aria-expanded", "false"); 
+                } else {
+                    //If the current Section is open add the collapsed the tag, hide the corresponding section and change the icon
+                    this.classList.add("collapsed");
+                    contentBlock.classList.remove("show");
+                    expandedIcon.style.display = "none"; 
+                    collapsedIcon.style.display = "block"; 
+                    this.setAttribute("aria-expanded", "true");
+                }
+            };
+        });
+      
+
+
         //Observe all contentElements to change the collapseAll/ExpandAll status when a contentcollapse opens/closes
         //Example: When all contentElements are closed, set the collapseAll -> expandAll
         let contentCollapseElements = document.querySelectorAll('[id^="coursecontentcollapse"]');

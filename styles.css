@@ -300,7 +300,7 @@ ul#oc-coursenavlist {
     padding-right:40px;
 }
 
-.ocmooc .course-section-header{
+.ocmooc .course-section-header .icons-collapse-expand{
     display:none;
 }
 .ocmooc .activity-item.hiddenactivity,
