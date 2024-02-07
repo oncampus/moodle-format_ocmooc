@@ -7,8 +7,6 @@ function toggleCollapseAll(id) {
 
     //The collapse all span Element
     let collapseSpan = document.querySelector('.collapseall');
-    //Get all collapseIcons (left next to the titles)
-    let collapseIcons = document.querySelectorAll(':is(a)[data-toggle="collapse"]');
 
     //The Expand All Span Element
     let expandSpan = document.querySelector('.expandall');
@@ -31,8 +29,11 @@ function toggleCollapseAll(id) {
             }
         });
 
-        collapseIcons.forEach(element => {
-            element.classList.add('collapsed');
+        //Show the leftside Section Button collapse Icon 
+        document.querySelectorAll('[id^="editcollapssesection"]').forEach(element => {
+            element.classList.add("collapsed");
+            element.querySelector(".expanded-icon").style.display = "none";
+            element.querySelector(".collapsed-icon").style.display = "block";
         });
 
     } else {
@@ -47,8 +48,11 @@ function toggleCollapseAll(id) {
             }
         });
 
-        collapseIcons.forEach(element => {
-            element.classList.remove('collapsed');
+        //Show the leftside Section Button expand Icon 
+        document.querySelectorAll('[id^="editcollapssesection"]').forEach(element => {
+            element.classList.remove("collapsed");
+            element.querySelector(".expanded-icon").style.display = "block";
+            element.querySelector(".collapsed-icon").style.display = "none";
         });
 
     }
@@ -123,6 +127,8 @@ function initToggle(){
         //Enables the collapseSection Button in header.mustache 
         document.querySelectorAll('[id^="editcollapssesection"]').forEach(function(element) {
             element.onclick = function() {
+                console.log("ONCLICK: ");
+                console.log(element);
                 //Get Selectors of a collapseSection Element
                 var expandedIcon = this.querySelector(".expanded-icon");
                 var collapsedIcon = this.querySelector(".collapsed-icon");
