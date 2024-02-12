@@ -15,7 +15,7 @@ function toggleCollapseAll(id) { // eslint-disable-line no-unused-vars
     //Check if collapse Section Button is expanded
     let isExpanded = collapseSection.getAttribute('aria-expanded') === 'true';
     //The Content Body Element which gets collapsed
-    let contentElements = document.querySelectorAll('.content.course-content-item-content.collapse');
+    let contentElements = document.querySelectorAll('.content.course-content-item-content.ocmooc-edit-collapsing');
 
     //If new CollapseSection is expanded show the new span (collapse) and all body
     if (isExpanded) {
@@ -24,8 +24,9 @@ function toggleCollapseAll(id) { // eslint-disable-line no-unused-vars
         expandSpan.style.display = 'inline';
         //Close all content Elements
         contentElements.forEach(element => {
-            if(element.classList.contains('show')){
-                element.classList.remove('show');
+            if(element.classList.contains('ocmooc-edit-show')){
+                element.classList.remove('ocmooc-edit-show');
+                element.style.height = 0;
             }
         });
 
@@ -42,8 +43,11 @@ function toggleCollapseAll(id) { // eslint-disable-line no-unused-vars
         expandSpan.style.display = 'none';
         //Open all content Elements
         contentElements.forEach(element => {
-            if(!element.classList.contains('show')){
-                element.classList.add('show');
+            if(!element.classList.contains('ocmooc-edit-show')){
+                element.classList.add('ocmooc-edit-show');
+                // Set the total height of all direct children of the HTML element by obtaining the height of each child element
+                // and summing them up using the map and reduce array methods. At the End add an offset Value if 30px.
+                element.style.height = Array.from(element.children).map(el => el.clientHeight).reduce((a, b) => a + b, 0) + 30 + "px";
             }
         });
 
@@ -69,7 +73,7 @@ function checkIfAllCollapseAreClosed(){
     let contentElements = document.querySelectorAll('[id^="coursecontentcollapse"]');
 
     contentElements.forEach(element => {
-       if(element.classList.contains('show') || element.classList.contains('collapsing')){
+       if(element.classList.contains('ocmooc-edit-show') || element.classList.contains('collapsing')){
         check = false;
        }
     });
@@ -107,7 +111,7 @@ function initEditMenuStart(){
     //The Expand All Span Element
     let expandSpan = document.querySelector('.expandall');
     //The Content Body Element which gets collapsed
-    let contentElements = document.querySelectorAll('.content.course-content-item-content.collapse');
+    let contentElements = document.querySelectorAll('.content.course-content-item-content.ocmooc-edit-collapsing');
 
     //Do nothing if all Sections collapsed
     if(!checkIfAllCollapseAreClosed()){
@@ -115,9 +119,12 @@ function initEditMenuStart(){
         collapseSpan.style.display = 'none';
         expandSpan.style.display = 'inline';
         //Close all content Elements
+        console.log("CLOSE ALL");
+        console.log(contentElements.length);
         contentElements.forEach(element => {
-            if(element.classList.contains('show')){
-                element.classList.remove('show');
+            if(element.classList.contains('ocmooc-edit-show')){
+                element.classList.remove('ocmooc-edit-show');
+                element.style.height = 0;
             }
         });
 
@@ -166,14 +173,20 @@ function initToggle(){
                 //If the current Section is collapsed remove the tag, show the corresponding section and change the icon
                 if (this.classList.contains("collapsed")) {
                     this.classList.remove("collapsed");
-                    contentBlock.classList.add("show");
+                    contentBlock.classList.add("ocmooc-edit-show");
+                    // Set the total height of all direct children of the HTML element by obtaining the height of each child element
+                    // and summing them up using the map and reduce array methods. At the End add an offset Value if 30px.
+                    contentBlock.style.height = Array.from(contentBlock.children).map(el => el.clientHeight).reduce((a, b) => a + b, 0) + 30 + "px";                
+                    console.log("Line178 ADD HEIGHT: " + contentBlock.style.height);
+
                     expandedIcon.style.display = "block";
                     collapsedIcon.style.display = "none";
                     this.setAttribute("aria-expanded", "false");
                 } else {
                     //If the current Section is open add the collapsed the tag, hide the corresponding section and change the icon
                     this.classList.add("collapsed");
-                    contentBlock.classList.remove("show");
+                    contentBlock.classList.remove("ocmooc-edit-show");
+                    contentBlock.style.height = 0;
                     expandedIcon.style.display = "none";
                     collapsedIcon.style.display = "block";
                     this.setAttribute("aria-expanded", "true");

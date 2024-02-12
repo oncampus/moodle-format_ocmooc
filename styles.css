@@ -303,6 +303,14 @@ ul#oc-coursenavlist {
 .ocmooc .course-section-header .icons-collapse-expand{
     display:none;
 }
+
+.ocmooc-edit-collapsing {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.35s ease;
+}
+
+
 .ocmooc .activity-item.hiddenactivity,
 .editing .ocmooc .activity-item:hover {
     background-color: #ffffff;
