@@ -15,6 +15,7 @@
 define(['jquery', 'format_ocmooc/hvp_resizer_child'], function ($) {
     /**
      * Sends a post message to the parent window
+     * @param {*} contentHeight Set the H5P-Element Height
      */
     function sendPostMessage(contentHeight) {
         let queryString = window.location.search;
