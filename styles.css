@@ -299,7 +299,8 @@ ul#oc-coursenavlist {
 .editing .ocmooc .section .activity .activityinstance {
     padding-right:40px;
 }
-.ocmooc .course-section-header .icons-collapse-expand {
+
+.ocmooc .course-section-header .icons-collapse-expand{
     display:none;
 }
 .ocmooc .activity-item.hiddenactivity,
