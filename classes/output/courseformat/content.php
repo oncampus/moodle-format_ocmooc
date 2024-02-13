@@ -257,9 +257,6 @@ class content extends content_base {
             return false;
         }
 
-        if ($completion->is_course_complete($USER->id)) {
-            return 100;
-        }
 
         $modules   = $completion->get_activities();
         $count     = 0;
