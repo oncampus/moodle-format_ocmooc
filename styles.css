@@ -306,8 +306,16 @@ ul#oc-coursenavlist {
 
 .ocmooc-edit-collapsing {
     height: 0;
-    overflow: hidden;
-    transition: height 0.35s ease;
+    visibility: hidden;
+    opacity: 0;
+    transition: height 0.35s ease, visibility 0s linear 0.35s, opacity 0.35s;
+}
+
+.ocmooc-edit-show {
+    height: auto;
+    visibility: visible;
+    opacity: 1;
+    transition: height 0.35s ease, visibility 0s, opacity 0.35s;
 }
 
 

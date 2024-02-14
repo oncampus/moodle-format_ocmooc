@@ -3,7 +3,7 @@
  * Example call in: templates/local/content/section/content.mustache
  * @param {*} id CollapseSection Id
  */
-function toggleCollapseAll(id) { // eslint-disable-line no-unused-vars
+function toggleCollapseAll(id) {
     let collapseSection = document.getElementById(id);
 
     //The collapse all span Element
@@ -46,8 +46,8 @@ function toggleCollapseAll(id) { // eslint-disable-line no-unused-vars
             if(!element.classList.contains('ocmooc-edit-show')){
                 element.classList.add('ocmooc-edit-show');
                 // Set the total height of all direct children of the HTML element by obtaining the height of each child element
-                // and summing them up using the map and reduce array methods. At the End add an offset Value if 30px.
-                element.style.height = Array.from(element.children).map(el => el.clientHeight).reduce((a, b) => a + b, 0) + 30 + "px";
+                // and summing them up using the map and reduce array methods. At the End add an offset Value if 40px.
+                element.style.height = Array.from(element.children).map(el => el.clientHeight).reduce((a, b) => a + b, 0) + 40 + "px";
             }
         });
 
@@ -175,8 +175,8 @@ function initToggle(){
                     this.classList.remove("collapsed");
                     contentBlock.classList.add("ocmooc-edit-show");
                     // Set the total height of all direct children of the HTML element by obtaining the height of each child element
-                    // and summing them up using the map and reduce array methods. At the End add an offset Value if 30px.
-                    contentBlock.style.height = Array.from(contentBlock.children).map(el => el.clientHeight).reduce((a, b) => a + b, 0) + 30 + "px";                
+                    // and summing them up using the map and reduce array methods. At the End add an offset Value if 40px.
+                    contentBlock.style.height = Array.from(contentBlock.children).map(el => el.clientHeight).reduce((a, b) => a + b, 0) + 40 + "px";                
                     console.log("Line178 ADD HEIGHT: " + contentBlock.style.height);
 
                     expandedIcon.style.display = "block";
