@@ -304,20 +304,23 @@ ul#oc-coursenavlist {
     display:none;
 }
 
+
+
 .ocmooc-edit-collapsing {
     height: 0;
     visibility: hidden;
+    overflow: hidden;
     opacity: 0;
-    transition: height 0.35s ease, visibility 0s linear 0.35s, opacity 0.35s;
+    transition: height 0.35s ease, visibility 0s linear 0.35s, opacity 0.35s, transform 0.35s;
 }
 
 .ocmooc-edit-show {
     height: auto;
+    overflow: hidden;
     visibility: visible;
     opacity: 1;
-    transition: height 0.35s ease, visibility 0s, opacity 0.35s;
+    transition: height 0.35s ease, visibility 0s, opacity 0.35s, transform 0.35s;
 }
-
 
 .ocmooc .activity-item.hiddenactivity,
 .editing .ocmooc .activity-item:hover {

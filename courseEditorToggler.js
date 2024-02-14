@@ -119,8 +119,6 @@ function initEditMenuStart(){
         collapseSpan.style.display = 'none';
         expandSpan.style.display = 'inline';
         //Close all content Elements
-        console.log("CLOSE ALL");
-        console.log(contentElements.length);
         contentElements.forEach(element => {
             if(element.classList.contains('ocmooc-edit-show')){
                 element.classList.remove('ocmooc-edit-show');
@@ -177,7 +175,6 @@ function initToggle(){
                     // Set the total height of all direct children of the HTML element by obtaining the height of each child element
                     // and summing them up using the map and reduce array methods. At the End add an offset Value if 40px.
                     contentBlock.style.height = Array.from(contentBlock.children).map(el => el.clientHeight).reduce((a, b) => a + b, 0) + 40 + "px";                
-                    console.log("Line178 ADD HEIGHT: " + contentBlock.style.height);
 
                     expandedIcon.style.display = "block";
                     collapsedIcon.style.display = "none";
