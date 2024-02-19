@@ -1,10 +1,13 @@
-// Layout Site
+/* Layout Site */
 #oc-chapters-navigation.wrap {
     max-width: calc(100% - 1rem);
 }
 #page-course-view-ocmooc #page.drawers .main-inner { padding:1.5rem 0; }
   
-#moocnav .secondary-navigation .navigation {margin:0;}
+#moocnav .secondary-navigation .navigation {
+    margin:0;
+    padding: 0;
+}
 #page-course-view-ocmooc #page.drawers div[role="main"] {
     padding:0;
 }
@@ -14,7 +17,7 @@
   }
 }
 /* Kurstitel + Kapitelname */
-.header-maxwidth .page-context-header,
+.format-ocmooc .header-maxwidth .page-context-header,
 #moocnav .chapter-name {
     margin-left: 1.25rem;
     margin-right: 1.25rem;
@@ -26,7 +29,45 @@
   }
 }
 
-
+/* Navigations Icons */
+.mooc-nav-list {
+    justify-content: center;
+}
+#moocnav .mooc-nav-link{
+    padding: 5px 10px;
+    display: block;
+}
+#moocnav .nav-item.oc-nav-item .nav-link::before {
+    position: relative;
+    left: calc(50% - 15px);
+    content: "";
+    display: block;
+    background-image: url([[pix:format_ocmooc|icons/courseicon]]);
+    height: 28px;
+    width: 28px;
+    background-size: contain;
+    margin-right: 5px;
+  }
+  
+  #moocnav .nav-item.oc-nav-item.forumtab .nav-link::before {
+    background-image: url([[pix:format_ocmooc|icons/forumicon]]);
+  }
+  #moocnav .nav-item.oc-nav-item.participantstab .nav-link::before {
+    background-image: url([[pix:format_ocmooc|icons/participantsicon]]);
+  }
+  #moocnav .nav-item.oc-nav-item.discussiontab .nav-link::before {
+    background-image: url([[pix:format_ocmooc|icons/discussionicon]]);
+  }
+  #moocnav .nav-item.oc-nav-item.badgestab .nav-link::before {
+    background-image: url([[pix:format_ocmooc|icons/badgeicon]]);
+  }
+  #moocnav .nav-item.oc-nav-item.forumlisttab .nav-link::before {
+    background-image: url([[pix:format_ocmooc|icons/discussionicon]]);
+  }
+  #moocnav .nav-item.oc-nav-item.socialmediatab .nav-link::before {
+    background-image: url([[pix:format_ocmooc|icons/socialmediaicon]]);
+  }
+  
 /* Kursdraweranpassung */
 .courseindex [data-number="0"]{
     display: none;
