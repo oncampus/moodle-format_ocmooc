@@ -346,21 +346,20 @@ ul#oc-coursenavlist {
 }
 
 .ocmooc-edit-collapsing {
-    max-height: 0;
+    height: 0;
     visibility: hidden;
     overflow: hidden;
     opacity: 0;
-    transition: max-height 0.35s ease, visibility 0s linear 0.35s, opacity 0.35s, transform 0.35s;
+    transition: height 0.35s ease, visibility 0s linear 0.35s, opacity 0.35s, transform 0.35s;
 }
 
 .ocmooc-edit-show {
-    max-height: 100rem;
+    height: auto;
     overflow: visible;
     visibility: visible;
     opacity: 1;
-    transition: max-height 0.35s ease, visibility 0s, opacity 0.35s, transform 0.35s;
+    transition: height 0.35s ease, visibility 0s, opacity 0.35s, transform 0.35s;
 }
-
 
 .ocmooc .activity-item.hiddenactivity,
 .editing .ocmooc .activity-item:hover {

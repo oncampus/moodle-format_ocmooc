@@ -26,6 +26,7 @@ function toggleCollapseAll(id) {
         contentElements.forEach(element => {
             if(element.classList.contains('ocmooc-edit-show')){
                 element.classList.remove('ocmooc-edit-show');
+                element.style.height = 0;
             }
         });
 
@@ -44,6 +45,9 @@ function toggleCollapseAll(id) {
         contentElements.forEach(element => {
             if(!element.classList.contains('ocmooc-edit-show')){
                 element.classList.add('ocmooc-edit-show');
+                // Set the total height of all direct children of the HTML element by obtaining the height of each child element
+                // and summing them up using the map and reduce array methods. At the End add an offset Value if 40px.
+                element.style.height = Array.from(element.children).map(el => el.clientHeight).reduce((a, b) => a + b, 0) + 40 + "px";
             }
         });
 
@@ -117,7 +121,8 @@ function initEditMenuStart(){
         //Close all content Elements
         contentElements.forEach(element => {
             if(element.classList.contains('ocmooc-edit-show')){
-                element.classList.remove('ocmooc-edit-show');     
+                element.classList.remove('ocmooc-edit-show');
+                element.style.height = 0;
             }
         });
 
@@ -167,6 +172,10 @@ function initToggle(){
                 if (this.classList.contains("collapsed")) {
                     this.classList.remove("collapsed");
                     contentBlock.classList.add("ocmooc-edit-show");
+                    // Set the total height of all direct children of the HTML element by obtaining the height of each child element
+                    // and summing them up using the map and reduce array methods. At the End add an offset Value if 40px.
+                    contentBlock.style.height = Array.from(contentBlock.children).map(el => el.clientHeight).reduce((a, b) => a + b, 0) + 40 + "px";                
+
                     expandedIcon.style.display = "block";
                     collapsedIcon.style.display = "none";
                     this.setAttribute("aria-expanded", "false");
@@ -174,6 +183,7 @@ function initToggle(){
                     //If the current Section is open add the collapsed the tag, hide the corresponding section and change the icon
                     this.classList.add("collapsed");
                     contentBlock.classList.remove("ocmooc-edit-show");
+                    contentBlock.style.height = 0;
                     expandedIcon.style.display = "none";
                     collapsedIcon.style.display = "block";
                     this.setAttribute("aria-expanded", "true");
