@@ -111,12 +111,12 @@
         href="#"
         aria-expanded="true"
         role="button"
-        data-toggle="toggleAll"
+        data-toggle="toggleall"
     >
-        <span class="collapseall text-nowrap" style="display: {{#is_expanded}}none{{/is_expanded}};">{{#str}}collapseall{{/str}}</span>
-        <span class="expandall text-nowrap" style="display: {{^is_expanded}}none{{/is_expanded}};">{{#str}}expandall{{/str}}</span>
+        <span class="collapseall text-nowrap">{{#str}}collapseall{{/str}}</span>
+        <span class="expandall text-nowrap">{{#str}}expandall{{/str}}</span>
     </a>
-</div>
+    </div>
 {{/collapsemenu}}
 {{#controlmenu}}
     {{$ core_courseformat/local/content/section/controlmenu }}
@@ -125,9 +125,7 @@
 {{/controlmenu}}
 </div>
 <div id="coursecontentcollapse{{num}}"
-    class="content {{^iscoursedisplaymultipage}}
-        {{^sitehome}}course-content-item-content {{#editing}}ocmooc-edit-collapsing ocmooc-edit-show{{/editing}}{{^editing}}collapse {{^contentcollapsed}}show{{/contentcollapsed}}{{/editing}} {{/sitehome}}
-    {{/iscoursedisplaymultipage}}">
+    class="content{{^iscoursedisplaymultipage}}{{^sitehome}}course-content-item-content collapse {{^contentcollapsed}}show{{/contentcollapsed}}{{/sitehome}}{{/iscoursedisplaymultipage}}">
     <div class="{{#hasavailability}}description{{/hasavailability}} my-3" data-for="sectioninfo">
     {{#summary}}
         {{$ core_courseformat/local/content/section/summary }}
