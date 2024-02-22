@@ -34,6 +34,7 @@
     justify-content: center;
 }
 #moocnav .mooc-nav-link{
+    color: #555;
     padding: 5px 10px;
     display: block;
 }
