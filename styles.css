@@ -218,7 +218,6 @@ ul#oc-coursenavlist {
     opacity: 1;
 }
 
-
 .ocmooc-navigation {
     list-style: none;
     padding: 0;
@@ -343,22 +342,6 @@ ul#oc-coursenavlist {
 
 .ocmooc .course-section-header .icons-collapse-expand{
     display:none;
-}
-
-.ocmooc-edit-collapsing {
-    height: 0;
-    visibility: hidden;
-    overflow: hidden;
-    opacity: 0;
-    transition: height 0.35s ease, visibility 0s linear 0.35s, opacity 0.35s, transform 0.35s;
-}
-
-.ocmooc-edit-show {
-    height: auto;
-    overflow: visible;
-    visibility: visible;
-    opacity: 1;
-    transition: height 0.35s ease, visibility 0s, opacity 0.35s, transform 0.35s;
 }
 
 .ocmooc .activity-item.hiddenactivity,
