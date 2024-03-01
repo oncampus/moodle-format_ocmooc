@@ -20,11 +20,14 @@ abstract class base {
 
     protected $context;
 
+    protected $course;
+
     /**
      * @param $courseid
      */
     public function __construct($courseid, $url) {
         $this->courseid = $courseid;
+        $this->course = get_course($courseid);
         $this->context = \context_course::instance($courseid);
         $this->url = $url;
     }

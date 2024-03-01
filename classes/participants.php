@@ -21,26 +21,34 @@ class participants extends base {
 
     private $searchform;
 
+    private $unenrolurl;
+
     public function __construct($courseid, $url) {
+        global $DB;
+
         parent::__construct($courseid, $url);
-        $this->mform     = new participantsform($this->url, ['courseid' => $this->courseid]);
+        $this->mform = new participantsform($this->url, ['courseid' => $this->courseid]);
         $this->setdatadb = 'format_ocmooc_parts';
 
-        $this->datestring        = new \stdClass();
-        $this->datestring->year  = get_string('year');
+        $this->datestring = new \stdClass();
+        $this->datestring->year = get_string('year');
         $this->datestring->years = get_string('years');
-        $this->datestring->day   = get_string('day');
-        $this->datestring->days  = get_string('days');
-        $this->datestring->hour  = get_string('hour');
+        $this->datestring->day = get_string('day');
+        $this->datestring->days = get_string('days');
+        $this->datestring->hour = get_string('hour');
         $this->datestring->hours = get_string('hours');
-        $this->datestring->min   = get_string('min');
-        $this->datestring->mins  = get_string('mins');
-        $this->datestring->sec   = get_string('sec');
-        $this->datestring->secs  = get_string('secs');
+        $this->datestring->min = get_string('min');
+        $this->datestring->mins = get_string('mins');
+        $this->datestring->sec = get_string('sec');
+        $this->datestring->secs = get_string('secs');
 
         $this->searchform = new searchform($this->url);
 
         $this->title = get_string('participants', 'format_ocmooc');
+
+        if ($enrolid = $DB->get_field('enrol', 'id', ['courseid' => $courseid, 'enrol' => 'manual', 'status' => 0])) {
+            $this->unenrolurl = new \moodle_url('/enrol/manual/unenrolself.php', ['enrolid' => $enrolid]);
+        }
     }
 
     public function check_guest_access() {
@@ -88,7 +96,7 @@ class participants extends base {
         $table->setup();
 
         $instances = $manager->get_enrolment_instances();
-        $ids       = [];
+        $ids = [];
         foreach ($instances as $instance) {
             $ids[] = $instance->id;
         }
@@ -127,6 +135,17 @@ class participants extends base {
         $total = $DB->get_records_sql($sql, $params);
         $total = count($total);
 
+        //Show unenrol button for manual enrolment, if manual enrolment is active and user has capability for unenrolself.
+        if (isset($this->unenrolurl)
+                && has_capability('enrol/manual:unenrolself', $this->context)) {
+            echo \html_writer::start_div('text-right');
+
+            $unenrolstring = get_string('unenrolme', 'enrol', $this->course->fullname ?? $this->course->shortname);
+            echo \html_writer::link($this->unenrolurl, $unenrolstring, ['class' => 'btn btn-primary']);
+
+            echo \html_writer::end_div();
+        }
+
         $this->searchform->display();
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
 
@@ -137,7 +156,7 @@ class participants extends base {
         // insert button to unenrol yourself from course with autoenroll
         if ($enrol = $DB->get_record('enrol', array('courseid' => $this->courseid, 'enrol' => 'autoenrol', 'status' => 0))) {
             if ($user_enrolment = $DB->get_record('user_enrolments', array('enrolid' => $enrol->id, 'userid' => $USER->id))) {
-                $unenrolurl = new \moodle_url('/enrol/autoenrol/unenrolself.php', ['enrolid'=>$enrol->id]);
+                $unenrolurl = new \moodle_url('/enrol/autoenrol/unenrolself.php', ['enrolid' => $enrol->id]);
                 echo $OUTPUT->single_button($unenrolurl, get_string('participants_unenrol', 'format_ocmooc'), 'post');
             }
         }
@@ -148,14 +167,14 @@ class participants extends base {
     private function prepare_table_header() {
         $data = $this->get_data();
 
-        $header      = [];
-        $titles      = [];
+        $header = [];
+        $titles = [];
         $notsortable = [];
 
         if ($data->profilepicture) {
             $notsortable[] = 'profilepicture';
-            $header[]      = 'profilepicture';
-            $titles[]      = get_string('userpic',);
+            $header[] = 'profilepicture';
+            $titles[] = get_string('userpic',);
         }
 
         switch ($data->namedisplay) {
@@ -166,8 +185,8 @@ class participants extends base {
             case 2:
             case 3:
                 $notsortable[] = 'name';
-                $header[]      = 'name';
-                $titles[]      = get_string('name');
+                $header[] = 'name';
+                $titles[] = get_string('name');
                 break;
             default:
                 $header[] = 'fullname';
@@ -192,20 +211,20 @@ class participants extends base {
 
         if ($data->roles) {
             $notsortable[] = 'roles';
-            $header[]      = 'roles';
-            $titles[]      = get_string('roles');
+            $header[] = 'roles';
+            $titles[] = get_string('roles');
         }
 
         if ($data->groups) {
             $notsortable[] = 'groups';
-            $header[]      = 'groups';
-            $titles[]      = get_string('groups');
+            $header[] = 'groups';
+            $titles[] = get_string('groups');
         }
 
         if ($data->badges) {
             $notsortable[] = 'badges';
-            $header[]      = 'badges';
-            $titles[]      = get_string('badges');
+            $header[] = 'badges';
+            $titles[] = get_string('badges');
         }
 
         if ($data->lastaccess) {
@@ -255,26 +274,26 @@ class participants extends base {
         }
 
         if ($data->roles) {
-            $roles     = get_user_roles(\context_course::instance($this->courseid), $user->id, false);
+            $roles = get_user_roles(\context_course::instance($this->courseid), $user->id, false);
             $rolesdata = [];
             foreach ($roles as $role) {
                 $rolesdata[] = \html_writer::tag('span', $role->fullname ?? $role->shortname, ['class' => '']);
             }
-            $seperator  = \html_writer::tag('span', ', ', ['class' => '']);
+            $seperator = \html_writer::tag('span', ', ', ['class' => '']);
             $userdata[] = implode($seperator, $rolesdata);
         }
 
         if ($data->groups) {
-            $groupsarr     = \groups_get_user_groups($this->courseid, $user->id)[0];
+            $groupsarr = \groups_get_user_groups($this->courseid, $user->id)[0];
             $groupsdata = [];
             foreach ($groupsarr as $group) {
                 if ($group) {
-                    $group=  \groups_get_group($group);
+                    $group = \groups_get_group($group);
                     $groupsdata[] = \html_writer::tag('span', $group->name, ['class' => '']);
                 }
             }
 
-            $seperator  = \html_writer::tag('span', ', ', ['class' => '']);
+            $seperator = \html_writer::tag('span', ', ', ['class' => '']);
             $userdata[] = implode($seperator, $groupsdata);
         }
 
@@ -287,7 +306,7 @@ class participants extends base {
                 $images[] = \html_writer::img($imageurl, $badge->name, ['style' => 'width: 30px; heigth: 30px;']);
             }
 
-            $seperator  = \html_writer::tag('span', ', ', ['class' => '']);
+            $seperator = \html_writer::tag('span', ', ', ['class' => '']);
             $userdata[] = implode($seperator, $images);
         }
 
@@ -345,7 +364,7 @@ class participants extends base {
         if ($this->searchform->is_cancelled()) {
             redirect($this->url);
         } else if ($fromform = $this->searchform->get_data()) {
-            $data       = $this->get_data();
+            $data = $this->get_data();
             $searchtext = "%$fromform->searchtext%";
 
             $sql .= " AND ";
@@ -357,28 +376,28 @@ class participants extends base {
             switch ($data->displayname) {
                 case 1:
                     $sqlwhere[] = 'u.username LIKE ?';
-                    $params[]   = $searchtext;
+                    $params[] = $searchtext;
                     break;
                 default:
                     $sqlwhere[] = 'u.firstname LIKE ? OR u.lastname LIKE ?';
-                    $params[]   = $searchtext;
-                    $params[]   = $searchtext;
+                    $params[] = $searchtext;
+                    $params[] = $searchtext;
                     break;
             }
 
             if ($data->email) {
                 $sqlwhere[] = 'u.email LIKE ?';
-                $params[]   = $searchtext;
+                $params[] = $searchtext;
             }
 
             if ($data->town) {
                 $sqlwhere[] = 'u.city LIKE ?';
-                $params[]   = $searchtext;
+                $params[] = $searchtext;
             }
 
             if ($data->country) {
                 $sqlwhere[] = 'u.city LIKE ?';
-                $params[]   = $searchtext;
+                $params[] = $searchtext;
             }
 
             $sql .= '(' . implode(' OR ', $sqlwhere) . ')';
@@ -404,16 +423,16 @@ class participants extends base {
         if ($id) {
             $record->id = $id;
         }
-        $record->courseid       = $this->courseid;
+        $record->courseid = $this->courseid;
         $record->profilepicture = $data->profilepicture ?? false;
-        $record->namedisplay    = $data->namedisplay;
-        $record->email          = $data->email ?? false;
-        $record->town           = $data->town ?? false;
-        $record->country        = $data->country ?? false;
-        $record->badges         = $data->badges ?? false;
-        $record->roles          = $data->roles ?? false;
-        $record->groups         = $data->groups ?? false;
-        $record->lastaccess     = $data->lastaccess ?? false;
+        $record->namedisplay = $data->namedisplay;
+        $record->email = $data->email ?? false;
+        $record->town = $data->town ?? false;
+        $record->country = $data->country ?? false;
+        $record->badges = $data->badges ?? false;
+        $record->roles = $data->roles ?? false;
+        $record->groups = $data->groups ?? false;
+        $record->lastaccess = $data->lastaccess ?? false;
         if (!$id) {
             $record->created = time();
         }
