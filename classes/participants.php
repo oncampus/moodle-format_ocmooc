@@ -13,6 +13,17 @@ require_once($CFG->dirroot . '/blocks/online_users/lib.php');
 
 class participants extends base {
 
+    const UNENROLS = [
+            'manual' => [
+                    'capability' => 'enrol/manual:unenrolself',
+                    'url' => '/enrol/manual/unenrolself.php',
+            ],
+            'autoenrol' => [
+                    'capability' => 'enrol/autoenrol:unenrolself',
+                    'url' => '/enrol/autoenrol/unenrolself.php',
+            ],
+    ];
+
     private $data;
 
     private $counter = 1;
@@ -21,11 +32,7 @@ class participants extends base {
 
     private $searchform;
 
-    private $unenrolurl;
-
     public function __construct($courseid, $url) {
-        global $DB;
-
         parent::__construct($courseid, $url);
         $this->mform = new participantsform($this->url, ['courseid' => $this->courseid]);
         $this->setdatadb = 'format_ocmooc_parts';
@@ -45,10 +52,6 @@ class participants extends base {
         $this->searchform = new searchform($this->url);
 
         $this->title = get_string('participants', 'format_ocmooc');
-
-        if ($enrolid = $DB->get_field('enrol', 'id', ['courseid' => $courseid, 'enrol' => 'manual', 'status' => 0])) {
-            $this->unenrolurl = new \moodle_url('/enrol/manual/unenrolself.php', ['enrolid' => $enrolid]);
-        }
     }
 
     public function check_guest_access() {
@@ -135,17 +138,6 @@ class participants extends base {
         $total = $DB->get_records_sql($sql, $params);
         $total = count($total);
 
-        //Show unenrol button for manual enrolment, if manual enrolment is active and user has capability for unenrolself.
-        if (isset($this->unenrolurl)
-                && has_capability('enrol/manual:unenrolself', $this->context)) {
-            echo \html_writer::start_div('text-right');
-
-            $unenrolstring = get_string('unenrolme', 'enrol', $this->course->fullname ?? $this->course->shortname);
-            echo \html_writer::link($this->unenrolurl, $unenrolstring, ['class' => 'btn btn-primary']);
-
-            echo \html_writer::end_div();
-        }
-
         $this->searchform->display();
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
 
@@ -153,13 +145,7 @@ class participants extends base {
 
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
 
-        // insert button to unenrol yourself from course with autoenroll
-        if ($enrol = $DB->get_record('enrol', array('courseid' => $this->courseid, 'enrol' => 'autoenrol', 'status' => 0))) {
-            if ($user_enrolment = $DB->get_record('user_enrolments', array('enrolid' => $enrol->id, 'userid' => $USER->id))) {
-                $unenrolurl = new \moodle_url('/enrol/autoenrol/unenrolself.php', ['enrolid' => $enrol->id]);
-                echo $OUTPUT->single_button($unenrolurl, get_string('participants_unenrol', 'format_ocmooc'), 'post');
-            }
-        }
+        $this->show_unenrol_button();
 
         unset($table);
     }
@@ -233,6 +219,36 @@ class participants extends base {
         }
 
         return [$header, $titles, $notsortable];
+    }
+
+    private function show_unenrol_button() {
+        global $DB, $USER, $OUTPUT;
+
+        if ($enrols = $DB->get_records('enrol', ['courseid' => $this->courseid, 'status' => 0])) {
+            foreach ($enrols as $enrol) {
+                $params = [
+                        'enrolid' => $enrol->id,
+                        'status' => 0,
+                        'userid' => $USER->id
+                ];
+                if ($DB->record_exists('user_enrolments', $params)) {
+                    if (array_key_exists($enrol->enrol, self::UNENROLS)) {
+                        $unenrolparams = self::UNENROLS[$enrol->enrol];
+
+                        if (has_capability($unenrolparams['capability'], $this->context)) {
+                            $url = new \moodle_url($unenrolparams['url'], ['enrolid' => $enrol->id]);
+                            $string = get_string('unenrolme', 'enrol', $this->course->fullname ?? $this->course->shortname);
+
+                            echo \html_writer::start_div('mt-2 text-right');
+                            echo $OUTPUT->single_button($url, $string, 'post');
+                            echo \html_writer::end_div();
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private function prepare_user_entry($user) {
