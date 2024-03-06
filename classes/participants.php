@@ -138,6 +138,8 @@ class participants extends base {
         $total = $DB->get_records_sql($sql, $params);
         $total = count($total);
 
+        $this->show_unenrol_button();
+
         $this->searchform->display();
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
 
@@ -145,7 +147,6 @@ class participants extends base {
 
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
 
-        $this->show_unenrol_button();
 
         unset($table);
     }
