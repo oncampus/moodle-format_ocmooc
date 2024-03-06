@@ -15,13 +15,36 @@ class content extends content_base {
 
         $data = parent::export_for_template($output);
 
-        $chapter = optional_param('chapter', 1, PARAM_INT);
+        $chapterpreferencename = "ocmooc_last_chapter_cid_{$COURSE->id}";
+        $lastchapter = get_user_preferences($chapterpreferencename, 1);
+        $chapter = optional_param('chapter', $lastchapter, PARAM_INT);
         $chapters = $this->get_chapters($output);
         $data->footerfirst = false;
         $data->lastfooter = false;
 
         if ($chapter <= 0 || $chapter > count($chapters)) {
             $chapter = 1;
+        }
+
+        $lectionpreferencename = "ocmooc_last_lection_cid_{$COURSE->id}";
+        $lastlection = get_user_preferences($lectionpreferencename, 1);
+        $lection = optional_param('lection', false, PARAM_INT);
+        // If the current chapter is not equal to the saved chapter.
+        if ($chapter != $lastchapter) {
+            // Save the current chapter.
+            set_user_preference($chapterpreferencename, $chapter);
+            // If no lection information is applied, set the lection to start lection of new selected chapter.
+            if (!$lection) {
+                $lection = 1;
+            }
+        } else if (!$lection) {
+            // If we are still in the same chapter and lection should not be changed, apply the lastlection.
+            $lection = $lastlection;
+        }
+
+        // If the last saved lection is different to the current selected lection, save it.
+        if ($lection != $lastlection) {
+            set_user_preference($lectionpreferencename, $lection);
         }
 
         if (array_key_exists($chapter, $chapters)) {
@@ -43,7 +66,6 @@ class content extends content_base {
         $data->chapterstarttransform = (($chapter - 1) * -$elementsize) + $elementsize;
         $data->quicknav = true;
 
-        $lection = optional_param('lection', 1, PARAM_INT);
         $params = ['id' => $COURSE->id, 'chapter' => $chapter];
         if (empty($sections)) {
             $data->sections = [];
