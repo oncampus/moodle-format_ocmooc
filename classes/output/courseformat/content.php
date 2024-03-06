@@ -15,10 +15,10 @@ class content extends content_base {
 
         $data = parent::export_for_template($output);
 
-        $chapter           = optional_param('chapter', 1, PARAM_INT);
-        $chapters          = $this->get_chapters($output);
+        $chapter = optional_param('chapter', 1, PARAM_INT);
+        $chapters = $this->get_chapters($output);
         $data->footerfirst = false;
-        $data->lastfooter  = false;
+        $data->lastfooter = false;
 
         if ($chapter <= 0 || $chapter > count($chapters)) {
             $chapter = 1;
@@ -26,38 +26,38 @@ class content extends content_base {
 
         if (array_key_exists($chapter, $chapters)) {
             $chapters[$chapter]->selected = true;
-            $deleteurl                    = new \moodle_url('/course/format/ocmooc/sectionhandler.php');
+            $deleteurl = new \moodle_url('/course/format/ocmooc/sectionhandler.php');
             $deleteurl->param('action', "confirm-delete");
             $deleteurl->param('sesskey', sesskey());
             $deleteurl->param('courseid', $COURSE->id);
             $deleteurl->param('sectionnum', $chapters[$chapter]->section);
             $chapters[$chapter]->deleteurl = $deleteurl->out(false);
-            $data->currentchapter          = $chapters[$chapter];
+            $data->currentchapter = $chapters[$chapter];
         }
 
-        $elementsize              = 284;
-        $data->chapters           = array_values($chapters);
-        $sections                 = $this->get_chapter_sections($chapters[$chapter], $chapter, $output);
+        $elementsize = 284;
+        $data->chapters = array_values($chapters);
+        $sections = $this->get_chapter_sections($chapters[$chapter], $chapter, $output);
         $data->chaptersstartwidth = count($chapters) * $elementsize;
 
         $data->chapterstarttransform = (($chapter - 1) * -$elementsize) + $elementsize;
-        $data->quicknav              = true;
+        $data->quicknav = true;
 
         $lection = optional_param('lection', 1, PARAM_INT);
-        $params  = ['id' => $COURSE->id, 'chapter' => $chapter];
+        $params = ['id' => $COURSE->id, 'chapter' => $chapter];
         if (empty($sections)) {
-            $data->sections     = [];
+            $data->sections = [];
             $data->firstsection = true;
-            $data->lastsection  = true;
+            $data->lastsection = true;
             if ($chapter < count($chapters)) {
                 $params['chapter'] = $chapter + 1;
                 $params['lection'] = 1;
                 $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
             }
-            $params  = ['id' => $COURSE->id, 'chapter' => $chapter];
+            $params = ['id' => $COURSE->id, 'chapter' => $chapter];
             if ($chapter > 1) {
                 $data->footerfirst = false;
-                $prevsections      = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
+                $prevsections = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
                 $params['chapter'] = $chapter - 1;
                 $params['lection'] = count($prevsections);
                 $data->prevsection = (new \moodle_url('/course/view.php', $params))->out(false);
@@ -68,12 +68,12 @@ class content extends content_base {
             }
 
             $sections[$lection]->selected = true;
-            $data->sections               = [$sections[$lection]];
+            $data->sections = [$sections[$lection]];
 
-            $navlectionarr      = [];
+            $navlectionarr = [];
             $maxlectionnavitems = 5;
-            $countsides         = ($maxlectionnavitems - 1) / 2;
-            $sectioncount       = count($sections);
+            $countsides = ($maxlectionnavitems - 1) / 2;
+            $sectioncount = count($sections);
 
             if ($lection <= 1 && $chapter === 1) {
                 $data->footerfirst = true;
@@ -90,7 +90,7 @@ class content extends content_base {
                     $data->lastsection = true;
                 }
                 $countleft = $lection - 3 > 0 ? $lection - 3 : 0;
-                $overflow  = ($lection - 3) + $maxlectionnavitems >= $sectioncount ?
+                $overflow = ($lection - 3) + $maxlectionnavitems >= $sectioncount ?
                         ($lection - 3) + $maxlectionnavitems - $sectioncount : 0;
                 if ($overflow && $lection > 0) {
                     $countleft -= $lection > $overflow ? $overflow : $lection;
@@ -98,9 +98,9 @@ class content extends content_base {
                 $navlectionarr = array_slice($sections, $countleft, $maxlectionnavitems);
 
             } else {
-                $navlectionarr      += array_values($sections);
+                $navlectionarr += array_values($sections);
                 $data->firstsection = true;
-                $data->lastsection  = true;
+                $data->lastsection = true;
             }
 
             $data->chaptersections = $navlectionarr;
@@ -113,9 +113,9 @@ class content extends content_base {
                 $params['lection'] = $lection + 1;
                 $data->nextsection = (new \moodle_url('/course/view.php', $params))->out(false);
             }
-            $params  = ['id' => $COURSE->id, 'chapter' => $chapter];
+            $params = ['id' => $COURSE->id, 'chapter' => $chapter];
             if ($chapter > 1 && $lection <= 1) {
-                $prevsections      = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
+                $prevsections = $this->get_chapter_sections($chapters[$chapter - 1], $chapter - 1, $output);
 
                 $params['chapter'] = $chapter - 1;
                 $params['lection'] = count($prevsections);
@@ -131,6 +131,8 @@ class content extends content_base {
         #$data->sectionreturn = $data->singlesection;
 
         $data->moocnav = moocnav::get_moocnav_entries();
+        $data->moocnavdropdown = moocnav::get_drowdown_items();
+        $data->showdropdown = !empty($data->moocnavdropdown);
         return $data;
     }
 
@@ -139,7 +141,7 @@ class content extends content_base {
         global $COURSE, $PAGE, $DB;
 
         $chapters = [];
-        $context  = \context_course::instance($COURSE->id);
+        $context = \context_course::instance($COURSE->id);
 
         $modinfo = $this->format->get_modinfo();
         $chapter = 1;
@@ -150,16 +152,16 @@ class content extends content_base {
 
             if ($section->parent === 0) {
                 if ($this->format->is_section_visible($section)) {
-                    $rawtitle  = $section->name;
+                    $rawtitle = $section->name;
                     $sectionid = $section->id;
 
                     $section = new $this->sectionclass($this->format, $section);
                     $section = $section->export_for_template($output);
 
-                    $section->rawtitle   = $rawtitle;
-                    $params              = ['id' => $COURSE->id, 'chapter' => $chapter, 'lection' => 1];
+                    $section->rawtitle = $rawtitle;
+                    $params = ['id' => $COURSE->id, 'chapter' => $chapter, 'lection' => 1];
                     $section->chapternum = $chapter;
-                    $section->url        = (new \moodle_url('/course/view.php', $params))->out(false);
+                    $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
                     if ($PAGE->user_is_editing()) {
                         $section->editurl = (new \moodle_url('/course/editsection.php', ['id' => $sectionid]));
                     }
@@ -167,14 +169,14 @@ class content extends content_base {
                     if ($section->summary->summarytext) {
                         $img_link = explode('src="', $section->summary->summarytext);
                         if (count($img_link) > 1) {
-                            $img             = substr($img_link[1], 0, strpos($img_link[1], '"'));
+                            $img = substr($img_link[1], 0, strpos($img_link[1], '"'));
                             $section->imgurl = $img;
                         }
                     }
 
-                    $section->section      = $sectionnum;
-                    $section->sections     = $this->get_chapter_sections($section, $chapter, $output);
-                    $section->progress     = $this->get_progress_by_sections($section->sections);
+                    $section->section = $sectionnum;
+                    $section->sections = $this->get_chapter_sections($section, $chapter, $output);
+                    $section->progress = $this->get_progress_by_sections($section->sections);
                     $section->sectioncount = count($section->sections);
 
                     $chapters[$chapter] = $section;
@@ -205,7 +207,7 @@ class content extends content_base {
             $chaptersectionnumber = $chapter->section;
         }
 
-        $modinfo    = $this->format->get_modinfo();
+        $modinfo = $this->format->get_modinfo();
         $sectionnum = 1;
         foreach ($modinfo->get_section_info_all() as $section) {
             if ($section->section != 0 && $section->parent == $chaptersectionnumber) {
@@ -215,12 +217,12 @@ class content extends content_base {
                 $section = $section->export_for_template($output);
 
                 $section->sectionreturnid = $sectionnum - 1;
-                $section->rawtitle        = $rawtitle;
-                $section->sectionnum      = $sectionnum;
-                $section->progress        = $this->get_progress_by_section($section);
-                $section->hasnoprogress   = $section->progress === false;
-                $params                   = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
-                $section->url             = (new \moodle_url('/course/view.php', $params))->out(false);
+                $section->rawtitle = $rawtitle;
+                $section->sectionnum = $sectionnum;
+                $section->progress = $this->get_progress_by_section($section);
+                $section->hasnoprogress = $section->progress === false;
+                $params = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
+                $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
 
                 $sections[$sectionnum] = $section;
 
@@ -257,9 +259,8 @@ class content extends content_base {
             return false;
         }
 
-
-        $modules   = $completion->get_activities();
-        $count     = 0;
+        $modules = $completion->get_activities();
+        $count = 0;
         $completed = 0;
         foreach ($modules as $module) {
             if ($module->section == $section->id) {

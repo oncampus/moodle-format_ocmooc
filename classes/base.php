@@ -54,7 +54,9 @@ abstract class base {
         global $OUTPUT;
 
         $moocnav = \format_ocmooc\moocnav::get_moocnav_entries();
-        echo $OUTPUT->render_from_template('format_ocmooc/local/moocnav/headernav', ['moocnav' => $moocnav]);
+        $moocnavdropdown = \format_ocmooc\moocnav::get_drowdown_items();
+        echo $OUTPUT->render_from_template('format_ocmooc/local/moocnav/headernav',
+                ['moocnav' => $moocnav, 'moocnavdropdown' => $moocnavdropdown, 'showdropdown' => !empty($moocnavdropdown)]);
 
         $this->render_view_custom();
     }
@@ -88,8 +90,8 @@ abstract class base {
             $url = $this->url;
             $url->remove_all_params();
             $url->params(['courseid' => $this->courseid]);
-        } else{
-            $url = new \moodle_url('/course/view.php',['id'=>$this->courseid]);
+        } else {
+            $url = new \moodle_url('/course/view.php', ['id' => $this->courseid]);
         }
 
         if ($this->mform->is_cancelled()) {

@@ -222,7 +222,19 @@ class participants extends base {
     }
 
     private function show_unenrol_button() {
-        global $DB, $USER, $OUTPUT;
+        global $OUTPUT;
+
+        if ($params = $this->get_unenrol_url()) {
+            list($url, $string) = $params;
+
+            echo \html_writer::start_div('mt-2 text-right');
+            echo $OUTPUT->single_button($url, $string, 'post');
+            echo \html_writer::end_div();
+        }
+    }
+
+    public function get_unenrol_url() {
+        global $DB, $USER;
 
         if ($enrols = $DB->get_records('enrol', ['courseid' => $this->courseid, 'status' => 0])) {
             foreach ($enrols as $enrol) {
@@ -236,19 +248,15 @@ class participants extends base {
                         $unenrolparams = self::UNENROLS[$enrol->enrol];
 
                         if (has_capability($unenrolparams['capability'], $this->context)) {
-                            $url = new \moodle_url($unenrolparams['url'], ['enrolid' => $enrol->id]);
                             $string = get_string('unenrolme', 'enrol', $this->course->fullname ?? $this->course->shortname);
-
-                            echo \html_writer::start_div('mt-2 text-right');
-                            echo $OUTPUT->single_button($url, $string, 'post');
-                            echo \html_writer::end_div();
-
-                            break;
+                            $url = new \moodle_url($unenrolparams['url'], ['enrolid' => $enrol->id]);
+                            return [$url, $string];
                         }
                     }
                 }
             }
         }
+        return false;
     }
 
     private function prepare_user_entry($user) {

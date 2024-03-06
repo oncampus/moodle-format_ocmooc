@@ -9,6 +9,24 @@
                     </a>
                 </li>
             {{/moocnav}}
+            {{#showdropdown}}
+                <li class="nav-item mooc-nav-listitem oc-nav-item moretab">
+                    <div class="btn nav-link oc-nav-link mooc-nav-link"
+                         id="moocnavDropdownMenu"
+                         data-toggle="dropdown"
+                         aria-haspopup="true"
+                         aria-expanded="false">
+                        {{#str}}more{{/str}}
+                    </div>
+                    <div class="dropdown-menu" aria-labelledby="moocnavDropdownMenu">
+                        {{#moocnavdropdown}}
+                            <a class="dropdown-item" href="{{url}}">
+                                {{{name}}}
+                            </a>
+                        {{/moocnavdropdown}}
+                    </div>
+                </li>
+            {{/showdropdown}}
         </ul>
     </nav>
 </div>

@@ -68,6 +68,9 @@
   #moocnav .nav-item.oc-nav-item.socialmediatab .nav-link::before {
     background-image: url([[pix:format_ocmooc|icons/socialmediaicon]]);
   }
+#moocnav .nav-item.oc-nav-item.moretab .nav-link::before {
+    background-image: url([[pix:theme_boost|fp/setting]]);
+}
   
 /* Kursdraweranpassung */
 .courseindex [data-number="0"]{
