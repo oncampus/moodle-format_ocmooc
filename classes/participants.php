@@ -126,6 +126,7 @@ class participants extends base {
             $sql .= " ORDER BY $sort";
         }
 
+        $userscount = $DB->count_records_sql($sql, $params);
         $users = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
 
         foreach ($users as $user) {
@@ -141,8 +142,10 @@ class participants extends base {
         $this->show_unenrol_button();
 
         $this->searchform->display();
+
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
 
+        echo \html_writer::tag('p', get_string('countparticipantsfound', 'core_user', $userscount));
         $table->finish_html();
 
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
