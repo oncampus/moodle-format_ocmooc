@@ -147,7 +147,6 @@ class participants extends base {
 
         echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
 
-
         unset($table);
     }
 
@@ -263,6 +262,9 @@ class participants extends base {
     private function prepare_user_entry($user) {
         global $OUTPUT, $DB;
 
+        $page = optional_param('page', 0, PARAM_INT);
+        $perpage = optional_param('perpage', 10, PARAM_INT);
+
         $data = $this->get_data();
 
         $userdata = [];
@@ -276,7 +278,7 @@ class participants extends base {
                 $userdata[] = $user->username;
                 break;
             case 2:
-                $userdata[] = "User $this->counter";
+                $userdata[] = "User " . ($this->counter + ($page * $perpage));
                 $this->counter++;
                 break;
             case 3:
@@ -398,10 +400,12 @@ class participants extends base {
 
             $params = [];
 
-            switch ($data->displayname) {
+            switch ($data->namedisplay) {
                 case 1:
                     $sqlwhere[] = 'u.username LIKE ?';
                     $params[] = $searchtext;
+                    break;
+                case 2:
                     break;
                 default:
                     $sqlwhere[] = 'u.firstname LIKE ? OR u.lastname LIKE ?';
