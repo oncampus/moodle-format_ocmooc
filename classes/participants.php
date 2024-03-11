@@ -126,7 +126,8 @@ class participants extends base {
             $sql .= " ORDER BY $sort";
         }
 
-        $userscount = $DB->count_records_sql($sql, $params);
+        $userscount = $DB->get_records_sql($sql, $params);
+        $userscount = count($userscount);
         $users = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
 
         foreach ($users as $user) {
