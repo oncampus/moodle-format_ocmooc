@@ -55,8 +55,10 @@ abstract class base {
 
         $moocnav = \format_ocmooc\moocnav::get_moocnav_entries();
         $moocnavdropdown = \format_ocmooc\moocnav::get_drowdown_items();
+        echo \html_writer::start_div('w-100', ['id' => 'moocnav']);
         echo $OUTPUT->render_from_template('format_ocmooc/local/moocnav/headernav',
                 ['moocnav' => $moocnav, 'moocnavdropdown' => $moocnavdropdown, 'showdropdown' => !empty($moocnavdropdown)]);
+        echo \html_writer::end_div();
 
         $this->render_view_custom();
     }
