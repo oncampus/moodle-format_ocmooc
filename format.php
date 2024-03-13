@@ -23,13 +23,13 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-global $PAGE,$CFG;
+global $PAGE, $CFG;
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
 // Retrieve course format option fields and add them to the $course object.
-$format  = course_get_format($course);
-$course  = $format->get_course();
+$format = course_get_format($course);
+$course = $format->get_course();
 $context = context_course::instance($course->id);
 
 // Add any extra logic here.
@@ -46,12 +46,13 @@ if (!empty($displaysection)) {
 $isediting = $PAGE->user_is_editing();
 if ($isediting) {
     $templateable = new \format_ocmooc\output\courseformat\fullcontent($format);
-    $data         = $templateable->export_for_template($renderer);
+    $data = $templateable->export_for_template($renderer);
     echo $renderer->render_from_template('format_ocmooc/local/content/content', $data);
+    $PAGE->requires->js_call_amd('format_ocmooc/jumpto_section', 'init');
 } else {
-// Output course content.
+    // Output course content.
     $outputclass = $format->get_output_classname('content');
-    $widget      = new $outputclass($format);
+    $widget = new $outputclass($format);
     echo $renderer->render($widget);
 }
 // Include any format js module here using $PAGE->requires->js.

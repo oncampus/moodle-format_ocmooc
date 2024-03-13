@@ -24,7 +24,6 @@
 
 namespace format_ocmooc\output\courseformat;
 
-
 use core_courseformat\output\local\content as content_base;
 use format_ocmooc\output\courseformat\content as content;
 
@@ -47,21 +46,33 @@ class fullcontent extends content_base {
         global $PAGE, $DB, $COURSE;
         $isediting = $PAGE->user_is_editing();
 
-        $data                = parent::export_for_template($output);
-        $data->editoradvice  = [];
+        $data = parent::export_for_template($output);
+        $data->editoradvice = [];
 
         $courseformatoptions = $this->format->get_format_options();
-        $data->editing       = $isediting;
+        $data->editing = $isediting;
         // TODO for now this class is only used if user is editing but check anyway as one day it will be used when not editing.
         if ($isediting) {
-            $course          = $this->format->get_course();
-            $content         = new content($this->format);
+            $course = $this->format->get_course();
+            $content = new content($this->format);
+
+            $chapters = $content->get_chapters($output);
+            $chapterpreferencename = "ocmooc_last_chapter_cid_{$COURSE->id}";
+            $lectionpreferencename = "ocmooc_last_lection_cid_{$COURSE->id}";
+            $lastchapter = get_user_preferences($chapterpreferencename, 1);
+            $lastlection = get_user_preferences($lectionpreferencename, 1);
+
+            if (array_key_exists($lastchapter, $chapters) && array_key_exists($lastlection, $chapters[$lastchapter]->sections)) {
+                $section = $chapters[$lastchapter]->sections[$lastlection];
+                echo \html_writer::tag('input', '', ['type' => 'hidden', 'id' => 'oc-jump-lection', 'value' => $section->num]);
+            }
+            
             // Workaround to fix index count of chapters for mustache template iterating.
             // We NEED index from 0 to x. Otherwise mustache templates would not iterate through the array.
             // It would only use the first element. All other would be ignored.
-            $data->chapters  = array_values($content->get_chapters($output));
-            
-            $format      = $this->format;
+            $data->chapters = array_values($chapters);
+
+            $format = $this->format;
             $lastsection = $format->get_last_section_number();
             $maxsections = $format->get_max_sections();
             foreach ($data->chapters as $chapternumber => $chapter) {
@@ -72,57 +83,57 @@ class fullcontent extends content_base {
                 $chapter->sections = array_values($chapter->sections);
 
                 $params = [
-                    'courseid' => $COURSE->id,
-                    'action'   => 'addchapter',
-                    'sesskey'  => sesskey(),
-                    'position' => $maxsections - $lastsection
+                        'courseid' => $COURSE->id,
+                        'action' => 'addchapter',
+                        'sesskey' => sesskey(),
+                        'position' => $maxsections - $lastsection
 
                 ];
                 $chapter->addchapter = [
-                    'url'        => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
-                    'title'      => get_string('addchapter', 'format_ocmooc'),
-                    'newsection' => $maxsections - $lastsection,
+                        'url' => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
+                        'title' => get_string('addchapter', 'format_ocmooc'),
+                        'newsection' => $maxsections - $lastsection,
                 ];
 
-                $params['action']               = 'addlection';
+                $params['action'] = 'addlection';
                 $params['chaptersectionnumber'] = $this->get_chapter_section_number($chapternumber);
 
                 $chapter->addlection = [
-                    'url'        => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
-                    'title'      => get_string('addlection', 'format_ocmooc'),
-                    'newsection' => $maxsections - $lastsection,
+                        'url' => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
+                        'title' => get_string('addlection', 'format_ocmooc'),
+                        'newsection' => $maxsections - $lastsection,
                 ];
             }
             if (get_config('format_ocmooc', 'allowsubocmoocview')
-                && isset($courseformatoptions['courseusesubocmooc']) && $courseformatoptions['courseusesubocmooc']) {
+                    && isset($courseformatoptions['courseusesubocmooc']) && $courseformatoptions['courseusesubocmooc']) {
                 // TODO for now (Beta version) we warn editor about sub ocmooc only appearing in non-edit view.
                 $messgage = get_string('editoradvicesubocmooc', 'format_ocmooc');
                 if (has_capability('moodle/site:config', \context_system::instance())) {
                     $messgage .= ' (' . get_string('version', 'format_ocmooc', self::get_ocmooc_plugin_release()) . ')';
                 }
                 $data->editoradvice[] = [
-                    'text' => $messgage,
-                    'icon' => 'info-circle', 'class' => 'secondary'
+                        'text' => $messgage,
+                        'icon' => 'info-circle', 'class' => 'secondary'
                 ];
             }
             // If completion tracking is on but nothing to track at activity level, display help to teacher.
             $hasnotrackableactivities = $DB->record_exists('course_modules', ['course' => $course->id, 'visible' => 1])
-                && !$DB->record_exists_sql(
-                    "SELECT id FROM {course_modules} WHERE course = ? AND visible = 1 AND completion != 0",
-                    [$course->id]
-                );
+                    && !$DB->record_exists_sql(
+                            "SELECT id FROM {course_modules} WHERE course = ? AND visible = 1 AND completion != 0",
+                            [$course->id]
+                    );
             if ($hasnotrackableactivities) {
-                $bulklink             = \html_writer::link(
-                    new \moodle_url('/course/bulkcompletion.php', array('id' => $course->id)),
-                    get_string('completionwarning_changeinbulk', 'format_ocmooc')
+                $bulklink = \html_writer::link(
+                        new \moodle_url('/course/bulkcompletion.php', array('id' => $course->id)),
+                        get_string('completionwarning_changeinbulk', 'format_ocmooc')
                 );
-                $helplink             = \html_writer::link(
-                    get_docs_url('Activity_completion_settings#Changing_activity_completion_settings_in_bulk'),
-                    $output->pix_icon('help', '', 'core')
+                $helplink = \html_writer::link(
+                        get_docs_url('Activity_completion_settings#Changing_activity_completion_settings_in_bulk'),
+                        $output->pix_icon('help', '', 'core')
                 );
                 $data->editoradvice[] = [
-                    'text' => get_string('completionwarning', 'format_ocmooc') . ' ' . $bulklink . ' ' . $helplink,
-                    'icon' => 'exclamation-triangle', 'class' => 'warning'
+                        'text' => get_string('completionwarning', 'format_ocmooc') . ' ' . $bulklink . ' ' . $helplink,
+                        'icon' => 'exclamation-triangle', 'class' => 'warning'
                 ];
             }
         }
@@ -151,11 +162,12 @@ class fullcontent extends content_base {
 
     /**
      * Get the release details of this version of ocmooc.
+     *
      * @return string
      */
     private static function get_ocmooc_plugin_release(): string {
         global $CFG;
-        $plugin          = new \stdClass();
+        $plugin = new \stdClass();
         $plugin->release = '';
         require("$CFG->dirroot/course/format/ocmooc/version.php");
         return $plugin->release;
