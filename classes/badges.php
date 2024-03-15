@@ -162,7 +162,17 @@ class badges extends base {
                 } else {
                     echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_need', 'format_ocmooc', array('min_per' => $min_prozent, 'current' => $percentage))));
                 }
-            } else {
+            }
+        }
+        //Check whether certificates can be obtained and output a string about the current certificate situation.
+        if ($simplecert_m || $ildcert_m || $certificate_m) {
+            if($DB->get_record('course_modules', array('module' => $ildcert_m->id, 'course' => $courseid, 'visible' => 1))
+            || $DB->get_record('course_modules', array('module' => $simplecert_m->id, 'course' => $courseid, 'visible' => 1)) 
+            || $DB->get_record('course_modules', array('module' => $certificate_m->id, 'course' => $courseid, 'visible' => 1))){
+                //There is at least one certificate included in the course.
+                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_available', 'format_ocmooc'), array('class' => 'oc_badges_text')));
+            }else{
+                //There is no certificate in the course.
                 echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
             }
         }

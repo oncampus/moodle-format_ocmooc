@@ -84,6 +84,7 @@ $string['cert_need']                = 'In this course you can download the confi
 $string['only_for_trainers'] = 'Only admins and trainers can see this';
 $string['cert_addtext']          = 'Lorem ipsum';
 $string['cert_nocert'] = 'It is not possible to obtain a certificate of attendance for this course.';
+$string['cert_available'] = 'It is possible to obtain a certificate of attendance for this course.';
 /* base.php */
 $string['default_title'] = 'Default Title';
 $string['editor']        = 'Editor';

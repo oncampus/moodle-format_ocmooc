@@ -83,6 +83,7 @@ $string['cert_need']                = 'In diesem Kurs können Sie sich die Teiln
 $string['only_for_trainers']          = 'Nur für Admins und Trainer sichtbar';
 $string['cert_addtext']          = 'Lorem ipsum';
 $string['cert_nocert'] = 'In diesem Kurs kann man keine Teilnahmebestätigung erwerben.';
+$string['cert_available'] = 'In diesem Kurs kann eine Teilnahmebestätigung erworben werden.';
 
 /* base.php */
 $string['default_title'] = 'Standart Title';
