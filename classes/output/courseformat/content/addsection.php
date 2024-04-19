@@ -8,7 +8,7 @@ use stdClass;
 class addsection extends addsection_base {
 
     public function export_for_template(\renderer_base $output): stdClass {
-        global $COURSE, $CFG;
+        global $COURSE, $PAGE;
 
         $data = new stdClass();
 
@@ -42,13 +42,7 @@ class addsection extends addsection_base {
         ];
 
         $context = \context_course::instance($COURSE->id);
-        if (count((array)$data)) {
-            if (has_capability('moodle/course:update', $context)){
-                $data->showaddsection = true;
-            } else {
-                $data->showaddsection = false;
-            }
-        }
+        $data->showaddsection = $PAGE->user_is_editing() && has_capability('moodle/course:update', $context);
 
         return $data;
     }
