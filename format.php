@@ -48,6 +48,7 @@ if ($isediting) {
     $templateable = new \format_ocmooc\output\courseformat\fullcontent($format);
     $data = $templateable->export_for_template($renderer);
     echo $renderer->render_from_template('format_ocmooc/local/content/content', $data);
+    $PAGE->requires->js_call_amd('format_ocmooc/lockEditbutton', 'init');
     $PAGE->requires->js_call_amd('format_ocmooc/jumpto_section', 'init');
 } else {
     // Output course content.
@@ -56,6 +57,7 @@ if ($isediting) {
     echo $renderer->render($widget);
 }
 // Include any format js module here using $PAGE->requires->js.
+$PAGE->requires->js('/course/format/ocmooc/lockEditbutton.js');
 $PAGE->requires->js('/course/format/ocmooc/chapterslider.js');
 $PAGE->requires->js('/course/format/ocmooc/courseEditorToggler.js');
 $PAGE->requires->js('/course/format/ocmooc/amd/build/hvp_resizer_parent.min.js');
