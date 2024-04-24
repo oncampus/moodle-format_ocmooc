@@ -217,7 +217,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         if (!params || !params.interactiveVideo) {
             return; // Seems to be a problem with Interactive Video
         }
-
+        console.log("---INT VIDEO---");
         const results = [];
         let subContentIds = [];
 
@@ -499,6 +499,11 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         );
         var isInteraction = false;
 
+        console.log(JSON.stringify(event, null, 2));
+        var contentId = event.data.statement.object.definition.extensions["http://h5p.org/x-api/h5p-local-content-id"];
+        console.log("Content ID:", contentId);
+
+
         if (event.data.statement.object.objectType === 'Activity') {
             isInteraction = true;
         }
@@ -510,13 +515,13 @@ define(['jquery', 'core/ajax'], function($, ajax) {
             typeof ILD.EssayPassPercentage[contentId] === 'undefined' &&
             typeof ILD.BranchingScenario[contentId] === 'undefined'
         ) {
-
             let score = event.getScore();
             let maxScore = event.getMaxScore();
             let subContentId = event.data.statement.object.id;
             subContentId = subContentId.split('subContentId=');
             subContentId = subContentId[1];
 
+            console.log(ILD.subIds);
             if (ILD.subIds.indexOf(subContentId) !== -1) {
                 if (typeof ILD.interactions[contentId] === 'undefined') {
                     ILD.interactions[contentId] = 1;
@@ -526,7 +531,11 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                 // ILD.maxScore += maxScore;
                 let interactions = ILD.interactions[contentId];
 
+                console.log("Score: " + score);
+                console.log("MaxScore: " + maxScore);
+                console.log("Interactions: " + interactions);
                 ILD.percentage = ILD.percentage + ((score / maxScore) / interactions) * 100;
+                console.log("PERC: " + ILD.percentage);
                 ILD.setResult(contentId, ILD.percentage, 100);
             } else if (ILD.subIds.indexOf(subContentId) === -1 && ILD.subIds.length === 0) {
                 // eslint-disable-next-line block-scoped-var
@@ -588,7 +597,9 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         var promises = ajax.call([
             {methodname: 'format_ocmooc_setgrade', args: {contentid: contentid, score: score, maxscore: maxScore}}
         ]);
-
+        console.log("ContentID: " + contentid);
+        console.log("Score: " + score);
+        console.log("MaxScore: " + maxScore);
         promises[0].done(function(data) {
             let divId = String('oc-progress-' + data.sectionId);
             let textDivId = String('oc-progress-text-' + data.sectionId);
