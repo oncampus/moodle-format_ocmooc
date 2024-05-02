@@ -294,9 +294,6 @@ class content extends content_base {
                        
                     require_once($CFG->libdir . '/gradelib.php');
                     $grading_info = \grade_get_grades($module->course, 'mod', 'hvp', $module->instance, $USER->id);
-                    var_dump($grading_info);
-                    echo "<br>---------------------<br>";
-
                     //Cheks if a Activity has a grademax > 0 and the current reached Grade is > 0
                     if($grading_info->items[0]->grademax != null && $grading_info->items[0]->grademax > 0 && $grading_info->items[0]->grades[$USER->id]->grade != null && $grading_info->items[0]->grades[$USER->id]->grade > 0){
                         //Set the completed status to the current grade of a activity (grade = 2.5, maxgrade = 10 => completed += 0.25)

@@ -22,6 +22,14 @@
  */
 
 $functions = array(
+        'format_ocmooc_setgrade_subcontent' => array(
+                'classname' => 'format_ocmooc_external',
+                'methodname' => 'setgrade_subcontent',
+                'classpath' => 'course/format/ocmooc/externallib.php',
+                'description' => 'Set H5P grade for activites with subcontent interactions',
+                'type' => 'write',
+                'ajax' => true
+        ),
         'format_ocmooc_setgrade' => array(
                 'classname' => 'format_ocmooc_external',
                 'methodname' => 'setgrade',
@@ -33,9 +41,15 @@ $functions = array(
 );
 
 $services = array(
+        'ocmooc_setgrade_subcontent' => array(
+                'functions' => array('format_ocmooc_setgrade_subcontent'),
+                'restrictedusers' => 0,
+                'enabled' => 1,
+        ),
         'ocmooc_setgrade' => array(
                 'functions' => array('format_ocmooc_setgrade'),
                 'restrictedusers' => 0,
                 'enabled' => 1,
         )
 );
+

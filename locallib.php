@@ -101,8 +101,8 @@ function get_progress($courseId, $sectionId) {
         return false;
     }
 
-    $percentage = 0;
-    $mods_counter = 0;
+    $activity_grade = 0.0;
+    $activity_maxgrade = 0.0;
 
     if(isset($SESSION->lang)) {
         $user_lang = $SESSION->lang;
@@ -129,15 +129,18 @@ function get_progress($courseId, $sectionId) {
 
             if (!$skip) {
                 $grading_info = \grade_get_grades($mod->course, 'mod', 'hvp', $mod->instance, $USER->id);
-                $user_grade = $grading_info->items[0]->grades[$USER->id]->grade;
-
-                $percentage += $user_grade;
-                $mods_counter++;
+                //It could be that an object is still displayed and marked with 
+                //[Deletion in Progress] if the corresponding cron job has not run yet.
+                if (!str_contains($grading_info->items[0]->name, '[Deletion in progress]')) { 
+                    $activity_grade += $grading_info->items[0]->grades[$USER->id]->grade;
+                    $activity_maxgrade += $grading_info->items[0]->grademax;
+                }
             }
         }
     }   
 
-    $progress = array('sectionId' => $sectionId, 'percentage' => $percentage / $mods_counter);
+    //$progress = array('sectionId' => $sectionId, 'percentage' => $percentage / $mods_counter);
+    $progress = array('sectionId' => $sectionId, 'percentage' => round(($activity_grade / $activity_maxgrade) * 100));
 
     return $progress;
 }
