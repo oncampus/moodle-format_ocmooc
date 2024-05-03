@@ -48,7 +48,6 @@ if ($isediting) {
     $templateable = new \format_ocmooc\output\courseformat\fullcontent($format);
     $data = $templateable->export_for_template($renderer);
     echo $renderer->render_from_template('format_ocmooc/local/content/content', $data);
-    $PAGE->requires->js_call_amd('format_ocmooc/lockEditbutton', 'init');
     $PAGE->requires->js_call_amd('format_ocmooc/jumpto_section', 'init');
 } else {
     // Output course content.
