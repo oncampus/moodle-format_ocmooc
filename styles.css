@@ -971,3 +971,16 @@ p + .accordion {
         padding-left: 10px;
     }
 }
+
+
+/* enrol-button */
+.enrol-button-container {
+    display: block;
+    height: 0;
+}
+
+.enrol-button-element {
+    position: relative;
+    text-align: right;
+    bottom: 4rem;
+}
