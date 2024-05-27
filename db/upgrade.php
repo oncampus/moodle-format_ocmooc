@@ -134,7 +134,7 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023071700, 'format', 'ocmooc');
     }
 
-    if ($oldversion < 20241022900) {
+    if ($oldversion < 2024052700) {
 
         // Define field id to be added to format_ocmooc_hvp.
         $table = new xmldb_table('format_ocmooc_hvp');
