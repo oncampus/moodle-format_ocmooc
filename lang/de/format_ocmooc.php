@@ -135,6 +135,8 @@ $string['lection'] = 'Lektion';
 $string['footernav:prev'] = 'Vorherige Lektion';
 $string['footernav:top']  = 'Nach oben';
 $string['footernav:next'] = 'Nächste Lektion';
+/* enrolbutton.mustache */
+$string['enrolbutton'] = 'In den Kurs einschreiben';
 
 /**  lib.php **/
 $string['edit:participants'] = 'Teilnehmer bearbeiten';

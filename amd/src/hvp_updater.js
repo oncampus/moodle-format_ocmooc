@@ -217,7 +217,6 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         if (!params || !params.interactiveVideo) {
             return; // Seems to be a problem with Interactive Video
         }
-
         const results = [];
         let subContentIds = [];
 
@@ -510,7 +509,6 @@ define(['jquery', 'core/ajax'], function($, ajax) {
             typeof ILD.EssayPassPercentage[contentId] === 'undefined' &&
             typeof ILD.BranchingScenario[contentId] === 'undefined'
         ) {
-
             let score = event.getScore();
             let maxScore = event.getMaxScore();
             let subContentId = event.data.statement.object.id;
@@ -522,12 +520,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                     ILD.interactions[contentId] = 1;
                 }
 
-                // ILD.score += score;
-                // ILD.maxScore += maxScore;
-                let interactions = ILD.interactions[contentId];
-
-                ILD.percentage = ILD.percentage + ((score / maxScore) / interactions) * 100;
-                ILD.setResult(contentId, ILD.percentage, 100);
+                ILD.setResultWithSubcontent(contentId, subContentId, score, maxScore, ILD.interactions[contentId]);
             } else if (ILD.subIds.indexOf(subContentId) === -1 && ILD.subIds.length === 0) {
                 // eslint-disable-next-line block-scoped-var
                 let percentage = (score / maxScore) * 100;
@@ -588,7 +581,6 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         var promises = ajax.call([
             {methodname: 'format_ocmooc_setgrade', args: {contentid: contentid, score: score, maxscore: maxScore}}
         ]);
-
         promises[0].done(function(data) {
             let divId = String('oc-progress-' + data.sectionId);
             let textDivId = String('oc-progress-text-' + data.sectionId);
@@ -601,6 +593,47 @@ define(['jquery', 'core/ajax'], function($, ajax) {
             });
         }).fail(function(result) {
             window.console.warn('format_ocmooc_setgrade:', result);
+        });
+    };
+
+
+    /**
+     * Post answered results for user and set progress if .
+     *
+     * @param {number} contentid
+     *   Identifies the content
+     * @param {number} subcontentid
+     *   Identifies the subcontent
+     * @param {number} score
+     *   Achieved score/points
+     * @param {number} maxScore
+     *   The maximum score/points that can be achieved
+     * @param {number} totalInteractions
+     *   All Interaction of the Activity
+     */
+    ILD.setResultWithSubcontent = function(contentid, subcontentid, score, maxScore, totalInteractions) {
+        var promises = ajax.call([
+            {methodname: 'format_ocmooc_setgrade_subcontent',
+            args: {
+                contentid: contentid,
+                subcontentid: subcontentid,
+                score: score,
+                maxscore: maxScore,
+                totalinteractions: totalInteractions
+            }}
+        ]);
+        promises[0].done(function(data) {
+            let divId = String('oc-progress-' + data.sectionId);
+            let textDivId = String('oc-progress-text-' + data.sectionId);
+            let percentage = Math.round(data.percentage);
+            percentage = String(percentage + '%');
+            window.parent.postMessage({
+                progressDiv: divId,
+                textDiv: textDivId,
+                percentage: percentage
+            });
+        }).fail(function(result) {
+            window.console.warn('format_ocmooc_setgrade_subcontent:', result);
         });
     };
 

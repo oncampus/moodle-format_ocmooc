@@ -23,7 +23,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-global $PAGE, $CFG;
+global $PAGE, $CFG, $COURSE;
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
@@ -50,12 +50,21 @@ if ($isediting) {
     echo $renderer->render_from_template('format_ocmooc/local/content/content', $data);
     $PAGE->requires->js_call_amd('format_ocmooc/jumpto_section', 'init');
 } else {
+    //Render the enrol Button, if a user is not yet enrolled in the course.
+    $isUserEnrolled = \format_ocmooc\enrolbutton::is_current_user_enrolled();
+    if(!$isUserEnrolled){
+        $url = new \moodle_url('/enrol/index.php', ['id' => $COURSE->id]);
+        $attributes = ['class' => 'enrol-button-container'];
+        echo html_writer::link($url, $renderer->render_from_template('format_ocmooc/local/content/enrolbutton', []), $attributes);
+    }
+
     // Output course content.
     $outputclass = $format->get_output_classname('content');
     $widget = new $outputclass($format);
     echo $renderer->render($widget);
 }
 // Include any format js module here using $PAGE->requires->js.
+$PAGE->requires->js('/course/format/ocmooc/lockEditbutton.js');
 $PAGE->requires->js('/course/format/ocmooc/chapterslider.js');
 $PAGE->requires->js('/course/format/ocmooc/courseEditorToggler.js');
 $PAGE->requires->js('/course/format/ocmooc/amd/build/hvp_resizer_parent.min.js');

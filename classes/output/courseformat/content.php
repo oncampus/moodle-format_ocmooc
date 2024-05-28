@@ -273,7 +273,7 @@ class content extends content_base {
      */
     private
     function get_progress_by_section($section) {
-        global $USER, $COURSE;
+        global $USER, $COURSE, $CFG;
 
         $completion = new \completion_info($COURSE);
 
@@ -282,21 +282,33 @@ class content extends content_base {
         }
 
         $modules = $completion->get_activities();
-        $count = 0;
-        $completed = 0;
+        $count = 0.0;
+        $completed = 0.0;
         foreach ($modules as $module) {
             if ($module->section == $section->id) {
                 $count++;
                 $data = $completion->get_data($module, true, $USER->id);
+
+                // For other modules, continue with existing completion status
                 if (($data->completionstate == COMPLETION_INCOMPLETE) || ($data->completionstate == COMPLETION_COMPLETE_FAIL)) {
-                    $completed += 0;
+                       
+                    require_once($CFG->libdir . '/gradelib.php');
+                    $grading_info = \grade_get_grades($module->course, 'mod', 'hvp', $module->instance, $USER->id);
+                    //Cheks if a Activity has a grademax > 0 and the current reached Grade is > 0
+                    if($grading_info->items[0]->grademax != null && $grading_info->items[0]->grademax > 0 && $grading_info->items[0]->grades[$USER->id]->grade != null && $grading_info->items[0]->grades[$USER->id]->grade > 0){
+                        //Set the completed status to the current grade of a activity (grade = 2.5, maxgrade = 10 => completed += 0.25)
+                        $completed += $grading_info->items[0]->grades[$USER->id]->grade / $grading_info->items[0]->grademax;
+                    }else{
+                        $completed += 0;
+                    } 
                 } else {
                     $completed += 1;
-                };
+                }
+            
             }
         }
 
-        if ($count == 0) {
+        if ($count == 0.0) {
             return false;
         }
 

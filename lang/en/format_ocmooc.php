@@ -140,6 +140,9 @@ $string['footernav:prev'] = 'Previous lection';
 $string['footernav:top']  = 'Top';
 $string['footernav:next'] = 'Next lection';
 
+/* enrolbutton.mustache */
+$string['enrolbutton'] = 'Enroll in the course';
+
 /**  lib.php **/
 $string['edit:participants'] = 'Edit particitpants';
 $string['edit:social']       = 'Edit socials';

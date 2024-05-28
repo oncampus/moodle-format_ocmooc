@@ -42,7 +42,8 @@ class addsection extends addsection_base {
         ];
 
         $context = \context_course::instance($COURSE->id);
-        $data->showaddsection = $PAGE->user_is_editing() && has_capability('moodle/course:update', $context);
+        //Show Create Section on the edit page or on the main page if no section is available
+        $data->showaddsection = ($PAGE->user_is_editing() && has_capability('moodle/course:update', $context)) || ($lastsection == 0 && has_capability('moodle/course:update', $context));
 
         return $data;
     }

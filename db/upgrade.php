@@ -134,5 +134,30 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2023071700, 'format', 'ocmooc');
     }
 
+    if ($oldversion < 2024052700) {
+
+        // Define field id to be added to format_ocmooc_hvp.
+        $table = new xmldb_table('format_ocmooc_hvp');
+
+        // Adding fields to table format_ocmooc_htmlsite.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_field('user_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('content_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('subcontent_id', XMLDB_TYPE_CHAR, '36', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('score', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('maxscore', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table format_ocmooc_parts.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch add field id.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Ocmooc savepoint reached.
+        upgrade_plugin_savepoint(true, 20241022900, 'format', 'ocmooc');
+    }
+
     return true;
 }
