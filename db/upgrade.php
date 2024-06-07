@@ -156,7 +156,7 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         }
 
         // Ocmooc savepoint reached.
-        upgrade_plugin_savepoint(true, 20241022900, 'format', 'ocmooc');
+        upgrade_plugin_savepoint(true, 2024052700, 'format', 'ocmooc');
     }
 
     return true;
