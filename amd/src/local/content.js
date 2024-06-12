@@ -26,7 +26,8 @@ import {BaseComponent} from 'core/reactive';
 import {debounce} from 'core/utils';
 import {getCurrentCourseEditor} from 'core_courseformat/courseeditor';
 import inplaceeditable from 'core/inplace_editable';
-import Section from 'core_courseformat/local/content/section';
+//import Section from 'core_courseformat/local/content/section';
+import Section from 'format_ocmooc/local/content/section';
 import CmItem from 'core_courseformat/local/content/section/cmitem';
 // Course actions is needed for actions that are not migrated to components.
 import courseActions from 'core_course/actions';
@@ -253,7 +254,6 @@ export default class Component extends BaseComponent {
         );
         return displayedSections;
     }
-
 
 
     /**
