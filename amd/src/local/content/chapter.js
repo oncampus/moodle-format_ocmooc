@@ -17,8 +17,14 @@ export default class extends Section {
     }
 
     drop(dropdata) {
+        let lections = document.querySelectorAll(`.section.lection[data-parent='${dropdata.id}']`);
+        let ids = [dropdata.id];
+        lections.forEach(function (item){
+            ids.push(item.dataset.id);
+        });
+
         if (dropdata.type == 'chapter') {
-            this.reactive.dispatch('chapterMove', [dropdata.id], this.id);
+            this.reactive.dispatch('chapterMove', ids, this.id);
         }
         super.drop(dropdata);
     }

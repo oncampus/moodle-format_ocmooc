@@ -248,7 +248,7 @@ class content extends content_base {
                 $section->ischapter = false;
                 $params = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
                 $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
-                $section->parent = $chaptersectionnumber;
+                $section->parent = $chapter->id;
 
                 $sections[$sectionnum] = $section;
 

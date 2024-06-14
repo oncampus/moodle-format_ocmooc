@@ -64,29 +64,23 @@ export default class extends Mutations {
     }
 
     async lectionMove(stateManager, sectionIds, targetSectionId) {
-        console.log(targetSectionId);
-
-        return;
         if (!targetSectionId) {
             throw new Error(`Mutation sectionMove requires targetSectionId`);
         }
         const course = stateManager.get('course');
         this.sectionLock(stateManager, sectionIds, true);
-        const updates = await this._callEditWebservice('section_move', course.id, sectionIds, targetSectionId);
+        const updates = await this._callEditWebservice('lection_move', course.id, sectionIds, targetSectionId);
         stateManager.processUpdates(updates);
         this.sectionLock(stateManager, sectionIds, false);
     }
 
-    async lectionMove(stateManager, sectionIds, targetSectionId) {
-        console.log(targetSectionId);
-
-        return;
+    async chapterMove(stateManager, sectionIds, targetSectionId) {
         if (!targetSectionId) {
             throw new Error(`Mutation sectionMove requires targetSectionId`);
         }
         const course = stateManager.get('course');
         this.sectionLock(stateManager, sectionIds, true);
-        const updates = await this._callEditWebservice('section_move', course.id, sectionIds, targetSectionId);
+        const updates = await this._callEditWebservice('chapter_move', course.id, sectionIds, targetSectionId);
         stateManager.processUpdates(updates);
         this.sectionLock(stateManager, sectionIds, false);
     }
