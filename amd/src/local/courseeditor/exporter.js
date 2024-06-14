@@ -43,4 +43,27 @@ export default class extends Exporter {
         }
         return section;
     }
+
+    chapterDraggableData(state, sectionid) {
+        return this.createDraggableData(state, sectionid, 'chapter');
+
+    }
+
+    lectionDraggableData(state, sectionid) {
+        return this.createDraggableData(state, sectionid, 'lection');
+    }
+
+    createDraggableData(state, sectionid, type) {
+        const sectioninfo = state.section.get(sectionid);
+        if (!sectioninfo) {
+            return null;
+        }
+        return {
+            type: type,
+            id: sectioninfo.id,
+            name: sectioninfo.name,
+            number: sectioninfo.number,
+            parent: sectioninfo.parent,
+        };
+    }
 }

@@ -183,6 +183,7 @@ class content extends content_base {
                     $section->rawtitle = $rawtitle;
                     $params = ['id' => $COURSE->id, 'chapter' => $chapter, 'lection' => 1];
                     $section->chapternum = $chapter;
+                    $section->ischapter = true;
                     $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
                     if ($PAGE->user_is_editing()) {
                         $section->editurl = (new \moodle_url('/course/editsection.php', ['id' => $sectionid]));
@@ -200,6 +201,7 @@ class content extends content_base {
                     $section->sections = $this->get_chapter_sections($section, $chapter, $output);
                     $section->progress = $this->get_progress_by_sections($section->sections);
                     $section->sectioncount = count($section->sections);
+                    $section->parent = 0;
 
                     $chapters[$chapter] = $section;
                 }
@@ -243,8 +245,10 @@ class content extends content_base {
                 $section->sectionnum = $sectionnum;
                 $section->progress = $this->get_progress_by_section($section);
                 $section->hasnoprogress = $section->progress === false;
+                $section->ischapter = false;
                 $params = ['id' => $COURSE->id, 'chapter' => $chapternum, 'lection' => $sectionnum];
                 $section->url = (new \moodle_url('/course/view.php', $params))->out(false);
+                $section->parent = $chaptersectionnumber;
 
                 $sections[$sectionnum] = $section;
 
@@ -291,20 +295,22 @@ class content extends content_base {
 
                 // For other modules, continue with existing completion status
                 if (($data->completionstate == COMPLETION_INCOMPLETE) || ($data->completionstate == COMPLETION_COMPLETE_FAIL)) {
-                       
+
                     require_once($CFG->libdir . '/gradelib.php');
                     $grading_info = \grade_get_grades($module->course, 'mod', 'hvp', $module->instance, $USER->id);
                     //Cheks if a Activity has a grademax > 0 and the current reached Grade is > 0
-                    if($grading_info->items[0]->grademax != null && $grading_info->items[0]->grademax > 0 && $grading_info->items[0]->grades[$USER->id]->grade != null && $grading_info->items[0]->grades[$USER->id]->grade > 0){
+                    if ($grading_info->items[0]->grademax != null && $grading_info->items[0]->grademax > 0 &&
+                            $grading_info->items[0]->grades[$USER->id]->grade != null &&
+                            $grading_info->items[0]->grades[$USER->id]->grade > 0) {
                         //Set the completed status to the current grade of a activity (grade = 2.5, maxgrade = 10 => completed += 0.25)
                         $completed += $grading_info->items[0]->grades[$USER->id]->grade / $grading_info->items[0]->grademax;
-                    }else{
+                    } else {
                         $completed += 0;
-                    } 
+                    }
                 } else {
                     $completed += 1;
                 }
-            
+
             }
         }
 

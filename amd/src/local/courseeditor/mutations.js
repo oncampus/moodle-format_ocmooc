@@ -62,4 +62,32 @@ export default class extends Mutations {
         const updates = await this._callEditWebservice('section_switch_collapsed', course.id, [sectionId]);
         stateManager.processUpdates(updates);
     }
+
+    async lectionMove(stateManager, sectionIds, targetSectionId) {
+        console.log(targetSectionId);
+
+        return;
+        if (!targetSectionId) {
+            throw new Error(`Mutation sectionMove requires targetSectionId`);
+        }
+        const course = stateManager.get('course');
+        this.sectionLock(stateManager, sectionIds, true);
+        const updates = await this._callEditWebservice('section_move', course.id, sectionIds, targetSectionId);
+        stateManager.processUpdates(updates);
+        this.sectionLock(stateManager, sectionIds, false);
+    }
+
+    async lectionMove(stateManager, sectionIds, targetSectionId) {
+        console.log(targetSectionId);
+
+        return;
+        if (!targetSectionId) {
+            throw new Error(`Mutation sectionMove requires targetSectionId`);
+        }
+        const course = stateManager.get('course');
+        this.sectionLock(stateManager, sectionIds, true);
+        const updates = await this._callEditWebservice('section_move', course.id, sectionIds, targetSectionId);
+        stateManager.processUpdates(updates);
+        this.sectionLock(stateManager, sectionIds, false);
+    }
 }

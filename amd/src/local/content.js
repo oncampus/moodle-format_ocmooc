@@ -25,9 +25,12 @@
 import {BaseComponent} from 'core/reactive';
 import {debounce} from 'core/utils';
 import {getCurrentCourseEditor} from 'core_courseformat/courseeditor';
+import DefaultMutations from 'format_ocmooc/local/courseeditor/mutations';
 import inplaceeditable from 'core/inplace_editable';
 //import Section from 'core_courseformat/local/content/section';
 import Section from 'format_ocmooc/local/content/section';
+import Chapter from 'format_ocmooc/local/content/chapter';
+import Lection from 'format_ocmooc/local/content/lection';
 import CmItem from 'core_courseformat/local/content/section/cmitem';
 // Course actions is needed for actions that are not migrated to components.
 import courseActions from 'core_course/actions';
@@ -51,6 +54,8 @@ export default class Component extends BaseComponent {
         // Default query selectors.
         this.selectors = {
             SECTION: `[data-for='section']`,
+            CHAPTER: `[data-for='chapter']`,
+            LECTION: `[data-for='lection']`,
             SECTION_ITEM: `[data-for='section_title']`,
             SECTION_CMLIST: `[data-for='cmlist']`,
             COURSE_SECTIONLIST: `[data-for='course_sectionlist']`,
@@ -70,6 +75,8 @@ export default class Component extends BaseComponent {
             ACTIVITY: `activity`,
             STATEDREADY: `stateready`,
             SECTION: `section`,
+            CHAPTER: `chapter`,
+            LECTION: `lection`,
         };
         // Array to save dettached elements during element resorting.
         this.dettachedCms = {};
@@ -91,9 +98,11 @@ export default class Component extends BaseComponent {
      * @return {Component}
      */
     static init(target, selectors, sectionReturn) {
+        let reactive = getCurrentCourseEditor();
+        reactive.mutations = new DefaultMutations();
         return new Component({
             element: document.getElementById(target),
-            reactive: getCurrentCourseEditor(),
+            reactive: reactive,
             selectors,
             sectionReturn,
         });
@@ -509,6 +518,22 @@ export default class Component extends BaseComponent {
             this.sections,
             (item) => {
                 return new Section(item);
+            }
+        );
+
+        this._scanIndex(
+            this.selectors.CHAPTER,
+            this.sections,
+            (item) => {
+                return new Chapter(item);
+            }
+        );
+
+        this._scanIndex(
+            this.selectors.LECTION,
+            this.sections,
+            (item) => {
+                return new Lection(item);
             }
         );
 

@@ -14,25 +14,79 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 import Section from 'core_courseformat/local/content/section';
+import Header from 'format_ocmooc/local/content/section/header';
 
 /**
- * Course section format component.
- *
- * @module     format_ocmooc/local/content/section
- * @copyright  2022 Marina Glancy
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Basic overriding Section class for chapter and lection.
+ * Preparing all sharing modifications here!
  */
 export default class extends Section {
-    // Extends course/format/amd/src/local/content/section.js
-    // Extends course/format/amd/src/local/courseeditor/dndsection.js
+
+    stateReady(state) {
+        this.configState(state);
+        // Drag and drop is only available for components compatible course formats.
+        if (this.reactive.isEditing && this.reactive.supportComponents) {
+            // Section zero and other formats sections may not have a title to drag.
+            const sectionItem = this.getElement(this.selectors.SECTION_ITEM);
+            if (sectionItem) {
+                // Init the inner dragable element.
+                const headerComponent = new Header({
+                    ...this,
+                    element: sectionItem,
+                    fullregion: this.element,
+                    type: this.type,
+                });
+                this.configDragDrop(headerComponent);
+            }
+        }
+    }
+
+    validateDropData(dropdata) {
+        if (dropdata?.type === this.type && this.reactive.sectionReturn != 0) {
+            return false;
+        }
+
+        // We accept any course module.
+        if (dropdata?.type === 'cm') {
+            return true;
+        }
+
+        // We accept any section but the section 0 or ourself
+        if (dropdata?.type === this.type) {
+            const sectionzeroid = this.course.sectionlist[0];
+            return dropdata?.id != this.id && dropdata?.id != sectionzeroid && this.id != sectionzeroid;
+        }
+        return false;
+    }
 
     /**
-     * Register state values and the drag and drop subcomponent.
+     * Display the component dropzone.
      *
-     * @param {BaseComponent} sectionitem section item component
+     * @param {Object} dropdata the accepted drop data
      */
-    configDragDrop(sectionitem) {
-        sectionitem.draggable = false; // <---- flexible Sections modification - disable drag&drop of sections for now.
-        super.configDragDrop(sectionitem);
+    showDropZone(dropdata) {
+        if (dropdata.type == 'cm') {
+            this.getLastCm()?.classList.add(this.classes.DROPDOWN);
+        }
+        if (dropdata.type == this.type) {
+            // The relative move of section depends on the section number.
+            if (this.section.number > dropdata.number) {
+                this.element.classList.remove(this.classes.DROPUP);
+                this.element.classList.add(this.classes.DROPDOWN);
+            } else {
+                this.element.classList.add(this.classes.DROPUP);
+                this.element.classList.remove(this.classes.DROPDOWN);
+            }
+        }
     }
+
+    /**
+     * Hide the component dropzone.
+     */
+    hideDropZone() {
+        this.getLastCm()?.classList.remove(this.classes.DROPDOWN);
+        this.element.classList.remove(this.classes.DROPUP);
+        this.element.classList.remove(this.classes.DROPDOWN);
+    }
+
 }
