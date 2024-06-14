@@ -3,6 +3,9 @@ import Section from 'format_ocmooc/local/content/section';
 export default class extends Section {
     create(descriptor) {
         this.type = 'lection';
+        this.types = [
+            'lection',
+        ];
         super.create(descriptor);
     }
 
@@ -24,7 +27,7 @@ export default class extends Section {
 
     getWatchers() {
         return [
-            {watch: `lection[${this.id}]:updated`, handler: this._refreshLection},
+            {watch: `section[${this.id}]:updated`, handler: this._refreshLection},
         ];
     }
 

@@ -445,9 +445,14 @@ class sections {
         return true;
     }
 
-    public function move_lecture($lecturesectionnumber, $position, $chaptersectionumber = NULL) {
-        // Chapterid to move to another chapter.
-        // If Chapterid is equal to 0, it's also possible to change lecture to chapter
+    public function move_lecture($lection, $chapter) {
+        global $DB;
+        $section          = $this->format->get_section($lection);
+        $parent           = $this->format->get_section($chapter);
+
+        print_object($section);
+        print_object($chapter);
+
     }
 
     /**

@@ -42,7 +42,9 @@ export default class extends Section {
     }
 
     validateDropData(dropdata) {
-        if (dropdata?.type === this.type && this.reactive.sectionReturn != 0) {
+        console.log(this.types.includes(dropdata?.type));
+        console.log(dropdata?.type);
+        if (this.types.includes(dropdata?.type) && this.reactive.sectionReturn != 0) {
             return false;
         }
 
@@ -52,7 +54,7 @@ export default class extends Section {
         }
 
         // We accept any section but the section 0 or ourself
-        if (dropdata?.type === this.type) {
+        if (this.types.includes(dropdata?.type)) {
             const sectionzeroid = this.course.sectionlist[0];
             return dropdata?.id != this.id && dropdata?.id != sectionzeroid && this.id != sectionzeroid;
         }
@@ -68,7 +70,7 @@ export default class extends Section {
         if (dropdata.type == 'cm') {
             this.getLastCm()?.classList.add(this.classes.DROPDOWN);
         }
-        if (dropdata.type == this.type) {
+        if (this.types.includes(dropdata?.type)) {
             // The relative move of section depends on the section number.
             if (this.section.number > dropdata.number) {
                 this.element.classList.remove(this.classes.DROPUP);

@@ -4,6 +4,10 @@ export default class extends Section {
 
     create(descriptor) {
         this.type = 'chapter';
+        this.types = [
+            'chapter',
+            'lection',
+        ];
         super.create(descriptor);
     }
 
@@ -17,21 +21,18 @@ export default class extends Section {
     }
 
     drop(dropdata) {
-        let lections = document.querySelectorAll(`.section.lection[data-parent='${dropdata.id}']`);
-        let ids = [dropdata.id];
-        lections.forEach(function (item){
-            ids.push(item.dataset.id);
-        });
-
         if (dropdata.type == 'chapter') {
-            this.reactive.dispatch('chapterMove', ids, this.id);
+            this.reactive.dispatch('chapterMove', [dropdata.id], this.id);
+        }
+        if (dropdata.type == 'lection') {
+            this.reactive.dispatch('lectionMove2Chapter', [dropdata.id], this.id);
         }
         super.drop(dropdata);
     }
 
     getWatchers() {
         return [
-            {watch: `chapter[${this.id}]:updated`, handler: this._refreshChapter},
+            {watch: `section[${this.id}]:updated`, handler: this._refreshChapter},
         ];
     }
 

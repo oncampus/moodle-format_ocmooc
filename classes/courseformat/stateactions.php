@@ -91,12 +91,98 @@ class stateactions extends \core_courseformat\stateactions {
 
     public function lection_move(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
             ?int $targetsectionid = null, ?int $targetcmid = null): void {
+        $this->validate_sections($course, $ids, __FUNCTION__);
 
+        $coursecontext = context_course::instance($course->id);
+        require_capability('moodle/course:movesections', $coursecontext);
+
+        $format = course_get_format($course);
+        $modinfo = $format->get_modinfo();
+
+        $lectionid = array_shift($ids);
+        $lection = $modinfo->get_section_info_by_id($lectionid);
+
+        $targetsection = $modinfo->get_section_info_by_id($targetsectionid);
+
+        $sectionmanager = $format->get_section_manager();
+
+        // If parents are different, we need to move lection to another chapter.
+        $sectionmanager->move_section($lection, $targetsection->parent, $targetsection);
+
+        // All course sections can be renamed because of the resort.
+        $allsections = $modinfo->get_section_info_all();
+        foreach ($allsections as $section) {
+            $updates->add_section_put($section->id);
+        }
+        // The section order is at a course level.
+        $updates->add_course_put();
+    }
+
+    function lection_move_to_chapter(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
+            ?int $targetsectionid = null, ?int $targetcmid = null) {
+        $this->validate_sections($course, $ids, __FUNCTION__);
+
+        $coursecontext = context_course::instance($course->id);
+        require_capability('moodle/course:movesections', $coursecontext);
+
+        $format = course_get_format($course);
+        $modinfo = $format->get_modinfo();
+
+        $lectionid = array_shift($ids);
+        $lection = $modinfo->get_section_info_by_id($lectionid);
+
+        $targetchapter = $modinfo->get_section_info_by_id($targetsectionid);
+
+        $sectionmanager = $format->get_section_manager();
+
+        // If parents are different, we need to move lection to another chapter.
+        $sectionmanager->move_section($lection, $targetchapter);
+
+        // All course sections can be renamed because of the resort.
+        $allsections = $modinfo->get_section_info_all();
+        foreach ($allsections as $section) {
+            $updates->add_section_put($section->id);
+        }
+        // The section order is at a course level.
+        $updates->add_course_put();
     }
 
     public function chapter_move(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
             ?int $targetsectionid = null, ?int $targetcmid = null): void {
+        $this->validate_sections($course, $ids, __FUNCTION__);
 
+        $coursecontext = context_course::instance($course->id);
+        require_capability('moodle/course:movesections', $coursecontext);
+
+        /** @var \format_ocmooc $format */
+        $format = course_get_format($course);
+        $modinfo = $format->get_modinfo();
+
+        $chapterid = array_shift($ids);
+        $chapter = $modinfo->get_section_info_by_id($chapterid);
+        $lectionsfrom = $this->get_lections_by_chapter($modinfo, $chapter);
+
+        $targetchapter = $modinfo->get_section_info_by_id($targetsectionid);
+        $targetlections = $this->get_lections_by_chapter($modinfo, $targetchapter);
+
+        $sectionmanager = $format->get_section_manager();
+
+        foreach ($lectionsfrom as $lection) {
+            $sectionmanager->move_section($lection, $targetchapter);
+        }
+
+        foreach ($targetlections as $lection) {
+            $sectionmanager->move_section($lection, $chapter);
+        }
+
+        /*
+        // All course sections can be renamed because of the resort.
+        $allsections = $modinfo->get_section_info_all();
+        foreach ($allsections as $section) {
+            $updates->add_section_put($section->id);
+        }
+        // The section order is at a course level.
+        $updates->add_course_put();*/
     }
 
     /**
@@ -202,5 +288,17 @@ class stateactions extends \core_courseformat\stateactions {
 
         // Adding subsection affects the full course structure.
         $this->course_state($updates, $course);
+    }
+
+    public function get_lections_by_chapter(\course_modinfo $modinfo, \section_info $chapter): array {
+        $lections = array();
+
+        foreach ($modinfo->get_section_info_all() as $section) {
+            if ($section->parent == $chapter->section) {
+                $lections[] = $section;
+            }
+        }
+
+        return $lections;
     }
 }
