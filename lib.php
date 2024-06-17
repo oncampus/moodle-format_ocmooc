@@ -47,7 +47,34 @@ class format_ocmooc extends core_courseformat\base {
     }
 
     public function section_action($section, $action, $sr) {
-        return true;
+        global $PAGE;
+
+        // Special case of refreshing here.
+        // We can not use the parent refreshing.
+        if ($action == 'refresh') {
+            $course = $this->get_course();
+            $coursecontext = context_course::instance($course->id);
+            $modinfo = $this->get_modinfo();
+            $renderer = $this->get_renderer($PAGE);
+
+            if ($sr) {
+                $this->set_section_number($sr);
+            }
+
+            if (!($section instanceof section_info)) {
+                $section = $modinfo->get_section_info($section->section);
+            }
+
+            if ($section->parent == 0) {
+                $section->ischapter = true;
+            }
+
+            return [
+                    'content' => $renderer->course_section_updated($this, $section),
+            ];
+        } else {
+            return parent::section_action($section, $action, $sr);
+        }
     }
 
     public function uses_indentation(): bool {

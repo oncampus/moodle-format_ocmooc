@@ -14,6 +14,9 @@ class section extends section_base {
         if ($PAGE->user_is_editing()) {
             $data->insertafter = false;
         }
+        if ($this->section->parent == 0) {
+            $data->ischapter = true;
+        }
         return $data;
     }
 

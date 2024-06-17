@@ -152,7 +152,7 @@ class stateactions extends \core_courseformat\stateactions {
 
         // TODO: Add checks for moving here!
         // If we are moving to a non existing chapter, stop here!
-        if (!isset($targetchapter)) {
+        if ($targetchapter !== null) {
             return;
         }
 

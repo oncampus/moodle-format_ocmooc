@@ -497,7 +497,7 @@ export default class Component extends BaseComponent {
         if (this.reactive.sectionReturn != 0) {
             return;
         }
-        const sectionlist = element.sectionlist ?? [];
+        const sectionlist = element.allsections ?? [];
         const listparent = this.getElement(this.selectors.COURSE_SECTIONLIST);
         // For now section cannot be created at a frontend level.
         const createSection = this._createSectionItem.bind(this);

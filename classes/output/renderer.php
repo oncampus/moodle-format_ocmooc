@@ -16,6 +16,7 @@
 
 namespace format_ocmooc\output;
 
+use core_courseformat\base as course_format;
 use core_courseformat\base as format_base;
 use core_courseformat\output\section_renderer;
 use moodle_page;
@@ -57,12 +58,14 @@ class renderer extends section_renderer {
         return $this->render(format_base::instance($course)->inplace_editable_render_section_name($section, false));
     }
 
-    public function course_index_drawer(format_base $format): ?String {
+    public function course_index_drawer(format_base $format): ?string {
         if ($format->uses_course_index()) {
             include_course_editor($format);
             return $this->render_from_template('format_ocmooc/local/courseindex/drawer', []);
         }
         return '';
     }
+
+
 
 }

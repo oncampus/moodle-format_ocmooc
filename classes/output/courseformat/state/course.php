@@ -38,10 +38,10 @@ class course extends \core_courseformat\output\local\state\course {
         $data = parent::export_for_template($output);
 
         $data->sectionlist = array_values(array_filter($data->sectionlist,
-            function($sectionid) {
-                $section = $this->format->get_modinfo()->get_section_info_by_id($sectionid);
-                return $section && !$section->parent;
-            }));
+                function($sectionid) {
+                    $section = $this->format->get_modinfo()->get_section_info_by_id($sectionid);
+                    return $section && !$section->parent;
+                }));
 
         // Build sections hierarchy.
         $allsections = $this->format->get_modinfo()->get_section_info_all();
@@ -65,6 +65,14 @@ class course extends \core_courseformat\output\local\state\course {
         // too early, before saving them in the 'dettachedelements'. To avoid accidentally losing sections during
         // reordering we pass the empty lists in the end.
         $data->hierarchy = array_merge($res1, $res2);
+
+        $format = $this->format;
+        $course = $format->get_course();
+        $modinfo = \course_modinfo::instance($course);
+        $data->allsections = array();
+        foreach ($modinfo->get_section_info_all() as $section_info) {
+            $data->allsections[] = $section_info->id;
+        }
 
         return $data;
     }

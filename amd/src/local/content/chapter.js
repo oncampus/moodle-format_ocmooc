@@ -29,14 +29,4 @@ export default class extends Section {
         }
         super.drop(dropdata);
     }
-
-    getWatchers() {
-        return [
-            {watch: `section[${this.id}]:updated`, handler: this._refreshChapter},
-        ];
-    }
-
-    _refreshChapter(element) {
-        super._refreshSection(element);
-    }
 }
