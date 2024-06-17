@@ -146,7 +146,8 @@ class stateactions extends \core_courseformat\stateactions {
         if ($lection->section < $targetchapter->section) {
             $target = $this->get_first_child($modinfo, $targetchapter->section);
         } else {
-            $targetchapter = $sectionmanager->get_chapter_before($targetchapter->section);$target = null;
+            $targetchapter = $sectionmanager->get_chapter_before($targetchapter->section);
+            $target = null;
         }
 
         // TODO: Add checks for moving here!
@@ -187,22 +188,21 @@ class stateactions extends \core_courseformat\stateactions {
 
         $sectionmanager = $format->get_section_manager();
 
-        /*foreach ($lectionsfrom as $lection) {
-            $sectionmanager->move_section($lection, $targetchapter);
+        if ($chapter->section < $targetchapter->section) {
+            $target = $this->find_next_section($modinfo, $targetchapter);
+        } else {
+            $target = $targetchapter;
         }
 
-        foreach ($targetlections as $lection) {
-            $sectionmanager->move_section($lection, $chapter);
-        }*/
+        $sectionmanager->move_section($chapter, 0, $target);
 
-        /*
         // All course sections can be renamed because of the resort.
         $allsections = $modinfo->get_section_info_all();
         foreach ($allsections as $section) {
             $updates->add_section_put($section->id);
         }
         // The section order is at a course level.
-        $updates->add_course_put();*/
+        $updates->add_course_put();
     }
 
     /**
