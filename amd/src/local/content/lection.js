@@ -32,6 +32,7 @@ export default class extends Section {
     }
 
     _refreshLection(element) {
+        console.log(element);
         super._refreshSection(element);
     }
 }
