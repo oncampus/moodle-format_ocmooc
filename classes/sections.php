@@ -517,6 +517,21 @@ class sections {
         return $chapter;
     }
 
+    public function get_chapter_before(int $chapter): ?\section_info {
+        $modinfo = $this->format->get_modinfo();
+        $lastparent = null;
+        foreach ($modinfo->get_section_info_all() as $section) {
+            if ($section->parent == 0) {
+                if ($section->section != $chapter) {
+                    $lastparent = $section;
+                } else {
+                    break;
+                }
+            }
+        }
+        return $lastparent;
+    }
+
     /**
      * @param $chapterid int the id of the chapter
      * @param $lectionid int the id of the lection

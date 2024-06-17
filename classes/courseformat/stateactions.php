@@ -104,10 +104,20 @@ class stateactions extends \core_courseformat\stateactions {
 
         $targetsection = $modinfo->get_section_info_by_id($targetsectionid);
 
+        if ($lection->section < $targetsection->section) {
+            $targetsection = $this->find_next_section($modinfo, $targetsection);
+        }
+
+        if (isset($targetsection)) {
+            $parent = $targetsection->parent;
+        } else {
+            $parent = $lection->parent;
+        }
+
         $sectionmanager = $format->get_section_manager();
 
         // If parents are different, we need to move lection to another chapter.
-        $sectionmanager->move_section($lection, $targetsection->parent, $targetsection);
+        $sectionmanager->move_section($lection, $parent, $targetsection);
 
         // All course sections can be renamed because of the resort.
         $allsections = $modinfo->get_section_info_all();
@@ -135,8 +145,15 @@ class stateactions extends \core_courseformat\stateactions {
 
         $sectionmanager = $format->get_section_manager();
 
+        if ($lection->section < $targetchapter->section) {
+            $target = $this->get_first_child($modinfo, $targetchapter->section);
+        } else {
+            $targetchapter = $sectionmanager->get_chapter_before($targetchapter->section);
+            $target = null;
+        }
+
         // If parents are different, we need to move lection to another chapter.
-        $sectionmanager->move_section($lection, $targetchapter);
+        $sectionmanager->move_section($lection, $targetchapter, $target);
 
         // All course sections can be renamed because of the resort.
         $allsections = $modinfo->get_section_info_all();
