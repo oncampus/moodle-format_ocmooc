@@ -181,10 +181,7 @@ class stateactions extends \core_courseformat\stateactions {
 
         $chapterid = array_shift($ids);
         $chapter = $modinfo->get_section_info_by_id($chapterid);
-        $lectionsfrom = $this->get_lections_by_chapter($modinfo, $chapter);
-
         $targetchapter = $modinfo->get_section_info_by_id($targetsectionid);
-        $targetlections = $this->get_lections_by_chapter($modinfo, $targetchapter);
 
         $sectionmanager = $format->get_section_manager();
 
