@@ -46,6 +46,10 @@ class format_ocmooc extends core_courseformat\base {
         return true;
     }
 
+    public function section_action($section, $action, $sr) {
+        return true;
+    }
+
     public function uses_indentation(): bool {
         return false;
     }
