@@ -42,8 +42,6 @@ export default class extends Section {
     }
 
     validateDropData(dropdata) {
-        console.log(this.types.includes(dropdata?.type));
-        console.log(dropdata?.type);
         if (this.types.includes(dropdata?.type) && this.reactive.sectionReturn != 0) {
             return false;
         }

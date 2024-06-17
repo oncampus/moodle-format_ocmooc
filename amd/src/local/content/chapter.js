@@ -37,6 +37,6 @@ export default class extends Section {
     }
 
     _refreshChapter(element) {
-        console.log("chapter update");
+        super._refreshSection(element);
     }
 }

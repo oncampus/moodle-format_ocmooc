@@ -187,13 +187,13 @@ class stateactions extends \core_courseformat\stateactions {
 
         $sectionmanager = $format->get_section_manager();
 
-        foreach ($lectionsfrom as $lection) {
+        /*foreach ($lectionsfrom as $lection) {
             $sectionmanager->move_section($lection, $targetchapter);
         }
 
         foreach ($targetlections as $lection) {
             $sectionmanager->move_section($lection, $chapter);
-        }
+        }*/
 
         /*
         // All course sections can be renamed because of the resort.

@@ -93,6 +93,7 @@
     {{> format_ocmooc/local/content/section/header }}
 {{/ format_ocmooc/local/content/section/header }}
 {{/header}}
+
 {{#restrictionlock}}
     <div class="align-self-center ml-2">
         {{#pix}}t/unlock, core{{/pix}}
@@ -124,6 +125,7 @@
     {{/ core_courseformat/local/content/section/controlmenu }}
 {{/controlmenu}}
 </div>
+
 <div id="coursecontentcollapse{{num}}"
     class="content{{^iscoursedisplaymultipage}}{{^sitehome}}course-content-item-content collapse {{^contentcollapsed}}show{{/contentcollapsed}}{{/sitehome}}{{/iscoursedisplaymultipage}}">
     <div class="{{#hasavailability}}description{{/hasavailability}} my-3" data-for="sectioninfo">
@@ -148,7 +150,11 @@
         {{> core_courseformat/local/content/section/cmlist }}
     {{/ core_courseformat/local/content/section/cmlist }}
 {{/cmlist}}
-{{{cmcontrols}}}
+
+{{^ischapter}}
+    {{{cmcontrols}}}
+{{/ischapter}}
+
 {{#insertafter}}
     {{#numsections}}
         {{$ core_courseformat/local/content/addsection}}
