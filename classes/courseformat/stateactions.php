@@ -104,17 +104,15 @@ class stateactions extends \core_courseformat\stateactions {
 
         $targetsection = $modinfo->get_section_info_by_id($targetsectionid);
 
+        $parent = $targetsection->parent;
+
         if ($lection->section < $targetsection->section) {
             $targetsection = $this->find_next_section($modinfo, $targetsection);
         }
 
-        if (isset($targetsection)) {
-            $parent = $targetsection->parent;
-        } else {
-            $parent = $lection->parent;
-        }
-
         $sectionmanager = $format->get_section_manager();
+
+        // TODO: Add check for moving here!
 
         // If parents are different, we need to move lection to another chapter.
         $sectionmanager->move_section($lection, $parent, $targetsection);
@@ -148,8 +146,13 @@ class stateactions extends \core_courseformat\stateactions {
         if ($lection->section < $targetchapter->section) {
             $target = $this->get_first_child($modinfo, $targetchapter->section);
         } else {
-            $targetchapter = $sectionmanager->get_chapter_before($targetchapter->section);
-            $target = null;
+            $targetchapter = $sectionmanager->get_chapter_before($targetchapter->section);$target = null;
+        }
+
+        // TODO: Add checks for moving here!
+        // If we are moving to a non existing chapter, stop here!
+        if (!isset($targetchapter)) {
+            return;
         }
 
         // If parents are different, we need to move lection to another chapter.
