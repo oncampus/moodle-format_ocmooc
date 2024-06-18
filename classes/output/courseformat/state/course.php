@@ -37,11 +37,12 @@ class course extends \core_courseformat\output\local\state\course {
     public function export_for_template(\renderer_base $output): \stdClass {
         $data = parent::export_for_template($output);
 
-        /*$data->sectionlist = array_values(array_filter($data->sectionlist,
+        $data->allsections = $data->sectionlist;
+        $data->sectionlist = array_values(array_filter($data->sectionlist,
                 function($sectionid) {
                     $section = $this->format->get_modinfo()->get_section_info_by_id($sectionid);
                     return $section && !$section->parent;
-                }));*/
+                }));
 
         // Build sections hierarchy.
         $allsections = $this->format->get_modinfo()->get_section_info_all();
@@ -61,6 +62,7 @@ class course extends \core_courseformat\output\local\state\course {
                 }
             }
         }
+
         // Function _fixOrder in lib/amd/src/local/reactive/basecomponent.js removes all existing children of empty lists
         // too early, before saving them in the 'dettachedelements'. To avoid accidentally losing sections during
         // reordering we pass the empty lists in the end.
