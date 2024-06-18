@@ -122,6 +122,12 @@ class stateactions extends \core_courseformat\stateactions {
             $updates->add_section_put($targetsection->id);
         }
 
+        // All course sections can be renamed because of the resort.
+        $allsections = $modinfo->get_section_info_all();
+        foreach ($allsections as $section) {
+            $updates->add_section_put($section->id);
+        }
+
         // The section order is at a course level.
         $updates->add_course_put();
     }
@@ -194,16 +200,11 @@ class stateactions extends \core_courseformat\stateactions {
 
         $sectionmanager->move_section($chapter, 0, $target);
 
-        $updates->add_section_put($chapter->id);
-        foreach ($this->get_lections_by_chapter($modinfo, $chapter) as $lection) {
-            $updates->add_section_put($lection->id);
+        // All course sections can be renamed because of the resort.
+        $allsections = $modinfo->get_section_info_all();
+        foreach ($allsections as $section) {
+            $updates->add_section_put($section->id);
         }
-
-        $updates->add_section_put($targetchapter->id);
-        foreach ($this->get_lections_by_chapter($modinfo, $targetchapter) as $lection) {
-            $updates->add_section_put($lection->id);
-        }
-
 
         // The section order is at a course level.
         $updates->add_course_put();
