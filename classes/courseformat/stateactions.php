@@ -210,6 +210,11 @@ class stateactions extends \core_courseformat\stateactions {
         $updates->add_course_put();
     }
 
+    public function cm_move(\core_courseformat\stateupdates $updates, stdClass $course, array $ids, ?int $targetsectionid = null,
+            ?int $targetcmid = null): void {
+        parent::cm_move($updates, $course, $ids, $targetsectionid, $targetcmid);
+    }
+
     /**
      * Find next section
      *

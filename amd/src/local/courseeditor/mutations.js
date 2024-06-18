@@ -63,6 +63,10 @@ export default class extends Mutations {
         stateManager.processUpdates(updates);
     }
 
+    async cmMove(stateManager, cmids, targetSectionId, targetCmId) {
+        this.move(stateManager, cmids, targetSectionId, 'cm_move');
+    }
+
     async move(stateManager, sectionIds, targetSectionId, action) {
         if (!targetSectionId) {
             throw new Error(`Mutation ${action} requires targetSectionId`);
