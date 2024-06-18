@@ -6,6 +6,7 @@ export default class extends Section {
         this.types = [
             'lection',
         ];
+        this.cm = true;
         super.create(descriptor);
     }
 

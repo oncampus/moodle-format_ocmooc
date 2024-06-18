@@ -48,7 +48,7 @@ export default class extends Section {
 
         // We accept any course module.
         if (dropdata?.type === 'cm') {
-            return true;
+            return this.cm ?? false;
         }
 
         // We accept any section but the section 0 or ourself
@@ -65,7 +65,7 @@ export default class extends Section {
      * @param {Object} dropdata the accepted drop data
      */
     showDropZone(dropdata) {
-        if (dropdata.type == 'cm') {
+        if (dropdata.type == 'cm' && this.cm) {
             this.getLastCm()?.classList.add(this.classes.DROPDOWN);
         }
         if (this.types.includes(dropdata?.type)) {

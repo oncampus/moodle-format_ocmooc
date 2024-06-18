@@ -8,6 +8,7 @@ export default class extends Section {
             'chapter',
             'lection',
         ];
+        this.cm = false;
         super.create(descriptor);
     }
 
@@ -26,6 +27,9 @@ export default class extends Section {
         }
         if (dropdata.type == 'lection') {
             this.reactive.dispatch('lectionMove2Chapter', [dropdata.id], this.id);
+        }
+        if (dropdata.type == 'cm') {
+            return;
         }
         super.drop(dropdata);
     }
