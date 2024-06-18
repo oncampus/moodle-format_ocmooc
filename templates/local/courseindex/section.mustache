@@ -64,7 +64,7 @@
 <div
     class="courseindex-section {{#current}}current{{/current}}"
     id="{{uniqid}}-course-index-section-{{id}}"
-    data-for="section"
+    data-for="{{^parent}}chapter{{/parent}}{{#parent}}lection{{/parent}}"
     data-id="{{id}}"
     data-number="{{number}}"
     role="treeitem"
@@ -136,7 +136,13 @@
 {{/testingonly-make-mustache-lint-happy}}
 
 {{#js}}
-require(['format_ocmooc/local/courseindex/section'], function(component) {
-    component.init('{{uniqid}}-course-index-section-{{id}}');
-});
+    require(['format_ocmooc/local/courseindex/section'], function(component) {
+    let c = component.init('{{uniqid}}-course-index-section-{{id}}');
+    {{^parent}}
+        c.setType('chapter');
+    {{/parent}}
+    {{#parent}}
+        c.setType('lection');
+    {{/parent}}
+    });
 {{/js}}
