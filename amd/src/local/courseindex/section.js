@@ -73,6 +73,7 @@ export default class Component extends BaseSection {
                 element: sectionItem,
                 fullregion: this.element,
                 type: this.type,
+                cm: this.cm,
             });
             this.configDragDrop(titleitem);
         }

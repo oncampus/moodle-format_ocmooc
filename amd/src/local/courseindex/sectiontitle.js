@@ -32,6 +32,7 @@ export default class extends SectionTitle {
 
     create(descriptor){
         this.type = descriptor.type;
+        this.cm = descriptor.cm;
         super.create(descriptor);
     }
 
@@ -42,5 +43,12 @@ export default class extends SectionTitle {
         } else {
             return exporter.lectionDraggableData(this.reactive.state, this.id);
         }
+    }
+
+    validateDropData(dropdata) {
+        if (dropdata.type == 'cm') {
+            return this.cm ?? false;
+        }
+        super.validateDropData(dropdata);
     }
 }
