@@ -125,8 +125,7 @@ export default class Component extends BaseSection {
             }
 
             if (dropdata?.type == 'lection') {
-                this.element.classList.remove(this.classes.DROPUP);
-                this.element.classList.add(this.classes.DROPDOWN);
+                this.element.classList.add(this.classes.DROPZONE);
             }
         } else {
             if (this.section.parent != dropdata.parent) {
@@ -149,6 +148,7 @@ export default class Component extends BaseSection {
         this.getLastCm()?.classList.remove(this.classes.DROPDOWN);
         this.element.classList.remove(this.classes.DROPUP);
         this.element.classList.remove(this.classes.DROPDOWN);
+        this.element.classList.remove(this.classes.DROPZONE);
     }
 
     /**

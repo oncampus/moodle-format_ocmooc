@@ -452,7 +452,9 @@ export default class Component extends BaseComponent {
      */
     _refreshSectionCmlist({element}) {
         const cmlist = element.cmlist ?? [];
-        const section = this.getElement(this.selectors.SECTION, element.id);
+        const section = this.getElement(this.selectors.SECTION, element.id) ??
+            this.getElement(this.selectors.CHAPTER, element.id) ??
+            this.getElement(this.selectors.LECTION, element.id);
         const listparent = section?.querySelector(this.selectors.SECTION_CMLIST);
         // A method to create a fake element to be replaced when the item is ready.
         const createCm = this._createCmItem.bind(this);
@@ -562,6 +564,7 @@ export default class Component extends BaseComponent {
      * @param {object} param0.element the state object
      */
     _reloadCm({element}) {
+        console.log(element);
         if (!this.getElement(this.selectors.CM, element.id)) {
             return;
         }

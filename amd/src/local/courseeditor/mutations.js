@@ -63,11 +63,7 @@ export default class extends Mutations {
         stateManager.processUpdates(updates);
     }
 
-    async cmMove(stateManager, cmids, targetSectionId, targetCmId) {
-        this.move(stateManager, cmids, targetSectionId, 'cm_move');
-    }
-
-    async move(stateManager, sectionIds, targetSectionId, action) {
+    async sectionMove(stateManager, sectionIds, targetSectionId, action) {
         if (!targetSectionId) {
             throw new Error(`Mutation ${action} requires targetSectionId`);
         }
@@ -79,14 +75,14 @@ export default class extends Mutations {
     }
 
     async lectionMove(stateManager, sectionIds, targetSectionId) {
-        this.move(stateManager, sectionIds, targetSectionId, 'lection_move');
+        this.sectionMove(stateManager, sectionIds, targetSectionId, 'lection_move');
     }
 
     async lectionMove2Chapter(stateManager, sectionIds, targetSectionId) {
-        this.move(stateManager, sectionIds, targetSectionId, 'lection_move_to_chapter');
+        this.sectionMove(stateManager, sectionIds, targetSectionId, 'lection_move_to_chapter');
     }
 
     async chapterMove(stateManager, sectionIds, targetSectionId) {
-        this.move(stateManager, sectionIds, targetSectionId, 'chapter_move');
+        this.sectionMove(stateManager, sectionIds, targetSectionId, 'chapter_move');
     }
 }
