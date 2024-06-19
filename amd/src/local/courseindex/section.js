@@ -112,9 +112,27 @@ export default class Component extends BaseSection {
         if (dropdata.type == 'cm' && this.cm) {
             this.getLastCm()?.classList.add(this.classes.DROPDOWN);
         }
-        if (this.types.includes(dropdata?.type)) {
-            // The relative move of section depends on the section number.
-            if (this.section.number > dropdata.number) {
+        if (this.type == 'chapter') {
+            if (dropdata?.type == 'chapter') {
+                // The relative move of section depends on the section number.
+                if (this.section.number > dropdata.number) {
+                    this.element.classList.remove(this.classes.DROPUP);
+                    this.element.classList.add(this.classes.DROPDOWN);
+                } else {
+                    this.element.classList.add(this.classes.DROPUP);
+                    this.element.classList.remove(this.classes.DROPDOWN);
+                }
+            }
+
+            if (dropdata?.type == 'lection') {
+                this.element.classList.remove(this.classes.DROPUP);
+                this.element.classList.add(this.classes.DROPDOWN);
+            }
+        } else {
+            if (this.section.parent != dropdata.parent) {
+                this.element.classList.remove(this.classes.DROPUP);
+                this.element.classList.add(this.classes.DROPDOWN);
+            } else if (this.section.number > dropdata.number) {
                 this.element.classList.remove(this.classes.DROPUP);
                 this.element.classList.add(this.classes.DROPDOWN);
             } else {
