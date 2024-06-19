@@ -21,6 +21,24 @@ export default class extends Section {
         super.configDragDrop(chapteritem);
     }
 
+    showDropZone(dropdata) {
+        if (dropdata?.type == 'chapter') {
+            // The relative move of section depends on the section number.
+            if (this.section.number > dropdata.number) {
+                this.element.classList.remove(this.classes.DROPUP);
+                this.element.classList.add(this.classes.DROPDOWN);
+            } else {
+                this.element.classList.add(this.classes.DROPUP);
+                this.element.classList.remove(this.classes.DROPDOWN);
+            }
+        }
+
+        if (dropdata?.type == 'lection') {
+            this.element.classList.remove(this.classes.DROPUP);
+            this.element.classList.add(this.classes.DROPDOWN);
+        }
+    }
+
     drop(dropdata) {
         if (dropdata.type == 'chapter') {
             this.reactive.dispatch('chapterMove', [dropdata.id], this.id);

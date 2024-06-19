@@ -19,6 +19,27 @@ export default class extends Section {
         super.configDragDrop(lectionitem);
     }
 
+    showDropZone(dropdata) {
+        if (dropdata.type == 'cm' && this.cm) {
+            this.getLastCm()?.classList.add(this.classes.DROPDOWN);
+        }
+
+
+        if (dropdata?.type == 'lection') {
+            // The relative move of section depends on the section number.
+            if (this.section.parent != dropdata.parent) {
+                this.element.classList.remove(this.classes.DROPUP);
+                this.element.classList.add(this.classes.DROPDOWN);
+            } else if (this.section.number > dropdata.number) {
+                this.element.classList.remove(this.classes.DROPUP);
+                this.element.classList.add(this.classes.DROPDOWN);
+            } else {
+                this.element.classList.add(this.classes.DROPUP);
+                this.element.classList.remove(this.classes.DROPDOWN);
+            }
+        }
+    }
+
     drop(dropdata) {
         if (dropdata.type == 'lection') {
             this.reactive.dispatch('lectionMove', [dropdata.id], this.id);

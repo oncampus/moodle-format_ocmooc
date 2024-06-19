@@ -521,6 +521,10 @@ class sections {
         $modinfo = $this->format->get_modinfo();
         $lastparent = null;
         foreach ($modinfo->get_section_info_all() as $section) {
+            if ($section->section == 0) {
+                continue;
+            }
+
             if ($section->parent == 0) {
                 if ($section->section != $chapter) {
                     $lastparent = $section;
