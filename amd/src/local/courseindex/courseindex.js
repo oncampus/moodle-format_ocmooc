@@ -64,6 +64,7 @@ export default class Component extends BaseCourseindex {
     getWatchers() {
         let res = super.getWatchers();
         res.push({watch: `course.hierarchy:updated`, handler: this._refreshCourseSectionlist});
+        res.push({watch: `course.subsectionlist:updated`, handler: this._refreshCourseSectionlist});
         return res;
     }
 
