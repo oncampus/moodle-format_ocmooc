@@ -54,6 +54,8 @@ export default class Component extends BaseCourseindex {
         // Optional component name for debugging.
         this.name = 'course_format_ocmooc_courseindex';
         this.selectors.COURSE_SUBSECTIONLIST = `[data-for='subsectionlist']`;
+        this.selectors.CHAPTER = `[data-for='chapter']`;
+        this.selectors.LECTION = `[data-for='lection']`;
     }
 
     /**
@@ -64,7 +66,7 @@ export default class Component extends BaseCourseindex {
     getWatchers() {
         let res = super.getWatchers();
         res.push({watch: `course.hierarchy:updated`, handler: this._refreshCourseSectionlist});
-        res.push({watch: `course.subsectionlist:updated`, handler: this._refreshCourseSectionlist});
+        //res.push({watch: `course.subsectionlist:updated`, handler: this._refreshCourseSectionlist});
         return res;
     }
 
@@ -101,7 +103,10 @@ export default class Component extends BaseCourseindex {
 
         // Move the elements in order at the beginning of the list.
         neworder.forEach((itemid, index) => {
-            let item = this.getElement(this.selectors.SECTION, itemid) ?? dettachedelements[itemid];
+            let item = this.getElement(this.selectors.SECTION, itemid) ??
+                this.getElement(this.selectors.CHAPTER, itemid) ??
+                this.getElement(this.selectors.LECTION, itemid) ??
+                dettachedelements[itemid];
             if (item === undefined) {
                 // Missing elements cannot be sorted.
                 return;

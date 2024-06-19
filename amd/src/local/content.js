@@ -273,7 +273,7 @@ export default class Component extends BaseComponent {
     getWatchers() {
         let res = super.getWatchers();
         res.push({watch: `course.hierarchy:updated`, handler: this._refreshCourseSectionlist});
-        res.push({watch: `course.subsectionlist:updated`, handler: this._refreshCourseSectionlist});
+        //res.push({watch: `course.subsectionlist:updated`, handler: this._refreshCourseSectionlist});
         return res;
     }
 
@@ -457,7 +457,7 @@ export default class Component extends BaseComponent {
         // A method to create a fake element to be replaced when the item is ready.
         const createCm = this._createCmItem.bind(this);
         if (listparent) {
-            this._fixOrder(listparent, cmlist, this.selectors.CM, this.dettachedCms, createCm);
+            this._fixOrder(listparent, cmlist, [this.selectors.CM], this.dettachedCms, createCm);
         }
     }
 
@@ -472,13 +472,13 @@ export default class Component extends BaseComponent {
         if (this.reactive.sectionReturn != 0) {
             return;
         }
-        console.log('[CONTENT] Refresh Section list.');
         const sectionlist = element.allsections ?? [];
         const listparent = this.getElement(this.selectors.COURSE_SECTIONLIST);
         // For now section cannot be created at a frontend level.
         const createSection = this._createSectionItem.bind(this);
         if (listparent) {
-            this._fixOrder(listparent, sectionlist, this.selectors.SECTION, this.dettachedSections, createSection);
+            let selectors = [this.selectors.CHAPTER, this.selectors.LECTION];
+            this._fixOrder(listparent, sectionlist, selectors, this.dettachedSections, createSection);
         }
     }
 
@@ -634,7 +634,9 @@ export default class Component extends BaseComponent {
      */
     _reloadSection({element}) {
         const pendingReload = new Pending(`courseformat/content:reloadSection_${element.id}`);
-        const sectionitem = this.getElement(this.selectors.SECTION, element.id);
+
+        let selector = element.parent == 0 ? this.selectors.CHAPTER : this.selectors.LECTION;
+        const sectionitem = this.getElement(selector, element.id);
         if (sectionitem) {
             // Cancel any pending reload because the section will reload cms too.
             for (const cmId of element.cmlist) {
@@ -689,12 +691,20 @@ export default class Component extends BaseComponent {
     _createSectionItem(container, sectionid) {
         const section = this.reactive.get('section', sectionid);
         const newItem = document.createElement(this.selectors.SECTIONTAG);
-        newItem.dataset.for = 'section';
+
+        newItem.classList.add(this.classes.SECTION);
+        if (section.parent == 0) {
+            newItem.dataset.for = 'chapter';
+            newItem.classList.add(this.classes.CHAPTER);
+        } else {
+            newItem.dataset.for = 'lection';
+            newItem.classList.add(this.classes.LECTION);
+        }
         newItem.dataset.id = sectionid;
         newItem.dataset.number = section.number;
         // The legacy actions.js requires a specific ID and class to refresh the section.
         newItem.id = `section-${sectionid}`;
-        newItem.classList.add(this.classes.SECTION);
+
         container.append(newItem);
         this._reloadSection({
             element: section,
@@ -728,7 +738,16 @@ export default class Component extends BaseComponent {
 
         // Move the elements in order at the beginning of the list.
         neworder.forEach((itemid, index) => {
-            let item = this.getElement(selector, itemid) ?? dettachedelements[itemid] ?? createMethod(container, itemid);
+            let item = null;
+            selector.forEach((select, index) => {
+                let i = this.getElement(select, itemid);
+                if (i !== null) {
+                    item = i;
+                }
+            });
+            if (item === null) {
+                item = dettachedelements[itemid] ?? createMethod(container, itemid);
+            }
             if (item === undefined) {
                 // Missing elements cannot be sorted.
                 return;
