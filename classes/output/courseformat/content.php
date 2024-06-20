@@ -158,8 +158,7 @@ class content extends content_base {
         return $data;
     }
 
-    public
-    function get_chapters($output) {
+    public function get_chapters($output) {
         global $COURSE, $PAGE, $DB;
 
         $chapters = [];
@@ -219,8 +218,7 @@ class content extends content_base {
      * @return array
      * @throws \moodle_exception
      */
-    public
-    function get_chapter_sections($chapter, $chapternum, $output) {
+    public function get_chapter_sections($chapter, $chapternum, $output) {
         global $COURSE;
 
         $sections = [];
@@ -259,8 +257,7 @@ class content extends content_base {
         return $sections;
     }
 
-    private
-    function get_progress_by_sections($sections) {
+    private function get_progress_by_sections($sections) {
         $progress = 0;
         if (!empty($sections)) {
             foreach ($sections as $section) {
@@ -275,8 +272,7 @@ class content extends content_base {
      * @param $section section_info|stdClass the section
      * @return false|float|int
      */
-    private
-    function get_progress_by_section($section) {
+    private function get_progress_by_section($section) {
         global $USER, $COURSE, $CFG;
 
         $completion = new \completion_info($COURSE);
@@ -321,8 +317,7 @@ class content extends content_base {
         return round(($completed / $count) * 100);
     }
 
-    public
-    function get_template_name(\renderer_base $renderer): string {
+    public function get_template_name(\renderer_base $renderer): string {
         return 'format_ocmooc/local/content';
     }
 
