@@ -271,10 +271,39 @@ export default class Component extends BaseComponent {
      * @returns {Array} of watchers
      */
     getWatchers() {
-        let res = super.getWatchers();
-        res.push({watch: `course.hierarchy:updated`, handler: this._refreshCourseSectionlist});
-        //res.push({watch: `course.subsectionlist:updated`, handler: this._refreshCourseSectionlist});
-        return res;
+        // Section return is a global page variable but most formats define it just before start printing
+        // the course content. This is the reason why we define this page setting here.
+        this.reactive.sectionReturn = this.sectionReturn;
+
+        // Check if the course format is compatible with reactive components.
+        if (!this.reactive.supportComponents) {
+            return [];
+        }
+        return [
+            // State changes that require to reload some course modules.
+            {watch: `cm.visible:updated`, handler: this._reloadCm},
+            {watch: `cm.stealth:updated`, handler: this._reloadCm},
+            {watch: `cm.indent:updated`, handler: this._reloadCm},
+            // Update section number and title.
+            {watch: `section.number:updated`, handler: this._refreshSectionNumber},
+            // Collapse and expand sections.
+            {watch: `section.contentcollapsed:updated`, handler: this._refreshSectionCollapsed},
+            // Sections and cm sorting.
+            {watch: `transaction:start`, handler: this._startProcessing},
+            {watch: `course.sectionlist:updated`, handler: this._refreshCourseSectionlist},
+            {watch: `section.cmlist:updated`, handler: this._refreshSectionCmlist},
+            // Section visibility.
+            {watch: `section.visible:updated`, handler: this._reloadSection},
+            // Reindex sections and cms.
+            {watch: `state:updated`, handler: this._indexContents},
+            // State changes thaty require to reload course modules.
+            {watch: `cm.visible:updated`, handler: this._reloadCm},
+            {watch: `cm.sectionid:updated`, handler: this._reloadCm},
+
+            // Custom Watchers
+            {watch: `course.hierarchy:updated`, handler: this._refreshCourseSectionlist},
+            {watch: `lection.cmlist:updated`, handler: this._refreshSectionCmlist},
+        ];
     }
 
     /**
