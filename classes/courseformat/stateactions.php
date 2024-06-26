@@ -106,8 +106,12 @@ class stateactions extends \core_courseformat\stateactions {
 
         $parent = $targetsection->parent;
 
-        if ($lection->parent == $targetsection->parent && $lection->section < $targetsection->section) {
+        if ($lection->parent != $targetsection->parent) {
             $targetsection = $this->find_next_section($modinfo, $targetsection);
+        } else if ($lection->section < $targetsection->section) {
+            if ($lection->parent == $targetsection->parent) {
+                $targetsection = $this->find_next_section($modinfo, $targetsection);
+            }
         }
 
         $sectionmanager = $format->get_section_manager();
