@@ -75,6 +75,7 @@ class fullcontent extends content_base {
             $format = $this->format;
             $lastsection = $format->get_last_section_number();
             $maxsections = $format->get_max_sections();
+
             foreach ($data->chapters as $chapternumber => $chapter) {
 
                 // Workaround to fix index count of sections for mustache template iterating.
@@ -82,7 +83,7 @@ class fullcontent extends content_base {
                 // It would only use the first element. All other would be ignored.
                 $chapter->sections = array_values($chapter->sections);
 
-                $params = [
+                /*$params = [
                         'courseid' => $COURSE->id,
                         'action' => 'addchapter',
                         'sesskey' => sesskey(),
@@ -102,7 +103,7 @@ class fullcontent extends content_base {
                         'url' => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
                         'title' => get_string('addlection', 'format_ocmooc'),
                         'newsection' => $maxsections - $lastsection,
-                ];
+                ];*/
             }
             if (get_config('format_ocmooc', 'allowsubocmoocview')
                     && isset($courseformatoptions['courseusesubocmooc']) && $courseformatoptions['courseusesubocmooc']) {

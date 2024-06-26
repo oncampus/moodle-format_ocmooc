@@ -15,6 +15,9 @@ class section extends section_base {
             $data->insertafter = false;
         }
         if ($this->section->parent == 0) {
+            if ($this->section->section > 0) {
+                $data->insertafter = true;
+            }
             $data->ischapter = true;
         }
         return $data;
