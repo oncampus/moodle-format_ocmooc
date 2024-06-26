@@ -593,7 +593,6 @@ export default class Component extends BaseComponent {
      * @param {object} param0.element the state object
      */
     _reloadCm({element}) {
-        console.log(element);
         if (!this.getElement(this.selectors.CM, element.id)) {
             return;
         }
