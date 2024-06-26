@@ -64,10 +64,21 @@ export default class Component extends BaseCourseindex {
      * @returns {Array} of watchers
      */
     getWatchers() {
-        let res = super.getWatchers();
-        res.push({watch: `course.hierarchy:updated`, handler: this._refreshCourseSectionlist});
-        //res.push({watch: `course.subsectionlist:updated`, handler: this._refreshCourseSectionlist});
-        return res;
+
+        return [
+            {watch: `section.indexcollapsed:updated`, handler: this._refreshSectionCollapsed},
+            {watch: `cm:created`, handler: this._createCm},
+            {watch: `cm:deleted`, handler: this._deleteCm},
+            {watch: `section:created`, handler: this._createSection},
+            {watch: `section:deleted`, handler: this._deleteSection},
+            {watch: `course.pageItem:created`, handler: this._refreshPageItem},
+            {watch: `course.pageItem:updated`, handler: this._refreshPageItem},
+            // Sections and cm sorting.
+            {watch: `course.sectionlist:updated`, handler: this._refreshCourseSectionlist},
+            {watch: `section.cmlist:updated`, handler: this._refreshSectionCmlist},
+            // Custom
+            {watch: `course.hierarchy:updated`, handler: this._refreshCourseSectionlist},
+        ];
     }
 
     /**
