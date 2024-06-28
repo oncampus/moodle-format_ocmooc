@@ -158,10 +158,8 @@
     {{{cmcontrols}}}
 {{/ischapter}}
 
-{{#insertafter}}
-    {{#numsections}}
-        {{$ format_ocmooc/local/content/addsection}}
-            {{> format_ocmooc/local/content/addsection}}
-        {{/ format_ocmooc/local/content/addsection}}
-    {{/numsections}}
-{{/insertafter}}
+{{#ischapter}}
+    {{$ format_ocmooc/local/content/addsection}}
+        {{> format_ocmooc/local/content/addsection}}
+    {{/ format_ocmooc/local/content/addsection}}
+{{/ischapter}}
