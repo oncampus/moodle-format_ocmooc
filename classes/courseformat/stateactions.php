@@ -217,6 +217,10 @@ class stateactions extends \core_courseformat\stateactions {
     protected function find_next_section(\course_modinfo $modinfo, \section_info $thissection): ?\section_info {
         $found = false;
         foreach ($modinfo->get_section_info_all() as $section) {
+            if ($section->parent != $thissection->parent) {
+                continue;
+            }
+
             if ($found) {
                 return $section->parent == $thissection->parent ? $section : null;
             } else if ($section->id == $thissection->id) {
