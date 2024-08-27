@@ -372,7 +372,6 @@ export default class Component extends BaseComponent {
      * @param {Object} state The state data
      */
     _refreshAllSectionsToggler(state) {
-        console.log("CHECK HERE");
         const target = this.getElement(this.selectors.TOGGLEALL);
         if (!target) {
             return;
