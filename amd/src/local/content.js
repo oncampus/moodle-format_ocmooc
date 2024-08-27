@@ -317,15 +317,31 @@ export default class Component extends BaseComponent {
      * @param {Object} args.element The element to update
      */
     _refreshSectionCollapsed({state, element}) {
-        const target = this.getElement(this.selectors.SECTION, element.id);
-        if (!target) {
+        // Combine targetLection and targetChapter into an object
+        const targets = {
+            lection: this.getElement(this.selectors.LECTION, element.id),
+            chapter: this.getElement(this.selectors.CHAPTER, element.id)
+        };
+
+        // Check if either targetLection or targetChapter does not exist
+        if (!targets.lection && !targets.chapter) {
             throw new Error(`Unknown section with ID ${element.id}`);
         }
-        // Check if it is already done.
-        const toggler = target.querySelector(this.selectors.COLLAPSE);
-        const isCollapsed = toggler?.classList.contains(this.classes.COLLAPSED) ?? false;
-
+        // Check if either targetLection or targetChapter is collapsed
+        const isCollapsed = (
+            targets.lection
+                ?.querySelector(this.selectors.COLLAPSE)
+                ?.classList.contains(this.classes.COLLAPSED) ?? false
+        ) || (
+            targets.chapter
+                ?.querySelector(this.selectors.COLLAPSE)
+                ?.classList.contains(this.classes.COLLAPSED) ?? false
+        );
         if (element.contentcollapsed !== isCollapsed) {
+            const toggler = (targets.lection
+                ?.querySelector(this.selectors.COLLAPSE)
+                || targets.chapter?.querySelector(this.selectors.COLLAPSE));
+            console.log(targets.chapter?.querySelector(this.selectors.COLLAPSE));
             let collapsibleId = toggler.dataset.target ?? toggler.getAttribute("href");
             if (!collapsibleId) {
                 return;
