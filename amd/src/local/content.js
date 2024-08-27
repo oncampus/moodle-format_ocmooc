@@ -179,13 +179,19 @@ export default class Component extends BaseComponent {
 
         if (sectionlink || isChevron) {
 
-            const section = event.target.closest(this.selectors.SECTION);
-            const toggler = section.querySelector(this.selectors.COLLAPSE);
+            const lection = event.target.closest(this.selectors.LECTION);
+            const chapter = event.target.closest(this.selectors.CHAPTER);
+
+            const toggler = lection !== null
+                ? lection.querySelector(this.selectors.COLLAPSE)
+                : chapter.querySelector(this.selectors.COLLAPSE);
             const isCollapsed = toggler?.classList.contains(this.classes.COLLAPSED) ?? false;
 
             if (isChevron || isCollapsed) {
                 // Update the state.
-                const sectionId = section.getAttribute('data-id');
+                const sectionId = lection !== null
+                    ? lection.getAttribute('data-id')
+                    : chapter.getAttribute('data-id');
                 this.reactive.dispatch(
                     'sectionContentCollapsed',
                     [sectionId],
@@ -341,7 +347,6 @@ export default class Component extends BaseComponent {
             const toggler = (targets.lection
                 ?.querySelector(this.selectors.COLLAPSE)
                 || targets.chapter?.querySelector(this.selectors.COLLAPSE));
-            console.log(targets.chapter?.querySelector(this.selectors.COLLAPSE));
             let collapsibleId = toggler.dataset.target ?? toggler.getAttribute("href");
             if (!collapsibleId) {
                 return;
@@ -367,6 +372,7 @@ export default class Component extends BaseComponent {
      * @param {Object} state The state data
      */
     _refreshAllSectionsToggler(state) {
+        console.log("CHECK HERE");
         const target = this.getElement(this.selectors.TOGGLEALL);
         if (!target) {
             return;
