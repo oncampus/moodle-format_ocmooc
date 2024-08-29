@@ -984,3 +984,9 @@ p + .accordion {
     text-align: right;
     bottom: 4rem;
 }
+
+
+/* Temporary disable moveCM in Activity Dropdown */
+a.dropdown-item.editing_movecm.menu-action.cm-edit-action {
+    display: none;
+} 
