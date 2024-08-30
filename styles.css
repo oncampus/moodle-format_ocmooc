@@ -990,3 +990,21 @@ p + .accordion {
 a.dropdown-item.editing_movecm.menu-action.cm-edit-action {
     display: none;
 } 
+
+
+/*Temporary disabled Collapse Icons in courseindex on non-edit Page */
+
+/* Collapse-Icons standardmäßig für alle Kapitel und Lektionen anzeigen */
+.courseindex-section .courseindex-chevron {
+    display: inline-block;
+}
+
+/* Collapse-Icons nur für Lektionen im normalen Modus ausblenden */
+.courseindex:not(.editing) .courseindex-section[data-for="lection"] .courseindex-chevron {
+    display: none;
+}
+
+/* Im Editiermodus alle Collapse-Icons anzeigen (keine zusätzliche Regel nötig, da Standardanzeige inline-block ist) */
+.courseindex.editing .courseindex-section[data-for="lection"] .courseindex-chevron {
+    display: inline-block; /* Sicherstellen, dass im Editiermodus die Icons für Lektionen angezeigt werden */
+}
