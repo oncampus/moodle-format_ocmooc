@@ -986,10 +986,13 @@ p + .accordion {
 }
 
 
-/* Temporary disable moveCM in Activity Dropdown */
+/* Temporary disable moveCM && Section/Lection in Activity Dropdown */
 a.dropdown-item.editing_movecm.menu-action.cm-edit-action {
     display: none;
-} 
+}
+a.dropdown-item[data-action="moveSection"] {
+    display: none;
+}
 
 
 /*Temporary disabled Collapse Icons in courseindex on non-edit Page */
