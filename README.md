@@ -27,6 +27,17 @@ Alternatively, you can run
 
 to complete the installation from the command line.
 
+## Update Logs ##
+
+### Version `2024052700` ###
+
+- Bei erneutem Kurseintritt sowie beim Neuladen der Seite in der zuletzt bearbeiteten Lektion landen.
+- Lernfortschrittsbalken bei H5P-Videos/Präsentationen angepasst. Nun wird jede Interaktion in einem Video einzeln getrackt und gespeichert.
+- Der Knopf, um in den Bearbeitungsmodus zu gelangen, ist erst nach vollständigem Laden der Seite wieder benutzbar.
+- Behebung einiger Fehler bei der Selbsteinschreibung ins MOOC-Format.
+- Hinzufügen eines Knopfes zum Beitreten des MOOC innerhalb des Kurses.
+- Aktivitäten, Lektionen und Kapitel können im Bearbeitungsmodus verschoben werden.
+
 ## License ##
 
 2022 oncampus GmbH <support@oncampus.de>
