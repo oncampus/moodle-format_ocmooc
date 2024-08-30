@@ -29,6 +29,14 @@ to complete the installation from the command line.
 
 ## Update Logs ##
 
+### Hotfix `2024083000` ###
+- Verschieben von Aktivitäten nach oben.
+- Lektionen in der Seitennavigation können geöffnet werden.
+- Hinzufügen von Aktivitäten in System Administration und in Kapitelsektion.
+- Alles einklappen/ausklappen im Bearbeitungsmodus.
+- Verschieben über die drei Punkte temporär ausgeblendet.
+- Behebung von courseindex sectionTogglers Errors in der Konsole.
+
 ### Version `2024052700` ###
 
 - Bei erneutem Kurseintritt sowie beim Neuladen der Seite in der zuletzt bearbeiteten Lektion landen.
