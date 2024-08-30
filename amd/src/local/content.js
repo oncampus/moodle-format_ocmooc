@@ -31,7 +31,8 @@ import inplaceeditable from 'core/inplace_editable';
 import Section from 'format_ocmooc/local/content/section';
 import Chapter from 'format_ocmooc/local/content/chapter';
 import Lection from 'format_ocmooc/local/content/lection';
-import CmItem from 'format_ocmooc/local/content/section/cmitem';
+//import CmItem from 'format_ocmooc/local/content/section/cmitem';
+import CmItem from 'core_courseformat/local/content/section/cmitem';
 // Course actions is needed for actions that are not migrated to components.
 import courseActions from 'core_course/actions';
 import DispatchActions from 'core_courseformat/local/content/actions';
@@ -181,7 +182,6 @@ export default class Component extends BaseComponent {
 
             const lection = event.target.closest(this.selectors.LECTION);
             const chapter = event.target.closest(this.selectors.CHAPTER);
-
             const toggler = lection !== null
                 ? lection.querySelector(this.selectors.COLLAPSE)
                 : chapter.querySelector(this.selectors.COLLAPSE);
