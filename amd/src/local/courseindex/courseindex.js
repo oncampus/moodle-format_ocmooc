@@ -82,6 +82,44 @@ export default class Component extends BaseCourseindex {
     }
 
     /**
+     * Setup sections toggler.
+     *
+     * Toggler click is delegated to the main course index element because new sections can
+     * appear at any moment and this way we prevent accidental double bindings.
+     *
+     * @param {Event} event the triggered event
+     */
+    _sectionTogglers(event) {
+        const sectionlink = event.target.closest(this.selectors.TOGGLER);
+        const closestCollapse = event.target.closest(this.selectors.COLLAPSE);
+        // Assume that chevron is the only collapse toggler in a section heading;
+        // I think this is the most efficient way to verify at the moment.
+        const isChevron = closestCollapse?.closest(this.selectors.SECTION_ITEM);
+
+        if (sectionlink || isChevron) {
+
+            const lection = event.target.closest(this.selectors.LECTION);
+            const chapter = event.target.closest(this.selectors.CHAPTER);
+            const toggler = lection !== null
+                ? lection.querySelector(this.selectors.COLLAPSE)
+                : chapter.querySelector(this.selectors.COLLAPSE);
+            const isCollapsed = toggler?.classList.contains(this.classes.COLLAPSED) ?? false;
+
+            if (isChevron || isCollapsed) {
+                // Update the state.
+                const sectionId = lection !== null
+                    ? lection.getAttribute('data-id')
+                    : chapter.getAttribute('data-id');
+                this.reactive.dispatch(
+                    'sectionContentCollapsed',
+                    [sectionId],
+                    !isCollapsed
+                );
+            }
+        }
+    }
+
+    /**
      * Refresh the section list.
      *
      * @param {object} param
