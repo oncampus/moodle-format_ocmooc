@@ -93,93 +93,108 @@ class badges extends base {
         //Check whether certificates can be obtained and output a string about the current certificate situation.
         if ($simplecert_m || $ildcert_m || $certificate_m) {
             if ($DB->get_record('course_modules', array('module' => $ildcert_m->id, 'course' => $courseid, 'visible' => 1))
-                    || $DB->get_record('course_modules', array('module' => $simplecert_m->id, 'course' => $courseid, 'visible' => 1))
-                    || $DB->get_record('course_modules', array('module' => $certificate_m->id, 'course' => $courseid, 'visible' => 1))) {
+                    ||
+                    $DB->get_record('course_modules', array('module' => $simplecert_m->id, 'course' => $courseid, 'visible' => 1))
+                    || $DB->get_record('course_modules',
+                            array('module' => $certificate_m->id, 'course' => $courseid, 'visible' => 1))) {
                 //There is at least one certificate included in the course.
-                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_available', 'format_ocmooc'), array('class' => 'oc_badges_text')));
+                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_available', 'format_ocmooc'),
+                        array('class' => 'oc_badges_text')));
             } else {
                 //There is no certificate in the course.
-                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
+                echo \html_writer::tag('div',
+                        \html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
             }
 
-        if ($certificate_m && ($coursecert_cm = $DB->get_record('course_modules', array('module' => $certificate_m->id, 'course' => $courseid, 'visible' => 1)))) {
-            $course_cert = $DB->get_records('tool_certificate_issues', array('courseid' => $courseid, 'userid' => $USER->id));
-            if ($course_cert) {
-                echo \html_writer::tag('div', get_string('cert_descr_general', 'format_ocmooc'));
-                foreach ($course_cert as $cert) {
-                    $link   = new \moodle_url('/admin/tool/certificate/view.php', array('code' => $cert->code, 'action' => 'get'));
-                    $button = new \single_button($link, get_string('certificate', 'format_ocmooc'));
-                    $button->add_action(
-                        new \popup_action('click', $link, 'view' . $coursecert_cm->id,
-                            array('height' => 600, 'width' => 800)));
-                    echo \html_writer::tag('div', $OUTPUT->render($button), array('style' => 'text-align:left'));
-                }
-            }
-        }
-        if ($ildcert_m && ($ildcert_cm = $DB->get_record('course_modules', array('module' => $ildcert_m->id, 'course' => $courseid, 'visible' => 1)))) {
-            // zertifikat anzeigen
-            $module_context = \context_module::instance($ildcert_cm->id);
-            if (has_capability('mod/ildcertificate:view', $module_context)
-                && (has_capability('mod/ildcertificate:manage', $module_context) || $DB->record_exists('ildcertificate_issues', array('certificateid' => $ildcert_cm->instance, 'userid' => $USER->id)))
-            ) {
-
-                $link   = new \moodle_url('/mod/ildcertificate/view.php', array('id' => $ildcert_cm->id, 'action' => 'get'));
-                $button = new \single_button($link, get_string('certificate', 'format_ocmooc'));
-                $button->add_action(
-                    new \popup_action('click', $link, 'view' . $ildcert_cm->id,
-                        array('height' => 600, 'width' => 800)));
-                echo \html_writer::tag('div', get_string('cert_descr_general', 'format_ocmooc'));
-                echo \html_writer::tag('div', $OUTPUT->render($button), array('style' => 'text-align:left'));
-            }
-        }
-        if ($simplecert_m) {
-            if ($min_prozent > 0 && $simplecert_cm = $DB->get_record('course_modules', array('module' => $simplecert_m->id, 'course' => $courseid, 'visible' => 1))) {
-                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_addtext', 'format_ocmooc'), array('class' => 'oc_badges_text')));
-                $percentage = 0;
-                $mod_count  = 0;
-
-                /* hvp start */
-                require_once($CFG->libdir . '/gradelib.php');
-                $hvp_percentage = 0;
-                $hvp_module     = $DB->get_record('modules', array('name' => 'hvp'));
-                $cm             = $DB->get_records('course_modules', array('course' => $courseid, 'module' => $hvp_module->id, 'completion' => 2, 'visible' => 1));
-                $hvp_count      = count($cm);
-
-                if ($hvp_count != 0) {
-                    foreach ($cm as $module) {
-                        $grading_info = grade_get_grades($module->course, 'mod', 'hvp', $module->instance, $USER->id);
-                        $user_grade   = $grading_info->items[0]->grades[$USER->id]->grade;
-
-                        $hvp_percentage += $user_grade / $hvp_count;
+            if ($certificate_m && ($coursecert_cm = $DB->get_record('course_modules',
+                            array('module' => $certificate_m->id, 'course' => $courseid, 'visible' => 1)))) {
+                $course_cert = $DB->get_records('tool_certificate_issues', array('courseid' => $courseid, 'userid' => $USER->id));
+                if ($course_cert) {
+                    echo \html_writer::tag('div', get_string('cert_descr_general', 'format_ocmooc'));
+                    foreach ($course_cert as $cert) {
+                        $link = new \moodle_url('/admin/tool/certificate/view.php',
+                                array('code' => $cert->code, 'action' => 'get'));
+                        $button = new \single_button($link, get_string('certificate', 'format_ocmooc'));
+                        $button->add_action(
+                                new \popup_action('click', $link, 'view' . $coursecert_cm->id,
+                                        array('height' => 600, 'width' => 800)));
+                        echo \html_writer::tag('div', $OUTPUT->render($button), array('style' => 'text-align:left'));
                     }
-
-                    $percentage = $hvp_percentage;
-                    $mod_count++;
-                }
-                /* hvp end */
-
-                $percentage = (int) ($percentage / $mod_count);
-
-                if ($percentage >= $min_prozent) {
-                    // zertifikat anzeigen
-                    $module_context = \context_module::instance($simplecert_cm->id);
-                    require_capability('mod/simplecertificate:view', $module_context);
-
-                    $link   = new \moodle_url('/mod/simplecertificate/view.php', array('id' => $simplecert_cm->id, 'action' => 'get'));
-                    $button = new \single_button($link, get_string('certificate', 'format_ocmooc'));
-                    $button->add_action(
-                        new \popup_action('click', $link, 'view' . $simplecert_cm->id,
-                            array('height' => 600, 'width' => 800)));
-                    echo \html_writer::tag('div', get_string('cert_descr', 'format_ocmooc', $min_prozent));
-                    echo \html_writer::tag('div', $OUTPUT->render($button), array('style' => 'text-align:left'));
-                } else {
-                    echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_need', 'format_ocmooc', array('min_per' => $min_prozent, 'current' => $percentage))));
                 }
             }
-        }
-        echo \html_writer::end_div();
+            if ($ildcert_m && ($ildcert_cm = $DB->get_record('course_modules',
+                            array('module' => $ildcert_m->id, 'course' => $courseid, 'visible' => 1)))) {
+                // zertifikat anzeigen
+                $module_context = \context_module::instance($ildcert_cm->id);
+                if (has_capability('mod/ildcertificate:view', $module_context)
+                        && (has_capability('mod/ildcertificate:manage', $module_context) ||
+                                $DB->record_exists('ildcertificate_issues',
+                                        array('certificateid' => $ildcert_cm->instance, 'userid' => $USER->id)))
+                ) {
 
+                    $link = new \moodle_url('/mod/ildcertificate/view.php', array('id' => $ildcert_cm->id, 'action' => 'get'));
+                    $button = new \single_button($link, get_string('certificate', 'format_ocmooc'));
+                    $button->add_action(
+                            new \popup_action('click', $link, 'view' . $ildcert_cm->id,
+                                    array('height' => 600, 'width' => 800)));
+                    echo \html_writer::tag('div', get_string('cert_descr_general', 'format_ocmooc'));
+                    echo \html_writer::tag('div', $OUTPUT->render($button), array('style' => 'text-align:left'));
+                }
+            }
+            if ($simplecert_m) {
+                if ($min_prozent > 0 && $simplecert_cm = $DB->get_record('course_modules',
+                                array('module' => $simplecert_m->id, 'course' => $courseid, 'visible' => 1))) {
+                    echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_addtext', 'format_ocmooc'),
+                            array('class' => 'oc_badges_text')));
+                    $percentage = 0;
+                    $mod_count = 0;
+
+                    /* hvp start */
+                    require_once($CFG->libdir . '/gradelib.php');
+                    $hvp_percentage = 0;
+                    $hvp_module = $DB->get_record('modules', array('name' => 'hvp'));
+                    $cm = $DB->get_records('course_modules',
+                            array('course' => $courseid, 'module' => $hvp_module->id, 'completion' => 2, 'visible' => 1));
+                    $hvp_count = count($cm);
+
+                    if ($hvp_count != 0) {
+                        foreach ($cm as $module) {
+                            $grading_info = grade_get_grades($module->course, 'mod', 'hvp', $module->instance, $USER->id);
+                            $user_grade = $grading_info->items[0]->grades[$USER->id]->grade;
+
+                            $hvp_percentage += $user_grade / $hvp_count;
+                        }
+
+                        $percentage = $hvp_percentage;
+                        $mod_count++;
+                    }
+                    /* hvp end */
+
+                    $percentage = (int) ($percentage / $mod_count);
+
+                    if ($percentage >= $min_prozent) {
+                        // zertifikat anzeigen
+                        $module_context = \context_module::instance($simplecert_cm->id);
+                        require_capability('mod/simplecertificate:view', $module_context);
+
+                        $link = new \moodle_url('/mod/simplecertificate/view.php',
+                                array('id' => $simplecert_cm->id, 'action' => 'get'));
+                        $button = new \single_button($link, get_string('certificate', 'format_ocmooc'));
+                        $button->add_action(
+                                new \popup_action('click', $link, 'view' . $simplecert_cm->id,
+                                        array('height' => 600, 'width' => 800)));
+                        echo \html_writer::tag('div', get_string('cert_descr', 'format_ocmooc', $min_prozent));
+                        echo \html_writer::tag('div', $OUTPUT->render($button), array('style' => 'text-align:left'));
+                    } else {
+                        echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_need', 'format_ocmooc',
+                                array('min_per' => $min_prozent, 'current' => $percentage))));
+                    }
+                }
+            }
+            echo \html_writer::end_div();
+        }
     }
+
     private function prepare_all_badges_awarded(&$allbadges, $badges) {
         foreach ($allbadges as &$allbadge) {
             $allbadge->owned = $this->check_is_badge_owned($allbadge, $badges);
