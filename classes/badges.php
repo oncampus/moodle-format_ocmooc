@@ -176,10 +176,6 @@ class badges extends base {
                 echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
             }
         }
-        //If no Certificate is available hide the Certificate Header
-        if(!$certificate_m && !$ildcert_m && !$simplecert_m){
-            echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
-        }
         echo \html_writer::end_div();
 
     }
