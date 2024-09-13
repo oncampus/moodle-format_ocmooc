@@ -89,6 +89,19 @@ class badges extends base {
 
         echo \html_writer::tag('h2', \html_writer::tag('div', get_string('certificate_and_badges', 'format_ocmooc'), array('class' => 'oc_badges_text')));
         echo \html_writer::tag('h2', \html_writer::tag('div', get_string('certificate', 'format_ocmooc'), array('class' => 'oc_badges_text')));
+
+        //Check whether certificates can be obtained and output a string about the current certificate situation.
+        if ($simplecert_m || $ildcert_m || $certificate_m) {
+            if ($DB->get_record('course_modules', array('module' => $ildcert_m->id, 'course' => $courseid, 'visible' => 1))
+                    || $DB->get_record('course_modules', array('module' => $simplecert_m->id, 'course' => $courseid, 'visible' => 1))
+                    || $DB->get_record('course_modules', array('module' => $certificate_m->id, 'course' => $courseid, 'visible' => 1))) {
+                //There is at least one certificate included in the course.
+                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_available', 'format_ocmooc'), array('class' => 'oc_badges_text')));
+            } else {
+                //There is no certificate in the course.
+                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
+            }
+
         if ($certificate_m && ($coursecert_cm = $DB->get_record('course_modules', array('module' => $certificate_m->id, 'course' => $courseid, 'visible' => 1)))) {
             $course_cert = $DB->get_records('tool_certificate_issues', array('courseid' => $courseid, 'userid' => $USER->id));
             if ($course_cert) {
@@ -162,18 +175,6 @@ class badges extends base {
                 } else {
                     echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_need', 'format_ocmooc', array('min_per' => $min_prozent, 'current' => $percentage))));
                 }
-            }
-        }
-        //Check whether certificates can be obtained and output a string about the current certificate situation.
-        if ($simplecert_m || $ildcert_m || $certificate_m) {
-            if($DB->get_record('course_modules', array('module' => $ildcert_m->id, 'course' => $courseid, 'visible' => 1))
-            || $DB->get_record('course_modules', array('module' => $simplecert_m->id, 'course' => $courseid, 'visible' => 1)) 
-            || $DB->get_record('course_modules', array('module' => $certificate_m->id, 'course' => $courseid, 'visible' => 1))){
-                //There is at least one certificate included in the course.
-                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_available', 'format_ocmooc'), array('class' => 'oc_badges_text')));
-            }else{
-                //There is no certificate in the course.
-                echo \html_writer::tag('div', \html_writer::tag('div', get_string('cert_nocert', 'format_ocmooc'), array('class' => 'oc_badges_text')));
             }
         }
         echo \html_writer::end_div();
