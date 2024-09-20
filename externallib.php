@@ -86,7 +86,7 @@ class format_ocmooc_external extends external_api {
      */
     public static function setgrade_subcontent($contentid, $subcontentid, $score, $maxscore, $totalinteractions) {
         global $DB, $USER;
-
+        
         //Get DB Entries by contentID
         $hvp_content = $DB->get_record('format_ocmooc_hvp', array('content_id' => $contentid));
 
@@ -125,9 +125,9 @@ class format_ocmooc_external extends external_api {
         //Get DB Entries by contentID
         $updated_hvp_content = $DB->get_records('format_ocmooc_hvp', array('content_id' => $contentid));
         //Get all subcontents from the content and calculate the new total score (count($score) / count($maxscore))
-        $total_score = 0;
+        $total_score = 0.0;
         foreach ($updated_hvp_content as $subcontent) {
-            $total_score += $subcontent->score;
+            $total_score += ($subcontent->score / $subcontent->maxscore);
         }
         $score = $totalinteractions > 0 ? ($total_score / $totalinteractions) * 100 : 0;
         $maxscore = 100;

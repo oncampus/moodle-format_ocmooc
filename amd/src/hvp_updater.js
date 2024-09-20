@@ -633,7 +633,8 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                 percentage: percentage
             });
         }).fail(function(result) {
-            window.console.warn('format_ocmooc_setgrade_subcontent:', result);
+            console.log('Response Text:', result.responseText);
+            console.warn('format_ocmooc_setgrade_subcontent:', result);
         });
     };
 
