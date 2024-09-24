@@ -144,16 +144,27 @@ class format_ocmooc_external extends external_api {
                 'totalinteractions' => $totalinteractions,
             )
         );
+        $debug = "Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore;
 
         //Context validation
         //OPTIONAL but in most web service it should present
         $context = \context_system::instance();
         self::validate_context($context);
         $progress = \setgrade($contentid, $score, $maxscore);
+        $cm = get_coursemodule_from_instance('hvp', $contentid);
 
+        if ($cm == null) {
+            // Kursmodul wurde nicht gefunden
+            return array(
+                'sectionId' => null,
+                'percentage' => null,
+            );
+        }
+        
+        // Rückgabe der Daten, wenn das Kursmodul gefunden wurde
         return array(
-            'sectionId' => $progress['sectionId'],
-            'percentage' => $progress['percentage']
+            'sectionId' => $cm->section,
+            'percentage' => $score,
         );
     }
 
