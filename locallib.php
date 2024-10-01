@@ -27,19 +27,19 @@ function setgrade($contextid, $score, $maxscore) {
 
     $cm = get_coursemodule_from_instance('hvp', $contextid);
     if (!$cm) {
-        return false;
+        return array('sectionId' => "", 'percentage' => 0);
     }
 
     // Check permission.
     $context = \context_module::instance($cm->id);
     if (!has_capability('mod/hvp:saveresults', $context)) {
-        return false;
+        return array('sectionId' => "", 'percentage' => 0);
     }
 
     // Get hvp data from content.
     $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
     if (!$hvp) {
-        return false;
+        return array('sectionId' => "", 'percentage' => 0);
     }
 
     // Create grade object and set grades.
@@ -81,10 +81,14 @@ function setgrade($contextid, $score, $maxscore) {
         );
 
         $progress = get_progress($cm->course, $cm->section);
-
+        return $progress;
+    }else if($score != 0 && $score == $user_grade){
+        //If score is higher 0 and equal to user_grade the hvp grade update already made. 
+        //We only need to get the correct Progressbar
+        $progress = get_progress($cm->course, $cm->section);
         return $progress;
     }
-    return false;
+    return array('sectionId' => "cm->instance: ". $cm->instance . " score: " . $score . " usergrade: " . $user_grade , 'percentage' => 0);
 }
 
 function get_progress($courseId, $sectionId) {
