@@ -504,17 +504,6 @@ define(['jquery', 'core/ajax'], function($, ajax) {
         );
         var isInteraction = false;
 
-        /*var activityName = event.getVerifiedStatementValue([
-            'object',
-            'definition',
-            'name',
-            'en-US'
-        ]);
-
-        var activityObject = event.getVerifiedStatementValue([
-            'object',
-        ]);*/
-
         if (event.data.statement.object.objectType === 'Activity') {
             isInteraction = true;
         }
@@ -537,24 +526,24 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                     ILD.interactions[contentId] = 1;
                 }
 
-                /*Temp fix [Aktuell haben alle Fragen in einer HVP-CoursePresentation die selbe ID,
-                da H5P hier nicht differenziert. Hier MUSS ein Weg gefunden werden, um die einzelnen
-                Slides unterscheidbar zu machen.]
-                console.log("******subContentId*****");
+                console.log("******MOOC-DEBUG: ILD.xAPIAnsweredListener *****");
                 console.log(subContentId.split('subContentId='));
                 console.log("type: " + ILD.ActivityTypeMap[contentId]);
-                console.log("actName: " + activityName);
-                console.log(activityObject);
                 console.log("score: " + score);
                 console.log("maxscore: " + maxScore);
+                console.log("ILD.percentage: " + ILD.percentage);
                 console.log("interactions: " + ILD.interactions[contentId]);
                 console.log("***********************");
-                */
+
                 if(ILD.ActivityTypeMap[contentId] === 'CoursePresentation'){
-                    //Temp fix set CoursePresentation to 100% after one correct awnser
-                    ILD.setResultWithSubcontent(contentId, subContentId, score, maxScore, 1);
+                    // eslint-disable-next-line block-scoped-var
+                    let interactions = ILD.interactions[contentId];
+                    ILD.percentage = ILD.percentage + ((score / maxScore) / interactions) * 100;
+                    ILD.setResult(contentId, ILD.percentage, 100);
+                }else{
+                    //Set Result on Activities with Subcontet like a Interactive Video
+                    ILD.setResultWithSubcontent(contentId, subContentId, score, maxScore, ILD.interactions[contentId]);
                 }
-                ILD.setResultWithSubcontent(contentId, subContentId, score, maxScore, ILD.interactions[contentId]);
             } else if (ILD.subIds.indexOf(subContentId) === -1 && ILD.subIds.length === 0) {
                 // eslint-disable-next-line block-scoped-var
                 let percentage = (score / maxScore) * 100;
@@ -656,7 +645,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                 totalinteractions: totalInteractions
             }}
         ]);
-        console.log("---Subcontent---");
+        console.log("******MOOC-DEBUG: ILD.setResultWithSubcontent*****");
         console.log("Content ID:", contentid);
         console.log("Subcontent ID:", subcontentid);
         console.log("Score:", score);
@@ -672,7 +661,7 @@ define(['jquery', 'core/ajax'], function($, ajax) {
             console.log("data.sectionId: " + data.sectionId);
             console.log("Math.round(data.percentage): " + data.percentage);
             console.log("data.debug: " + data.debug);
-            console.log("----------------");
+            console.log("*******************");
             window.parent.postMessage({
                 progressDiv: divId,
                 textDiv: textDivId,
