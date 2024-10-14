@@ -526,14 +526,14 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                     ILD.interactions[contentId] = 1;
                 }
 
-                console.log("******MOOC-DEBUG: ILD.xAPIAnsweredListener *****");
+                /*console.log("******MOOC-DEBUG: ILD.xAPIAnsweredListener *****");
                 console.log(subContentId.split('subContentId='));
                 console.log("type: " + ILD.ActivityTypeMap[contentId]);
                 console.log("score: " + score);
                 console.log("maxscore: " + maxScore);
                 console.log("ILD.percentage: " + ILD.percentage);
                 console.log("interactions: " + ILD.interactions[contentId]);
-                console.log("***********************");
+                console.log("***********************");*/
 
                 if(ILD.ActivityTypeMap[contentId] === 'CoursePresentation'){
                     // eslint-disable-next-line block-scoped-var
@@ -645,12 +645,12 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                 totalinteractions: totalInteractions
             }}
         ]);
-        console.log("******MOOC-DEBUG: ILD.setResultWithSubcontent*****");
+        /*console.log("******MOOC-DEBUG: ILD.setResultWithSubcontent*****");
         console.log("Content ID:", contentid);
         console.log("Subcontent ID:", subcontentid);
         console.log("Score:", score);
         console.log("Max Score:", maxScore);
-        console.log("Total Interactions:", totalInteractions);
+        console.log("Total Interactions:", totalInteractions);*/
 
 
         promises[0].done(function(data) {
@@ -658,10 +658,10 @@ define(['jquery', 'core/ajax'], function($, ajax) {
             let textDivId = String('oc-progress-text-' + data.sectionId);
             let percentage = Math.round(data.percentage);
             percentage = String(percentage + '%');
-            console.log("data.sectionId: " + data.sectionId);
+            /*console.log("data.sectionId: " + data.sectionId);
             console.log("Math.round(data.percentage): " + data.percentage);
             console.log("data.debug: " + data.debug);
-            console.log("*******************");
+            console.log("*******************");*/
             window.parent.postMessage({
                 progressDiv: divId,
                 textDiv: textDivId,
