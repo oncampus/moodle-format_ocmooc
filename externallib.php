@@ -53,12 +53,23 @@ class format_ocmooc_external extends external_api {
         //OPTIONAL but in most web service it should present
         $context = \context_system::instance();
         self::validate_context($context);
-
+        $cm = get_coursemodule_from_instance('hvp', $contentid);
         $progress = \setgrade($contentid, $score, $maxscore);
 
+        $debug = "CONTENT DEBUG: Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore . " progress: " . $progress['percentage'];
+        if ($cm == null) {
+            // Kursmodul wurde nicht gefunden
+            return array(
+                'sectionId' => null,
+                'percentage' => null,
+            );
+        }
+        
+        // Rückgabe der Daten, wenn das Kursmodul gefunden wurde
         return array(
-            'sectionId' => $progress['sectionId'],
-            'percentage' => $progress['percentage']
+            'sectionId' => $cm->section,
+            'percentage' => $progress['percentage'],
+            'debug' => $debug
         );
     }
     
@@ -66,6 +77,7 @@ class format_ocmooc_external extends external_api {
         return new \external_single_structure(array(
             'sectionId' => new external_value(PARAM_INT, 'section ID'),
             'percentage' => new external_value(PARAM_FLOAT, 'Percentage of section progress'),
+            'debug' => new external_value(PARAM_TEXT, 'Debug Text'),
         ), 'Section progress');
     }
 
@@ -144,27 +156,30 @@ class format_ocmooc_external extends external_api {
                 'totalinteractions' => $totalinteractions,
             )
         );
-        $debug = "Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore;
 
         //Context validation
         //OPTIONAL but in most web service it should present
         $context = \context_system::instance();
         self::validate_context($context);
-        $progress = \setgrade($contentid, $score, $maxscore);
         $cm = get_coursemodule_from_instance('hvp', $contentid);
+        $progress = \setgrade($contentid, $score, $maxscore);
 
+
+        $debug = "SUBCONTENT DEBUG: Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore . " progress: " . $progress['percentage'];
         if ($cm == null) {
             // Kursmodul wurde nicht gefunden
             return array(
                 'sectionId' => null,
                 'percentage' => null,
+                'debug' => $debug
             );
         }
         
         // Rückgabe der Daten, wenn das Kursmodul gefunden wurde
         return array(
             'sectionId' => $cm->section,
-            'percentage' => $score,
+            'percentage' => $progress['percentage'],
+            'debug' => $debug
         );
     }
 
@@ -174,6 +189,7 @@ class format_ocmooc_external extends external_api {
         return new \external_single_structure(array(
             'sectionId' => new external_value(PARAM_INT, 'section ID'),
             'percentage' => new external_value(PARAM_FLOAT, 'Percentage of section progress'),
+            'debug' => new external_value(PARAM_TEXT, 'Debug Text'),
         ), 'Section progress');
     }
 }
