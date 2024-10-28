@@ -190,7 +190,7 @@ class participants extends base {
         }
 
         if ($data->town) {
-            $header[] = 'town';
+            $header[] = 'city';
             $titles[] = get_string('city');
         }
 
