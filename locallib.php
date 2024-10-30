@@ -55,7 +55,7 @@ function setgrade($contextid, $score, $maxscore) {
     } else {
         $user_grade = 0;
     }
-
+    
     if ($score > $user_grade) {
         // Set grade using Gradebook API.
         $hvp->cmidnumber = $cm->idnumber;
@@ -135,7 +135,7 @@ function get_progress($courseId, $sectionId) {
                 $grading_info = \grade_get_grades($mod->course, 'mod', 'hvp', $mod->instance, $USER->id);
                 //It could be that an object is still displayed and marked with 
                 //[Deletion in Progress] if the corresponding cron job has not run yet.
-                if (!str_contains($grading_info->items[0]->name, '[Deletion in progress]')) { 
+                if (!str_contains($grading_info->items[0]->name, '[Deletion in progress]') && !str_contains($grading_info->items[0]->name, '[Löschung in Bearbeitung]')) { 
                     $activity_grade += $grading_info->items[0]->grades[$USER->id]->grade;
                     $activity_maxgrade += $grading_info->items[0]->grademax;
                 }

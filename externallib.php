@@ -99,8 +99,8 @@ class format_ocmooc_external extends external_api {
     public static function setgrade_subcontent($contentid, $subcontentid, $score, $maxscore, $totalinteractions) {
         global $DB, $USER;
         
-        //Get DB Entries by contentID
-        $hvp_content = $DB->get_record('format_ocmooc_hvp', array('content_id' => $contentid));
+        //Get DB Entries by contentID and UserID
+        $hvp_content = $DB->get_record('format_ocmooc_hvp', array('content_id' => $contentid, 'user_id' => $USER->id));
 
         //If no entry exists with the contentid create a entry in the table
         if (!$hvp_content) {
@@ -112,10 +112,13 @@ class format_ocmooc_external extends external_api {
             $new_entry->maxscore = $maxscore;
             $DB->insert_record('format_ocmooc_hvp', $new_entry);
         } else {
-            // If an entry with the contentid exists, proceed with the existing entry logic
-            // Get existing entry for the given subcontentid, if any
-            $existing_subcontent_entry = $DB->get_record('format_ocmooc_hvp', array('content_id' => $contentid, 'subcontent_id' => $subcontentid));
-
+            // If an entry with the contentid and user_id exists, proceed with the existing entry logic
+            // Get existing entry for the given subcontentid and user_id, if any
+            $existing_subcontent_entry = $DB->get_record('format_ocmooc_hvp', array(
+                'content_id' => $contentid, 
+                'subcontent_id' => $subcontentid, 
+                'user_id' => $USER->id
+            ));
             if ($existing_subcontent_entry) {
                 // If an entry exists, update the score if the new score is higher
                 if ($existing_subcontent_entry->score < $score) {
@@ -134,8 +137,9 @@ class format_ocmooc_external extends external_api {
             }
         }
 
-        //Get DB Entries by contentID
-        $updated_hvp_content = $DB->get_records('format_ocmooc_hvp', array('content_id' => $contentid));
+        //Get DB Entries for the current user and contentID
+        $updated_hvp_content = $DB->get_records('format_ocmooc_hvp', array('content_id' => $contentid, 'user_id' => $USER->id));
+        
         //Get all subcontents from the content and calculate the new total score (count($score) / count($maxscore))
         $total_score = 0.0;
         foreach ($updated_hvp_content as $subcontent) {
@@ -165,7 +169,7 @@ class format_ocmooc_external extends external_api {
         $progress = \setgrade($contentid, $score, $maxscore);
 
 
-        $debug = "SUBCONTENT DEBUG: Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore . " progress: " . $progress['percentage'];
+        $debug = "SUBCONTENT DEBUG: setGrade Data: " . $progress['sectionId'] . " ,Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore . " progress: " . $progress['percentage'];
         if ($cm == null) {
             // Kursmodul wurde nicht gefunden
             return array(
