@@ -1,16 +1,42 @@
-# OC MOOC #
+# MOOC-Format für Moodle ##
 
-TODO Describe the plugin shortly here.
+Das MOOC-Format ist ein speziell entwickeltes Kursformat für Moodle, das umfangreiche Funktionen zur Unterstützung von Massive Open Online Courses (MOOCs) bietet. Es ermöglicht eine modulare Kursstruktur mit Kapiteln, Lektionen und interaktiven Aktivitäten, sowie Funktionen wie Fortschrittsverfolgung, Abzeichen, Zertifikate, Teilnehmerlisten und Diskussionsforen. Diese Features machen es besonders geeignet für große offene Online-Kurse und individuelle Lernpfade.
 
-TODO Provide more detailed description here.
+## Features ##
 
-## Installing via uploaded ZIP file ##
+- **Modulare Struktur**: Organisiert Kurse in Kapitel und Lektionen.
+- **Fortschrittsverfolgung**: Zeigt den Fortschritt der Lernenden im Kurs an.
+- **Interaktive H5P-Inhalte**: Integriert H5P für interaktive Inhalte direkt im Kurs.
+- **Zertifikate und Abzeichen**: Automatische Verteilung von Zertifikaten und Abzeichen nach Kursabschluss.
+- **Diskussionsforen und Teilnehmerlisten**: Fördert Austausch und Kollaboration im Kurs.
 
-1. Log in to your Moodle site as an admin and go to _Site administration >
-   Plugins > Install plugins_.
-2. Upload the ZIP file with the plugin code. You should only be prompted to add
-   extra details if your plugin type is not automatically detected.
-3. Check the plugin validation report and finish the installation.
+## Anforderungen ##
+
+- **Moodle Version**: 4.1 oder höher
+- **H5P Plugin**: Version 1.26.1 oder höher ([H5P Plugin Version 1.26.1](https://github.com/h5p/moodle-mod_hvp/tree/1.26.1))
+
+## Installation ##
+
+1. **MOOC-Format Plugin herunterladen**: Lade das Plugin aus unserem GitLab-Repository herunter:
+   - [MOOC-Format GitLab Repository](https://gitlab.oncampus-system.de/moodle/plugins/mod/format_ocmooc/-/tree/MOODLE_401_STABLE?ref_type=heads)
+2. **Plugin installieren**:
+   - Entpacke das Plugin und kopiere den gesamten Ordner in das Moodle-Verzeichnis `moodle/course/format`.
+3. **H5P Plugin installieren**:
+   - Installiere das H5P-Plugin (falls nicht vorhanden), um interaktive Inhalte einzubetten.
+4. **Moodle aktualisieren**:
+   - Melde dich als Admin bei Moodle an und führe ein Update durch, um das Plugin zu aktivieren.
+
+## H5P-Integration ##
+
+Das MOOC-Format-Plugin ist auf H5P-Inhalte ausgelegt. Eine detaillierte Anleitung zur H5P-Einbettung für das MOOC-Format findest du [hier](https://oncampus-gmbh.atlassian.net/wiki/spaces/IT/pages/192643114/HVP+Einbettung).
+
+
+## Update Logs und Kundeninformationen ##
+
+Eine Liste der Kunden, die derzeit das MOOC-Format nutzen, und eine Übersicht aller Updates und Funktionen findest du unter:
+- **Update Logs**: [Update Log für das MOOC-Format](https://oncampus-gmbh.atlassian.net/wiki/spaces/IT/pages/434405417/Update+Log)
+- **Kundenliste**: [Kunden im MOOC-Format](https://oncampus-gmbh.atlassian.net/wiki/spaces/IT/pages/edit-v2/695336961?draftShareId=8c2aeeee-f85b-4a54-9b35-070416d8e38e)
+
 
 ## Installing manually ##
 
@@ -26,25 +52,6 @@ Alternatively, you can run
     $ php admin/cli/upgrade.php
 
 to complete the installation from the command line.
-
-## Update Logs ##
-
-### Hotfix `2024083000` ###
-- Verschieben von Aktivitäten nach oben.
-- Lektionen in der Seitennavigation können geöffnet werden.
-- Hinzufügen von Aktivitäten in System Administration und in Kapitelsektion.
-- Alles einklappen/ausklappen im Bearbeitungsmodus.
-- Verschieben über die drei Punkte temporär ausgeblendet.
-- Behebung von courseindex sectionTogglers Errors in der Konsole.
-
-### Version `2024052700` ###
-
-- Bei erneutem Kurseintritt sowie beim Neuladen der Seite in der zuletzt bearbeiteten Lektion landen.
-- Lernfortschrittsbalken bei H5P-Videos/Präsentationen angepasst. Nun wird jede Interaktion in einem Video einzeln getrackt und gespeichert.
-- Der Knopf, um in den Bearbeitungsmodus zu gelangen, ist erst nach vollständigem Laden der Seite wieder benutzbar.
-- Behebung einiger Fehler bei der Selbsteinschreibung ins MOOC-Format.
-- Hinzufügen eines Knopfes zum Beitreten des MOOC innerhalb des Kurses.
-- Aktivitäten, Lektionen und Kapitel können im Bearbeitungsmodus verschoben werden.
 
 ## License ##
 
