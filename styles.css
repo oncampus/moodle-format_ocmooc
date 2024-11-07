@@ -303,6 +303,12 @@ ul#oc-coursenavlist {
 
 .ocmooc-nav-link .text-container {
     align-items: flex-start; /* Align elements to the top */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    text-overflow: ellipsis;
 }
 
 @media (max-width: 767.98px) {
