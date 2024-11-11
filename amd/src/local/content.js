@@ -100,7 +100,12 @@ export default class Component extends BaseComponent {
      */
     static init(target, selectors, sectionReturn) {
         let reactive = getCurrentCourseEditor();
+        let legacyActivityAction = reactive.mutations.legacyActivityAction ?? {};
+        let legacySectionAction = reactive.mutations.legacySectionAction ?? {};
+
         reactive.mutations = new DefaultMutations();
+        reactive.addMutations({legacyActivityAction, legacySectionAction});
+
         return new Component({
             element: document.getElementById(target),
             reactive: reactive,
