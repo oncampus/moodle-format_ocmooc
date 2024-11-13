@@ -537,10 +537,29 @@ class participants extends base {
             WHERE e.courseid = :courseid";
 
         $participants = $DB->get_records_sql($sql, ['courseid' => $courseid]);
-        $participants = array_values($participants);
 
-        return $participants;
+        $locations = [];
+        foreach ($participants as $participant) {
+            $locationKey = $participant->latitude . ',' . $participant->longitude;
+
+            if (!isset($locations[$locationKey])) {
+                $locations[$locationKey] = [
+                    'latitude' => $participant->latitude,
+                    'longitude' => $participant->longitude,
+                    'location_name' => $participant->location_name,
+                    'participants' => []
+                ];
+            }
+
+            $locations[$locationKey]['participants'][] = [
+                'firstname' => $participant->firstname,
+                'lastname' => $participant->lastname
+            ];
+        }
+
+        return array_values($locations);
     }
+
 
 
 }
