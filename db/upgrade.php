@@ -159,5 +159,31 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024052700, 'format', 'ocmooc');
     }
 
+    if ($oldversion < 2024111303) { // Beispiel für die neue Versionsnummer
+
+        // Define table format_ocmooc_locations to be created.
+        $table = new xmldb_table('format_ocmooc_locations');
+
+        // Adding fields to table format_ocmooc_locations.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('location_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('latitude', XMLDB_TYPE_NUMBER, '10, 7', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('longitude', XMLDB_TYPE_NUMBER, '10, 7', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('last_checked', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table format_ocmooc_locations.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('unique_location', XMLDB_KEY_UNIQUE, ['location_name']);
+
+        // Conditionally launch create table for format_ocmooc_locations.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Ocmooc savepoint reached.
+        upgrade_plugin_savepoint(true, 2024111303, 'format', 'ocmooc');
+    }
+
+
     return true;
 }

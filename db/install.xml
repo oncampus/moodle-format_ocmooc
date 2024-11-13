@@ -63,9 +63,22 @@
         <FIELD NAME="maxscore" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
-      <KEYS/>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="format_ocmooc_locations" COMMENT="Stores unique geographic locations based on user-provided city names, with latitude and longitude coordinates.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="location_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="latitude" TYPE="float" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="longitude" TYPE="float" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="last_checked" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp of last API check"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="unique_location" TYPE="unique" FIELDS="location_name"/>
+      </KEYS>
+    </TABLE>
+
   </TABLES>
 </XMLDB>

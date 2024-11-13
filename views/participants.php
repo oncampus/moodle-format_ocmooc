@@ -16,9 +16,20 @@ $url = new moodle_url('/course/format/ocmooc/views/participants.php', ['courseid
 $participants = new \format_ocmooc\participants($courseid, $url);
 
 $participants->check_guest_access();
+$participants->update_missing_locations($courseid);
+$participant_locations = $participants->get_course_participant_locations($courseid);
+$templatecontext = [
+    'markers' => $participant_locations
+];
+
+
+echo "<pre>";
+print_r($templatecontext);
+echo "</pre>";
+
 
 $participants->setup_page();
 echo $OUTPUT->header();
-
 $participants->render_view();
+echo $OUTPUT->render_from_template('format_ocmooc/map/map', $templatecontext);
 echo $OUTPUT->footer();

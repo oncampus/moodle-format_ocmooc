@@ -5,6 +5,7 @@ namespace format_ocmooc;
 use core_group\output\group_details;
 use format_ocmooc\forms\participantsform;
 use format_ocmooc\forms\searchform;
+use stdClass;
 
 require_once($CFG->dirroot . '/enrol/locallib.php');
 
@@ -477,4 +478,69 @@ class participants extends base {
             return $DB->insert_record('format_ocmooc_parts', $record);
         }
     }
+
+    public function update_missing_locations($courseid) {
+        global $DB;
+
+        $sql = "SELECT DISTINCT u.city
+            FROM {user} u
+            JOIN {user_enrolments} ue ON ue.userid = u.id
+            JOIN {enrol} e ON e.id = ue.enrolid
+            LEFT JOIN {format_ocmooc_locations} loc ON loc.location_name = u.city
+            WHERE e.courseid = :courseid AND loc.id IS NULL AND u.city IS NOT NULL";
+
+        $cities = $DB->get_records_sql($sql, ['courseid' => $courseid]);
+
+        foreach ($cities as $city) {
+            $this->get_location_coordinates($city->city);
+        }
+    }
+
+
+    private function get_location_coordinates($location_name) {
+        global $DB;
+
+        $existing_location = $DB->get_record('format_ocmooc_locations', ['location_name' => $location_name]);
+        if ($existing_location) {
+            return ['latitude' => $existing_location->latitude, 'longitude' => $existing_location->longitude];
+        }
+
+        $geonames_url = 'http://api.geonames.org/searchJSON?q=' . urlencode($location_name) . '&maxRows=1&username=j_l_r';
+        $response = json_decode(file_get_contents($geonames_url));
+
+        if (!empty($response->geonames)) {
+            $lat = $response->geonames[0]->lat;
+            $lng = $response->geonames[0]->lng;
+
+            // Daten in der Datenbank speichern
+            $record = new stdClass();
+            $record->location_name = $location_name;
+            $record->latitude = $lat;
+            $record->longitude = $lng;
+            $record->last_checked = time();
+            $DB->insert_record('format_ocmooc_locations', $record);
+
+            return ['latitude' => $lat, 'longitude' => $lng];
+        }
+
+        return null;
+    }
+
+    public function get_course_participant_locations($courseid) {
+        global $DB;
+
+        $sql = "SELECT u.id AS userid, u.firstname, u.lastname, loc.latitude, loc.longitude, loc.location_name
+            FROM {user} u
+            JOIN {user_enrolments} ue ON ue.userid = u.id
+            JOIN {enrol} e ON e.id = ue.enrolid
+            LEFT JOIN {format_ocmooc_locations} loc ON loc.location_name = u.city
+            WHERE e.courseid = :courseid";
+
+        $participants = $DB->get_records_sql($sql, ['courseid' => $courseid]);
+        $participants = array_values($participants);
+
+        return $participants;
+    }
+
+
 }
