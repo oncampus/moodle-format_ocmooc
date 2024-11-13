@@ -22,12 +22,6 @@ $templatecontext = [
     'markers' => $participant_locations
 ];
 
-
-echo "<pre>";
-print_r($templatecontext);
-echo "</pre>";
-
-
 $participants->setup_page();
 echo $OUTPUT->header();
 $participants->render_view();
