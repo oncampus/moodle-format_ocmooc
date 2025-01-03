@@ -1017,3 +1017,14 @@ p + .accordion {
 .courseindex.editing .courseindex-section[data-for="lection"] .courseindex-chevron {
     display: inline-block; /* Sicherstellen, dass im Editiermodus die Icons für Lektionen angezeigt werden */
 }
+
+
+/* Make the Chaptername in Editmode bold */
+.editing .ocmooc .chapter .sectionname {
+    font-weight: 700;
+}
+
+/* Indent the Lectionname*/
+.editing .ocmooc .lection .d-flex {
+    margin-left: 10px;
+}
