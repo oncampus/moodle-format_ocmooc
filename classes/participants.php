@@ -3,6 +3,7 @@
 namespace format_ocmooc;
 
 use core_group\output\group_details;
+use dml_exception;
 use format_ocmooc\forms\participantsform;
 use format_ocmooc\forms\searchform;
 use stdClass;
@@ -68,91 +69,105 @@ class participants extends base {
     protected function render_view_custom() {
         global $PAGE, $COURSE, $DB, $OUTPUT, $CFG, $USER;
 
-        $page = optional_param('page', 0, PARAM_INT);
-        $perpage = optional_param('perpage', 10, PARAM_INT);
+        $showlist = get_config('format_ocmooc', 'displaylist');
+        $showmap = get_config('format_ocmooc', 'displayworldmap');
 
-        $data = $this->get_data();
+        $this->show_unenrol_button();
 
-        if ($data->town && $data->country) {
-            #$map = get_html_osmmap();
-            #echo \html_writer::span($map, 'mb-2');
-        }
+        if ($showlist) {
+            $page = optional_param('page', 0, PARAM_INT);
+            $perpage = optional_param('perpage', 10, PARAM_INT);
 
-        $manager = new \course_enrolment_manager($PAGE, $COURSE);
+            $data = $this->get_data();
 
-        [$header, $titles, $nosort] = $this->prepare_table_header();
+            if ($data->town && $data->country) {
+                #$map = get_html_osmmap();
+                #echo \html_writer::span($map, 'mb-2');
+            }
 
-        $table = new \flexible_table('user-index-participants-' . $this->courseid);
-        $table->define_columns($header);
-        $table->define_headers($titles);
-        $table->define_baseurl($this->url);
+            $manager = new \course_enrolment_manager($PAGE, $COURSE);
 
-        $table->set_attribute('cellspacing', '0');
-        $table->set_attribute('id', 'participants');
-        $table->set_attribute('class', 'generaltable generalbox ');
+            [$header, $titles, $nosort] = $this->prepare_table_header();
 
-        foreach ($nosort as $col) {
-            $table->no_sorting($col);
-        }
+            $table = new \flexible_table('user-index-participants-' . $this->courseid);
+            $table->define_columns($header);
+            $table->define_headers($titles);
+            $table->define_baseurl($this->url);
 
-        $table->sortable(true);
+            $table->set_attribute('cellspacing', '0');
+            $table->set_attribute('id', 'participants');
+            $table->set_attribute('class', 'generaltable generalbox ');
 
-        $table->setup();
+            foreach ($nosort as $col) {
+                $table->no_sorting($col);
+            }
 
-        $instances = $manager->get_enrolment_instances();
-        $ids = [];
-        foreach ($instances as $instance) {
-            $ids[] = $instance->id;
-        }
+            $table->sortable(true);
 
-        unset($instance);
-        unset($instances);
+            $table->setup();
 
-        [$insql, $params] = $DB->get_in_or_equal($ids);
-        //raise memory limit for big courses
-        raise_memory_limit(MEMORY_EXTRA);
-        $sql = "SELECT u.* FROM {user} u
+            $instances = $manager->get_enrolment_instances();
+            $ids = [];
+            foreach ($instances as $instance) {
+                $ids[] = $instance->id;
+            }
+
+            unset($instance);
+            unset($instances);
+
+            [$insql, $params] = $DB->get_in_or_equal($ids);
+            //raise memory limit for big courses
+            raise_memory_limit(MEMORY_EXTRA);
+            $sql = "SELECT u.* FROM {user} u
                 INNER JOIN {user_enrolments} ue
                     ON u.id = ue.userid
                 WHERE enrolid $insql";
 
-        [$sql, $paramssearch] = $this->handle_search_data($sql);
+            [$sql, $paramssearch] = $this->handle_search_data($sql);
 
-        if ($paramssearch) {
-            $params = array_merge($params, $paramssearch);
+            if ($paramssearch) {
+                $params = array_merge($params, $paramssearch);
+            }
+
+            $sort = $table->get_sql_sort();
+            if ($sort) {
+                $sql .= " ORDER BY $sort";
+            }
+
+            $userscount = $DB->get_records_sql($sql, $params);
+            $userscount = count($userscount);
+            $users = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
+
+            foreach ($users as $user) {
+                $user = $this->prepare_user_entry($user);
+                $table->add_data($user);
+                unset($user);
+            }
+
+            // There was a problem with count_records_sql. The count was incorrect.
+            $total = $DB->get_records_sql($sql, $params);
+            $total = count($total);
+
+            $this->searchform->display();
+
+            echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
+
+            echo \html_writer::tag('p', get_string('countparticipantsfound', 'core_user', $userscount));
+            $table->finish_html();
+
+            echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
+
+            unset($table);
         }
 
-        $sort = $table->get_sql_sort();
-        if ($sort) {
-            $sql .= " ORDER BY $sort";
+        if ($showmap) {
+            $participantlocations = $this->fetch_course_participant_locations($this->courseid);
+
+            $templatecontext = [
+                'markers' => array_values($participantlocations),
+            ];
+            echo $OUTPUT->render_from_template('format_ocmooc/map/map', $templatecontext);
         }
-
-        $userscount = $DB->get_records_sql($sql, $params);
-        $userscount = count($userscount);
-        $users = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
-
-        foreach ($users as $user) {
-            $user = $this->prepare_user_entry($user);
-            $table->add_data($user);
-            unset($user);
-        }
-
-        // There was a problem with count_records_sql. The count was incorrect.
-        $total = $DB->get_records_sql($sql, $params);
-        $total = count($total);
-
-        $this->show_unenrol_button();
-
-        $this->searchform->display();
-
-        echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
-
-        echo \html_writer::tag('p', get_string('countparticipantsfound', 'core_user', $userscount));
-        $table->finish_html();
-
-        echo $OUTPUT->paging_bar($total, $page, $perpage, $this->url);
-
-        unset($table);
     }
 
     private function prepare_table_header() {
@@ -373,7 +388,7 @@ class participants extends base {
                     $data->courseid = $this->courseid;
                     $data->profilepicture = get_config('format_ocmooc', 'profilepicture');
                     $data->namedisplay = get_config('format_ocmooc', 'namedisplay');
-                    $data->email = get_config('format_ocmooc', 'town');
+                    $data->email = get_config('format_ocmooc', 'email');
                     $data->town = get_config('format_ocmooc', 'town');
                     $data->country = get_config('format_ocmooc', 'country');
                     $data->badges = get_config('format_ocmooc', 'badges');
@@ -479,87 +494,273 @@ class participants extends base {
         }
     }
 
-    public function update_missing_locations($courseid) {
+    /**
+     * Fetches participant locations for a given course.
+     *
+     * This function retrieves the geographic locations of course participants based on their city data.
+     * If certain cities are missing from the database, it processes and adds them using an external API.
+     * Finally, it returns all markers (locations) with participant counts for the course.
+     *
+     * @param int $courseid The ID of the course.
+     * @return array An array of markers, each containing:
+     *               - 'latitude' (float): The latitude of the location.
+     *               - 'longitude' (float): The longitude of the location.
+     *               - 'location_name' (string): The name of the location (localized).
+     *               - 'participants' (array): List of participants associated with the location.
+     * @throws dml_exception If there are any database errors during execution.
+     */
+    public function fetch_course_participant_locations(int $courseid): array {
+        // Identify cities that are missing from the database.
+        // These cities are those not yet mapped to a geographic location.
+        $missingcities = $this->get_missing_cities($courseid);
+
+        // Process each missing city.
+        // This includes fetching geographic data from an external API and adding the city to the database.
+        foreach ($missingcities as $city) {
+            $this->process_city($city->city);
+        }
+
+        // Retrieve all markers for the course participants.
+        // This includes the geographic coordinates, location names, and participant counts.
+        return $this->get_markers($courseid);
+    }
+
+    /**
+     * Retrieves a list of cities missing from the database for a given course.
+     *
+     * This function identifies participant cities that are not yet mapped to a location
+     * in the database. It checks for missing entries in the `format_ocmooc_locations` table
+     * and also accounts for aliases in the `format_ocmooc_aliases` table.
+     *
+     * @param int $courseid The ID of the course.
+     * @return array An array of missing cities, where each item contains:
+     *               - 'city' (string): The name of the missing city.
+     * @throws dml_exception If there are any database errors during execution.
+     */
+    private function get_missing_cities(int $courseid): array {
         global $DB;
 
+        // SQL query to find distinct cities of participants in the course that:
+        // - Are not already mapped to a geographic location in the `format_ocmooc_locations` table.
+        // - Are not present as an alias in the `format_ocmooc_aliases` table.
+        // - Are not empty strings.
         $sql = "SELECT DISTINCT u.city
-            FROM {user} u
-            JOIN {user_enrolments} ue ON ue.userid = u.id
-            JOIN {enrol} e ON e.id = ue.enrolid
-            LEFT JOIN {format_ocmooc_locations} loc ON loc.location_name = u.city
-            WHERE e.courseid = :courseid AND loc.id IS NULL AND u.city IS NOT NULL";
+                           FROM {user} u
+                           JOIN {user_enrolments} ue ON ue.userid = u.id
+                           JOIN {enrol} e ON e.id = ue.enrolid
+                      LEFT JOIN {format_ocmooc_locations} loc ON loc.location_name_de = u.city OR loc.location_name_en = u.city
+                      LEFT JOIN {format_ocmooc_aliases} alias ON alias.alias = u.city
+                          WHERE e.courseid = :courseid
+                                AND loc.id IS NULL
+                                AND alias.id IS NULL
+                                AND u.city <> ''";
 
-        $cities = $DB->get_records_sql($sql, ['courseid' => $courseid]);
-
-        foreach ($cities as $city) {
-            $this->get_location_coordinates($city->city);
-        }
+        return $DB->get_records_sql($sql, ['courseid' => $courseid]);
     }
 
-
-    private function get_location_coordinates($location_name) {
+    /**
+     * Processes a city and updates location data.
+     *
+     * This function retrieves geographic data for the given city from an external API.
+     * If the location already exists in the database, it adds an alias if necessary.
+     * Otherwise, it creates a new location record in the database and optionally adds an alias.
+     *
+     * @param string $city The name of the city to process.
+     * @return void
+     * @throws dml_exception If there are any database errors during execution.
+     */
+    private function process_city(string $city) {
         global $DB;
 
-        $existing_location = $DB->get_record('format_ocmooc_locations', ['location_name' => $location_name]);
-        if ($existing_location) {
-            return ['latitude' => $existing_location->latitude, 'longitude' => $existing_location->longitude];
+        // Fetch geographic information for the given city using an external API.
+        $locationinfo = $this->get_location_info($city);
+
+        // If no location data is found, log a debugging message and exit the method.
+        if (!$locationinfo) {
+            debugging("No valid location data found for: " . $city);
+            return;
         }
 
-        $geonames_url = 'http://api.geonames.org/searchJSON?q=' . urlencode($location_name) . '&maxRows=1&username=j_l_r';
-        $response = json_decode(file_get_contents($geonames_url));
+        // Check if the location already exists in the database.
+        $sql = "SELECT loc.id
+                  FROM {format_ocmooc_locations} loc
+             LEFT JOIN {format_ocmooc_aliases} alias ON alias.location_id = loc.id
+                 WHERE loc.latitude = :latitude AND loc.longitude = :longitude";
 
-        if (!empty($response->geonames)) {
-            $lat = $response->geonames[0]->lat;
-            $lng = $response->geonames[0]->lng;
+        $existinglocation = $DB->get_record_sql($sql, [
+            'latitude' => $locationinfo['latitude'],
+            'longitude' => $locationinfo['longitude'],
+        ]);
 
-            // Daten in der Datenbank speichern
-            $record = new stdClass();
-            $record->location_name = $location_name;
-            $record->latitude = $lat;
-            $record->longitude = $lng;
-            $record->last_checked = time();
-            $DB->insert_record('format_ocmooc_locations', $record);
-
-            return ['latitude' => $lat, 'longitude' => $lng];
-        }
-
-        return null;
-    }
-
-    public function get_course_participant_locations($courseid) {
-        global $DB;
-
-        $sql = "SELECT u.id AS userid, u.firstname, u.lastname, loc.latitude, loc.longitude, loc.location_name
-            FROM {user} u
-            JOIN {user_enrolments} ue ON ue.userid = u.id
-            JOIN {enrol} e ON e.id = ue.enrolid
-            LEFT JOIN {format_ocmooc_locations} loc ON loc.location_name = u.city
-            WHERE e.courseid = :courseid";
-
-        $participants = $DB->get_records_sql($sql, ['courseid' => $courseid]);
-
-        $locations = [];
-        foreach ($participants as $participant) {
-            $locationKey = $participant->latitude . ',' . $participant->longitude;
-
-            if (!isset($locations[$locationKey])) {
-                $locations[$locationKey] = [
-                    'latitude' => $participant->latitude,
-                    'longitude' => $participant->longitude,
-                    'location_name' => $participant->location_name,
-                    'participants' => []
-                ];
+        // If the location exists, check if the city name is an alias.
+        if ($existinglocation) {
+            if (!in_array($city, [$locationinfo['location_name_de'], $locationinfo['location_name_en']])) {
+                // Add the city as an alias for the existing location.
+                $this->add_location_alias($existinglocation->id, $city);
             }
+            return; // Exit as no further action is needed.
+        }
 
-            $locations[$locationKey]['participants'][] = [
-                'firstname' => $participant->firstname,
-                'lastname' => $participant->lastname
+        // If the location does not exist, create a new record in the database.
+        $record = new stdClass();
+        $record->location_name_de = $locationinfo['location_name_de'] ?? $city;
+        $record->location_name_en = $locationinfo['location_name_en'] ?? $city;
+        $record->latitude = $locationinfo['latitude'];
+        $record->longitude = $locationinfo['longitude'];
+        $record->last_checked = time();
+
+        // Insert the new location into the database and get its ID.
+        $locationid = $DB->insert_record('format_ocmooc_locations', $record);
+
+        // Add the city as an alias if it is not one of the main localized names.
+        if (!in_array($city, [$locationinfo['location_name_de'], $locationinfo['location_name_en']])) {
+            $this->add_location_alias($locationid, $city);
+        }
+    }
+
+    /**
+     * Retrieves location markers for course participants.
+     *
+     * This function generates a list of geographic markers representing the locations of participants
+     * in a given course. It aggregates participant data based on their city information and resolves
+     * locations using the `format_ocmooc_locations` table and its aliases. The results are grouped by
+     * location and include the number of participants at each location, along with the geographic
+     * coordinates (latitude and longitude).
+     *
+     * @param int $courseid The ID of the course for which participant locations should be fetched.
+     * @return array An array of location markers, where each record contains:
+     *               - 'location_name' (string): The localized name of the location.
+     *               - 'participant_count' (int): The total number of participants at this location.
+     *               - 'latitude' (float): The latitude of the location.
+     *               - 'longitude' (float): The longitude of the location.
+     * @throws dml_exception If there are any database errors during execution.
+     */
+    private function get_markers(int $courseid): array {
+        global $DB;
+
+        // Determine the appropriate location field based on the current language.
+        // Use the German name ('location_name_de') for 'de', otherwise default to the English name ('location_name_en').
+        $lang = current_language();
+        $locationfield = ($lang === 'de') ? 'location_name_de' : 'location_name_en';
+
+        // SQL query to fetch participant locations:
+        // - The query counts participants ('participant_count') for each unique location.
+        // - It uses the `format_ocmooc_locations` table to map city names to geographic locations.
+        // - If a city name matches an alias in `format_ocmooc_aliases`, it resolves to the associated location ID.
+        $sql = "SELECT loc.$locationfield AS location_name,
+                       COUNT(u.id) AS participant_count,
+                       loc.latitude,
+                       loc.longitude
+                 FROM {user} u
+                 JOIN {user_enrolments} ue ON ue.userid = u.id
+                 JOIN {enrol} e ON e.id = ue.enrolid
+            LEFT JOIN {format_ocmooc_locations} loc ON loc.location_name_de = u.city
+                      OR loc.location_name_en = u.city
+                      OR loc.id = (
+                          SELECT alias.location_id
+                          FROM {format_ocmooc_aliases} alias
+                          WHERE alias.alias = u.city
+                          LIMIT 1
+                      )
+                WHERE e.courseid = :courseid
+                      AND loc.id IS NOT NULL
+             GROUP BY loc.location_name_de, loc.latitude, loc.longitude";
+
+        // Execute the query and return the results as an array of records.
+        return $DB->get_records_sql($sql, ['courseid' => $courseid]);
+    }
+
+    /**
+     * Retrieves geographic information for a given location name.
+     *
+     * This function queries the GeoNames API to fetch latitude, longitude, and localized names
+     * for the provided location. It performs two separate API calls, one for German (`lang=de`)
+     * and one for English (`lang=en`), to retrieve localized data. If data is found in either
+     * language, it combines the results into a unified array. If no data is found, it returns `null`.
+     *
+     * @param string $locationname The name of the location to search for.
+     * @return array|null An array containing:
+     *                    - 'latitude' (float): The latitude of the location.
+     *                    - 'longitude' (float): The longitude of the location.
+     *                    - 'location_name_de' (string|null): The German name of the location (if available).
+     *                    - 'location_name_en' (string|null): The English name of the location (if available).
+     *                    Returns null if no data is found.
+     */
+    private function get_location_info(string $locationname): ?array {
+        // Perform API requests to GeoNames in German and English.
+        // The `featureClass=P` parameter limits results to populated places (cities, towns, etc.).
+        $apiresponses = [
+            'de' => json_decode(
+                file_get_contents(
+                    'http://api.geonames.org/searchJSON?q=' . urlencode($locationname) .
+                    '&maxRows=1&username=j_l_r&lang=de&featureClass=P'
+                )
+            ),
+            'en' => json_decode(
+                file_get_contents(
+                    'http://api.geonames.org/searchJSON?q=' . urlencode($locationname) .
+                    '&maxRows=1&username=j_l_r&lang=en&featureClass=P'
+                )
+            ),
+        ];
+
+        // Check if at least one of the API responses contains valid geoname data.
+        if (!empty($apiresponses['de']->geonames) || !empty($apiresponses['en']->geonames)) {
+            return [
+                // Use the latitude from the German response, or fallback to the English response.
+                'latitude' => $apiresponses['de']->geonames[0]->lat ?? $apiresponses['en']->geonames[0]->lat,
+
+                // Use the longitude from the German response, or fallback to the English response.
+                'longitude' => $apiresponses['de']->geonames[0]->lng ?? $apiresponses['en']->geonames[0]->lng,
+
+                // Use the German location name if available, otherwise null.
+                'location_name_de' => $apiresponses['de']->geonames[0]->name ?? null,
+
+                // Use the English location name if available, otherwise null.
+                'location_name_en' => $apiresponses['en']->geonames[0]->name ?? null,
             ];
         }
 
-        return array_values($locations);
+        // If no valid data is found in either API response, return null.
+        return null;
     }
 
+    /**
+     * Adds an alias for a given location.
+     *
+     * This function checks if an alias for the given location already exists in the database.
+     * If no such alias exists, it creates a new record in the `format_ocmooc_aliases` table
+     * linking the alias name to the specified location ID. Aliases are used to map alternative
+     * names for the same geographic location (e.g., different spellings or translations of city names).
+     *
+     * @param int $locationid The ID of the location to which the alias should be linked.
+     * @param string $alias The alias name to be added for the location.
+     * @return void
+     * @throws dml_exception If a database error occurs during execution.
+     */
+    private function add_location_alias(int $locationid, string $alias) {
+        global $DB;
 
+        // Check if the alias already exists for the specified location.
+        // This query ensures no duplicate aliases are added to the database.
+        $sql = "SELECT id
+                  FROM {format_ocmooc_aliases}
+                 WHERE location_id = :location_id AND alias = :alias";
 
+        // Execute the query with the provided location ID and alias as parameters.
+        $existingalias = $DB->get_record_sql($sql, [
+            'location_id' => $locationid,
+            'alias' => $alias,
+        ]);
+
+        // If the alias does not already exist, insert a new record.
+        if (!$existingalias) {
+            $record = new stdClass();
+            $record->location_id = $locationid; // Link the alias to the location.
+            $record->alias = $alias;           // Store the alias name.
+
+            // Insert the new alias record into the `format_ocmooc_aliases` table.
+            $DB->insert_record('format_ocmooc_aliases', $record);
+        }
+    }
 }

@@ -113,10 +113,13 @@ $string['action']     = 'Aktion';
 $string['sesskey']    = 'Sitzungsschlüssel';
 $string['courseid']   = 'Kurs ID';
 $string['sectionnum'] = 'Sektionsnummer';
+/* participants.php*/
+$string['worldmap'] = 'Weltkarte';
 
 /**  edit **/
 /* htmlpage.php */
 $string['error:nocapability'] = 'Do hast nicht die benötigten berechtigungen';
+$string['participant']       = 'Teilnehmer/in';
 $string['participants']       = 'Teilnehmer/in';
 $string['participants_unenrol'] = 'Selber aus dem Kurs ausschreiben';
 /* participants.php */
@@ -151,6 +154,13 @@ $string['numberedlection'] = 'Lektion {a}';
 $string['badge_overview_description']  = 'Mit Kursbadges bzw. digitale Lernabzeichen wird der Fortschritt im Kurs belohnt und sichtbar gemacht.';
 $string['no_badges_available']  = 'Es sind keine Auszeichnungen verfügbar';
 $string['my_badges']  = 'Meine Auszeichnungen';
+
+$string['participants_and_map_global'] = 'Teilnehmerliste und Weltkarte Global';
+$string['participants_and_map_global_info'] = 'Diese Einstellungen ermöglichen es, global festzulegen, ob die Nutzertabelle und die Weltkarte in Kursen angezeigt werden.';
+$string['display_list'] = 'Liste anzeigen';
+$string['display_list_desc'] = 'Aktivieren Sie diese Option, um die Teilnehmerliste in Kursen anzuzeigen.';
+$string['display_worldmap'] = 'Weltkarte anzeigen';
+$string['display_worldmap_desc'] = 'Aktivieren Sie diese Option, um die Weltkarte in Kursen anzuzeigen.';
 
 $string['participants_default'] = 'Teilnehmerliste Default';
 $string['participants_guest'] = 'Teilnehmerliste Gast';

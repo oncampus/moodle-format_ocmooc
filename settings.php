@@ -39,6 +39,36 @@ if ($hassiteconfig) {
         ];
 
         //////////////////////////////////////////////////////////
+        ///       GLOBAK SETTINGS : PARTICIPANTS & WORLDMAP    ///
+        //////////////////////////////////////////////////////////
+
+        $settings->add(
+            new admin_setting_heading(
+                'global_participants_header',
+                get_string('participants_and_map_global', 'format_ocmooc'),
+                get_string('participants_and_map_global_info', 'format_ocmooc'),
+            )
+        );
+
+        $settings->add(
+            new admin_setting_configcheckbox(
+                'format_ocmooc/displaylist',
+                get_string('display_list', 'format_ocmooc'),
+                get_string('display_list_desc', 'format_ocmooc'),
+                true
+            )
+        );
+
+        $settings->add(
+            new admin_setting_configcheckbox(
+                'format_ocmooc/displayworldmap',
+                get_string('display_worldmap', 'format_ocmooc'),
+                get_string('display_worldmap_desc', 'format_ocmooc'),
+                false
+            )
+        );
+
+        //////////////////////////////////////////////////////////
         ///           DEFAULT SETTINGS : PARTICIPANTS          ///
         //////////////////////////////////////////////////////////
 
@@ -233,6 +263,5 @@ if ($hassiteconfig) {
                         false
                 )
         );
-
     }
 }

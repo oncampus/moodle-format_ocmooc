@@ -114,10 +114,13 @@ $string['action']     = 'Action';
 $string['sesskey']    = 'Session key';
 $string['courseid']   = 'Course ID';
 $string['sectionnum'] = 'Section Number';
+/* participants.php*/
+$string['worldmap'] = 'Worldmap';
 
 /**  edit **/
 /* htmlpage.php */
 $string['error:nocapability'] = 'You do not have the capability to view this page';
+$string['participant']       = 'Participant';
 $string['participants']       = 'Participants';
 $string['participants_unenrol'] = 'Unenrol yourself from course';
 
@@ -156,6 +159,13 @@ $string['numberedlection'] = 'Lection {a}';
 $string['badge_overview_description']  = 'Course badges reward and show progress in the course.';
 $string['no_badges_available']  = 'Their are no badges available.';
 $string['my_badges']  = 'My Badges';
+
+$string['participants_and_map_global'] = 'Participantslist and worldmap global';
+$string['participants_and_map_global_info'] = 'These settings allow you to globally configure whether the user table and world map are displayed in courses.';
+$string['display_list'] = 'Display list';
+$string['display_list_desc'] = 'Enable this option to show the list of participants in courses.';
+$string['display_worldmap'] = 'Display worldmap';
+$string['display_worldmap_desc'] = 'Enable this option to show the worldmap in courses.';
 
 $string['participants_default'] = 'Participants Default';
 $string['participants_guest'] = 'Participants Guest';
