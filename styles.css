@@ -404,8 +404,13 @@ ul#oc-coursenavlist {
 
 
 /* Footer Navigation */
+.oc-div-footerlinks {
+    margin: 0 0.5rem;
+}
 .oc-div-footerlinks #oc-div-prevlection, .oc-div-footerlinks #oc-div-nextlection {
-    min-width: 175px;
+    /*min-width: 175px;*/
+    display: flex;
+    align-items: center;
 }
 
 .oc-div-footerlinks .btn.inactive {
@@ -466,6 +471,10 @@ ul#oc-coursenavlist {
 #page-course-view-ocmooc #region-main .moremenu .nav-link:focus {
     border-color: transparent;
     background-color: #ffffff;
+}
+
+#page-course-view-ocmooc #region-main .moremenu {
+    height: auto;
 }
 
 #page-course-view-ocmooc .secondary-navigation .navigation .nav-link:hover,
@@ -988,7 +997,13 @@ p + .accordion {
 .enrol-button-element {
     position: relative;
     text-align: right;
-    bottom: 4rem;
+    bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+    .enrol-button-element {
+        margin-right: 2rem;
+    }
 }
 
 

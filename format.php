@@ -55,6 +55,7 @@ if ($isediting) {
     if (!$isuserenrolled) {
         $url = new \moodle_url('/enrol/index.php', ['id' => $COURSE->id]);
         $attributes = ['class' => 'enrol-button-container'];
+        echo "<style>#page-header { padding-bottom: 2.5rem; }</style>";
         echo html_writer::link($url, $renderer->render_from_template('format_ocmooc/local/content/enrolbutton', []), $attributes);
     }
 
