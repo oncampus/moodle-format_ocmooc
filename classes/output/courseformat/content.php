@@ -92,9 +92,7 @@ class content extends content_base {
             $sections[$lection]->selected = true;
             $data->sections = [$sections[$lection]];
 
-            $navlectionarr = [];
             $maxlectionnavitems = 5;
-            $countsides = ($maxlectionnavitems - 1) / 2;
             $sectioncount = count($sections);
 
             if ($lection <= 1 && $chapter === 1) {
@@ -105,27 +103,14 @@ class content extends content_base {
             }
 
             if (count($sections) > $maxlectionnavitems) {
-                if ($lection - $countsides <= 1) {
-                    $data->firstsection = true;
-                }
-                if ($lection + $countsides >= $sectioncount) {
-                    $data->lastsection = true;
-                }
-                $countleft = $lection - 3 > 0 ? $lection - 3 : 0;
-                $overflow = ($lection - 3) + $maxlectionnavitems >= $sectioncount ?
-                        ($lection - 3) + $maxlectionnavitems - $sectioncount : 0;
-                if ($overflow && $lection > 0) {
-                    $countleft -= $lection > $overflow ? $overflow : $lection;
-                }
-                $navlectionarr = array_slice($sections, $countleft, $maxlectionnavitems);
-
+                $data->firstsection = true;
+                $data->lastsection = false;
+                $data->chaptersections = array_values($sections);
             } else {
-                $navlectionarr += array_values($sections);
                 $data->firstsection = true;
                 $data->lastsection = true;
+                $data->chaptersections = array_values($sections);
             }
-
-            $data->chaptersections = $navlectionarr;
 
             if ($chapter < count($chapters) && $lection === $sectioncount) {
                 $params['chapter'] = $chapter + 1;
