@@ -320,6 +320,16 @@ define(['jquery', 'core/ajax'], function($, ajax) {
     };
 
     /**
+     * Analyze H5P content: MultiMediaChoice.
+     * @return {object} Analysis results
+     */
+    ILD.analyzeHandlers.multiMediaChoice = function() {
+        return {
+            isScored: true,
+        };
+    };
+
+    /**
      * Analyze H5P content: Questionnaire.
      * @return {object} Analysis results
      */
