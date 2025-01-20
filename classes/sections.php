@@ -185,7 +185,7 @@ class sections {
         }
 
         foreach ($modulestodelete as $cmid) {
-            course_delete_module($cmid);
+            course_delete_module($cmid, true);
         }
 
         foreach ($sectionstodelete as $sid) {
