@@ -19,6 +19,5 @@ $participants->check_guest_access();
 
 $participants->setup_page();
 echo $OUTPUT->header();
-
 $participants->render_view();
 echo $OUTPUT->footer();

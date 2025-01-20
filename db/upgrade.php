@@ -159,5 +159,47 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024052700, 'format', 'ocmooc');
     }
 
+    if ($oldversion < 2024111807) { // Beispiel für die neue Versionsnummer
+
+        // Define table format_ocmooc_locations to be created.
+        $table = new xmldb_table('format_ocmooc_locations');
+
+        // Adding fields to table format_ocmooc_locations.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, 'Primary key');
+        $table->add_field('location_name_de', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'German locationname');
+        $table->add_field('location_name_en', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'English locationname');
+        $table->add_field('latitude', XMLDB_TYPE_NUMBER, '10, 7', null, XMLDB_NOTNULL, null, null, 'Latitude coordinate');
+        $table->add_field('longitude', XMLDB_TYPE_NUMBER, '10, 7', null, XMLDB_NOTNULL, null, null, 'Longitude coordinate');
+        $table->add_field('last_checked', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'Timestamp of last API check');
+
+        // Adding keys to table format_ocmooc_locations.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('unique_location', XMLDB_KEY_UNIQUE, ['latitude', 'longitude']);
+
+        // Conditionally launch create table for format_ocmooc_locations.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('format_ocmooc_aliases');
+
+        // Adding fields to table format_ocmooc_aliases.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, 'Primary key');
+        $table->add_field('location_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'Reference to format_ocmooc_locations');
+        $table->add_field('alias', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'Alias for the location');
+
+        // Adding keys to table format_ocmooc_aliases.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('unique_alias', XMLDB_KEY_UNIQUE, ['location_id', 'alias']);
+        $table->add_key('fk_location', XMLDB_KEY_FOREIGN, ['location_id'], 'format_ocmooc_locations', ['id']);
+
+        // Conditionally launch create table for format_ocmooc_aliases.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Ocmooc savepoint reached.
+        upgrade_plugin_savepoint(true, 2024111807, 'format', 'ocmooc');
+    }
     return true;
 }
