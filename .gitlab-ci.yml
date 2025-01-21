@@ -4,7 +4,7 @@ phpcs moodle:
   stage: test
   image: gitlab.oncampus-system.de:5050/moodle/docker-templates:codesniffer
   script:
-    - phpcs -s -p --colors --extensions=php,js --standard=moodle .
+    - phpcs -s -p --colors --extensions=php,js --ignore=*/amd/build/* --standard=moodle .
     
 php-compatibility 8.3:
   tags:
