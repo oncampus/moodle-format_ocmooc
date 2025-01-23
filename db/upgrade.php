@@ -159,7 +159,7 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024052700, 'format', 'ocmooc');
     }
 
-    if ($oldversion < 2025012205) {
+    if ($oldversion < 2025012312) {
 
         // Define table format_ocmooc_locations to be created.
         $table = new xmldb_table('format_ocmooc_locations');
@@ -175,13 +175,19 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
 
         // Adding keys to table format_ocmooc_locations.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-        $table->add_key('unique_location', XMLDB_KEY_UNIQUE, ['latitude', 'longitude']);
+
+        // Adding indexes to improve query performance.
+        $table->add_index('idx_location_name_de', XMLDB_INDEX_NOTUNIQUE, ['location_name_de']);
+        $table->add_index('idx_location_name_en', XMLDB_INDEX_NOTUNIQUE, ['location_name_en']);
+        $table->add_index('idx_country', XMLDB_INDEX_NOTUNIQUE, ['country']);
+        $table->add_index('idx_latitude_longitude', XMLDB_INDEX_NOTUNIQUE, ['latitude', 'longitude']);
 
         // Conditionally launch create table for format_ocmooc_locations.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
 
+        // Define table format_ocmooc_aliases to be created.
         $table = new xmldb_table('format_ocmooc_aliases');
 
         // Adding fields to table format_ocmooc_aliases.
@@ -193,8 +199,11 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
 
         // Adding keys to table format_ocmooc_aliases.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-        $table->add_key('unique_alias', XMLDB_KEY_UNIQUE, ['location_id', 'alias']);
-        $table->add_key('fk_location', XMLDB_KEY_FOREIGN, ['location_id'], 'format_ocmooc_locations', ['id']);
+        $table->add_key('fk_location_reference', XMLDB_KEY_FOREIGN, ['location_id'], 'format_ocmooc_locations', ['id']); // Fremdschlüssel.
+
+        // Adding indexes to improve query performance.
+        $table->add_index('idx_alias', XMLDB_INDEX_NOTUNIQUE, ['alias']); // Nur auf alias, nicht auf location_id!
+        $table->add_index('idx_location_id_alias', XMLDB_INDEX_NOTUNIQUE, ['location_id', 'alias']);
 
         // Conditionally launch create table for format_ocmooc_aliases.
         if (!$dbman->table_exists($table)) {
@@ -202,7 +211,7 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         }
 
         // Ocmooc savepoint reached.
-        upgrade_plugin_savepoint(true, 2025012205, 'format', 'ocmooc');
+        upgrade_plugin_savepoint(true, 2025012312, 'format', 'ocmooc');
     }
     return true;
 }
