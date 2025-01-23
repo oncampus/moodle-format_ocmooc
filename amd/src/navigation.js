@@ -1,7 +1,8 @@
 define(['jquery'], function($) {
     return {
         init: function() {
-            var maxVisible = 5;
+            var maxVisible = window.innerWidth < 500 ? 3 :
+                 window.innerWidth < 600 ? 4 : 5;
 
             // Initialize: Hide non-visible lessons on page load
             $(document).ready(function() {
