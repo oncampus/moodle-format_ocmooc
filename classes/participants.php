@@ -772,10 +772,8 @@ class participants extends base {
 
             // Define the API URLs for German and English responses.
             $apiurls = [
-                'de' => "http://api.geonames.org/searchJSON?q=
-                {$city}{$countryparam}&maxRows=1&username=j_l_r&lang=de&featureClass=P",
-                'en' => "http://api.geonames.org/searchJSON?q=
-                {$city}{$countryparam}&maxRows=1&username=j_l_r2&lang=en&featureClass=P",
+                'de' => "http://api.geonames.org/searchJSON?q={$city}{$countryparam}&maxRows=1&username=j_l_r&lang=de&featureClass=P",
+                'en' => "http://api.geonames.org/searchJSON?q={$city}{$countryparam}&maxRows=1&username=j_l_r2&lang=en&featureClass=P",
             ];
 
             // Initialize cURL handles for both German and English requests.
