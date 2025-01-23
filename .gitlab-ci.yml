@@ -1,31 +1,21 @@
-#basic ci.yml only setting up the plugin and running its unit tests
-image: gitlab.oncampus-system.de:5050/moodle/docker-templates:p81m401
-stages:
-  - test
-variables:
-  PLUGIN_TYPE: "format"
-  PLUGIN_PATH: "course/format"
-  PLUGIN_NAME: "ocmooc"
-  MOODLE_ROOT: "/var/www/moodle"
-before_script:
-  - service mariadb start
-  - cp -R $CI_PROJECT_DIR $MOODLE_ROOT/$PLUGIN_PATH/$PLUGIN_NAME
-codechecker:
+phpcs moodle:
   tags:
   - moodle
   stage: test
+  image: gitlab.oncampus-system.de:5050/moodle/docker-templates:codesniffer
   script:
-    - git clone https://github.com/moodlehq/moodle-local_codechecker.git ${MOODLE_ROOT}/local/codechecker
-    - php ${MOODLE_ROOT}/admin/cli/upgrade.php --non-interactive
-    - cd ${MOODLE_ROOT}/local/codechecker
-    - git clone https://github.com/squizlabs/PHP_CodeSniffer.git
-    - cd PHP_CodeSniffer
-    - php bin/phpcs --config-set installed_paths ..
-    - php bin/phpcs --config-set default_standard moodle
-    - cd .. 
-    - if php run.php ${PLUGIN_PATH}/${PLUGIN_NAME} | grep -i "| ERROR |"; 
-      then
-        echo "Errors found";
-        exit 1;
-      else
-        echo "No errors found"; fi
+    - phpcs -s -p --colors --extensions=php,js --ignore=*/amd/build/* --standard=moodle .
+    
+php-compatibility 8.3:
+  tags:
+  - moodle
+  stage: test
+  image: gitlab.oncampus-system.de:5050/moodle/docker-templates:codesniffer
+  variables:
+    PHPVERSION: "8.3"
+  script:
+    - >-
+      phpcs -s -p --colors
+      --standard=PHPCompatibility
+      --extensions=php
+      --runtime-set testVersion ${PHPVERSION} .
