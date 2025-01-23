@@ -159,7 +159,7 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024052700, 'format', 'ocmooc');
     }
 
-    if ($oldversion < 2025012100) { // Beispiel für die neue Versionsnummer
+    if ($oldversion < 2025012205) {
 
         // Define table format_ocmooc_locations to be created.
         $table = new xmldb_table('format_ocmooc_locations');
@@ -168,6 +168,7 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, 'Primary key');
         $table->add_field('location_name_de', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'German locationname');
         $table->add_field('location_name_en', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'English locationname');
+        $table->add_field('country', XMLDB_TYPE_CHAR, '2', null, null, null, null);
         $table->add_field('latitude', XMLDB_TYPE_NUMBER, '10, 7', null, XMLDB_NOTNULL, null, null, 'Latitude coordinate');
         $table->add_field('longitude', XMLDB_TYPE_NUMBER, '10, 7', null, XMLDB_NOTNULL, null, null, 'Longitude coordinate');
         $table->add_field('last_checked', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'Timestamp of last API check');
@@ -185,7 +186,9 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
 
         // Adding fields to table format_ocmooc_aliases.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, 'Primary key');
-        $table->add_field('location_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'Reference to format_ocmooc_locations');
+        $table->add_field(
+            'location_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'Reference to format_ocmooc_locations'
+        );
         $table->add_field('alias', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'Alias for the location');
 
         // Adding keys to table format_ocmooc_aliases.
@@ -199,7 +202,7 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         }
 
         // Ocmooc savepoint reached.
-        upgrade_plugin_savepoint(true, 2025012100, 'format', 'ocmooc');
+        upgrade_plugin_savepoint(true, 2025012205, 'format', 'ocmooc');
     }
     return true;
 }

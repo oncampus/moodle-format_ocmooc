@@ -529,8 +529,8 @@ class participants extends base {
      * Retrieves a list of cities missing from the database for a given course.
      *
      * This function identifies participant cities that are not yet mapped to a location
-     * in the database. It checks for missing entries in the `format_ocmooc_locations` table
-     * and also accounts for aliases in the `format_ocmooc_aliases` table.
+     * in the `format_ocmooc_locations` table or its aliases in the `format_ocmooc_aliases` table.
+     * It ensures that only cities with a valid mapping or alias are considered as "existing."
      *
      * @param int $courseid The ID of the course.
      * @return array An array of missing cities, where each item contains:
@@ -540,20 +540,30 @@ class participants extends base {
     private function get_missing_cities(int $courseid): array {
         global $DB;
 
-        // SQL query to find distinct cities of participants in the course that:
-        // - Are not already mapped to a geographic location in the `format_ocmooc_locations` table.
-        // - Are not present as an alias in the `format_ocmooc_aliases` table.
-        // - Are not empty strings.
+        // SQL query to find cities that are:
+        // 1. Distinct participant cities in the course.
+        // 2. Not mapped to a location in `format_ocmooc_locations` with the same country.
+        // 3. Not present as an alias in `format_ocmooc_aliases` for the same country.
+        // 4. Non-empty strings.
         $sql = "SELECT DISTINCT u.city
                            FROM {user} u
                            JOIN {user_enrolments} ue ON ue.userid = u.id
                            JOIN {enrol} e ON e.id = ue.enrolid
-                      LEFT JOIN {format_ocmooc_locations} loc ON loc.location_name_de = u.city OR loc.location_name_en = u.city
-                      LEFT JOIN {format_ocmooc_aliases} alias ON alias.alias = u.city
-                          WHERE e.courseid = :courseid
-                                AND loc.id IS NULL
-                                AND alias.id IS NULL
-                                AND u.city <> ''";
+                      LEFT JOIN {format_ocmooc_locations} loc
+                                ON (loc.location_name_de = u.city OR loc.location_name_en = u.city)
+                                AND loc.country = u.country
+                      LEFT JOIN {format_ocmooc_aliases} alias
+                                ON alias.alias = u.city
+                                AND EXISTS (
+                                    SELECT 1
+                                      FROM {format_ocmooc_locations} loc_alias
+                                     WHERE loc_alias.id = alias.location_id
+                                       AND loc_alias.country = u.country
+                                    )
+                         WHERE e.courseid = :courseid
+                               AND loc.id IS NULL
+                               AND alias.id IS NULL
+                               AND u.city <> ''";
 
         return $DB->get_records_sql($sql, ['courseid' => $courseid]);
     }
@@ -570,49 +580,54 @@ class participants extends base {
      * @throws dml_exception If there are any database errors during execution.
      */
     private function process_city(string $city) {
-        global $DB;
+        global $DB, $USER;
 
-        // Fetch geographic information for the given city using an external API.
-        $locationinfo = $this->get_location_info($city);
+        // Retrieve the user's country from their profile.
+        $usercountry = $USER->country;
 
-        // If no location data is found, log a debugging message and exit the method.
+        // Fetch geographic data for the city and country using the external API.
+        $locationinfo = $this->get_location_info($city, $usercountry);
+
+        // If no valid location data is returned, log a debug message and exit.
         if (!$locationinfo) {
-            debugging("No valid location data found for: " . $city);
+            debugging("No valid location data found for: $city in $usercountry");
             return;
         }
 
-        // Check if the location already exists in the database.
+        // Check if a location with the same latitude, longitude, and country already exists in the database.
         $sql = "SELECT loc.id
-                  FROM {format_ocmooc_locations} loc
-             LEFT JOIN {format_ocmooc_aliases} alias ON alias.location_id = loc.id
-                 WHERE loc.latitude = :latitude AND loc.longitude = :longitude";
+              FROM {format_ocmooc_locations} loc
+             WHERE loc.latitude = :latitude
+               AND loc.longitude = :longitude
+               AND loc.country = :country";
 
         $existinglocation = $DB->get_record_sql($sql, [
             'latitude' => $locationinfo['latitude'],
             'longitude' => $locationinfo['longitude'],
+            'country' => $usercountry,
         ]);
 
-        // If the location exists, check if the city name is an alias.
+        // If the location already exists, check if the current city name needs to be added as an alias.
         if ($existinglocation) {
+            // Add the city as an alias if it is not already one of the known names for the location.
             if (!in_array($city, [$locationinfo['location_name_de'], $locationinfo['location_name_en']])) {
-                // Add the city as an alias for the existing location.
                 $this->add_location_alias($existinglocation->id, $city);
             }
-            return; // Exit as no further action is needed.
+            return; // Exit early since the location already exists.
         }
 
-        // If the location does not exist, create a new record in the database.
+        // Create a new record for the location in the database.
         $record = new stdClass();
         $record->location_name_de = $locationinfo['location_name_de'] ?? $city;
         $record->location_name_en = $locationinfo['location_name_en'] ?? $city;
         $record->latitude = $locationinfo['latitude'];
         $record->longitude = $locationinfo['longitude'];
+        $record->country = $usercountry;
         $record->last_checked = time();
 
-        // Insert the new location into the database and get its ID.
         $locationid = $DB->insert_record('format_ocmooc_locations', $record);
 
-        // Add the city as an alias if it is not one of the main localized names.
+        // If the city name is different from the API-provided names, add it as an alias.
         if (!in_array($city, [$locationinfo['location_name_de'], $locationinfo['location_name_en']])) {
             $this->add_location_alias($locationid, $city);
         }
@@ -647,27 +662,39 @@ class participants extends base {
         // - The query counts participants ('participant_count') for each unique location.
         // - It uses the `format_ocmooc_locations` table to map city names to geographic locations.
         // - If a city name matches an alias in `format_ocmooc_aliases`, it resolves to the associated location ID.
-        $sql = "SELECT loc.$locationfield AS location_name,
-                       COUNT(u.id) AS participant_count,
-                       loc.latitude,
-                       loc.longitude
-                 FROM {user} u
-                 JOIN {user_enrolments} ue ON ue.userid = u.id
-                 JOIN {enrol} e ON e.id = ue.enrolid
-            LEFT JOIN {format_ocmooc_locations} loc ON loc.location_name_de = u.city
-                      OR loc.location_name_en = u.city
-                      OR loc.id = (
-                          SELECT alias.location_id
-                          FROM {format_ocmooc_aliases} alias
-                          WHERE alias.alias = u.city
-                          LIMIT 1
-                      )
+        $sql = "SELECT COALESCE(loc.$locationfield, alias_loc.$locationfield) AS location_name,
+                       COALESCE(loc.latitude, alias_loc.latitude)             AS latitude,
+                       COALESCE(loc.longitude, alias_loc.longitude)           AS longitude,
+                       COUNT(DISTINCT u.id)                                   AS participant_count
+                FROM {user} u
+                  JOIN {user_enrolments} ue
+                ON ue.userid = u.id
+                    JOIN {enrol} e ON e.id = ue.enrolid
+                    LEFT JOIN {format_ocmooc_locations} loc
+                    ON (loc.location_name_de = u.city OR loc.location_name_en = u.city)
+                    AND loc.country = u.country
+                    LEFT JOIN (
+                    SELECT alias.alias,
+                           loc.id AS location_id,
+                           loc.location_name_de,
+                           loc.location_name_en,
+                           loc.latitude,
+                           loc.longitude,
+                           loc.country
+                    FROM {format_ocmooc_aliases} alias
+                    JOIN {format_ocmooc_locations} loc ON alias.location_id = loc.id
+                    ) alias_loc
+                    ON alias_loc.alias = u.city AND alias_loc.country = u.country
                 WHERE e.courseid = :courseid
-                      AND loc.id IS NOT NULL
-             GROUP BY loc.location_name_de, loc.latitude, loc.longitude";
+                  AND u.city <> ''
+                  AND (loc.id IS NOT NULL
+                   OR alias_loc.location_id IS NOT NULL)
+                GROUP BY location_name, latitude, longitude";
+
+        $params = ['courseid' => $courseid];
 
         // Execute the query and return the results as an array of records.
-        return $DB->get_records_sql($sql, ['courseid' => $courseid]);
+        return $DB->get_records_sql($sql, $params);
     }
 
     /**
@@ -686,20 +713,23 @@ class participants extends base {
      *                    - 'location_name_en' (string|null): The English name of the location (if available).
      *                    Returns null if no data is found.
      */
-    private function get_location_info(string $locationname): ?array {
+    private function get_location_info(string $locationname, string $country = null): ?array {
+        // Optional country parameter for the API query, encoded for URL safety.
+        $countryparam = $country ? '&country=' . urlencode($country) : '';
+
         // Perform API requests to GeoNames in German and English.
         // The `featureClass=P` parameter limits results to populated places (cities, towns, etc.).
         $apiresponses = [
             'de' => json_decode(
                 file_get_contents(
                     'http://api.geonames.org/searchJSON?q=' . urlencode($locationname) .
-                    '&maxRows=1&username=j_l_r&lang=de&featureClass=P'
+                    $countryparam . '&maxRows=1&username=j_l_r&lang=de&featureClass=P'
                 )
             ),
             'en' => json_decode(
                 file_get_contents(
                     'http://api.geonames.org/searchJSON?q=' . urlencode($locationname) .
-                    '&maxRows=1&username=j_l_r&lang=en&featureClass=P'
+                    $countryparam . '&maxRows=1&username=j_l_r&lang=en&featureClass=P'
                 )
             ),
         ];
@@ -707,16 +737,11 @@ class participants extends base {
         // Check if at least one of the API responses contains valid geoname data.
         if (!empty($apiresponses['de']->geonames) || !empty($apiresponses['en']->geonames)) {
             return [
-                // Use the latitude from the German response, or fallback to the English response.
+                // Use the latitude and longitude from the first valid result in either language.
                 'latitude' => $apiresponses['de']->geonames[0]->lat ?? $apiresponses['en']->geonames[0]->lat,
-
-                // Use the longitude from the German response, or fallback to the English response.
                 'longitude' => $apiresponses['de']->geonames[0]->lng ?? $apiresponses['en']->geonames[0]->lng,
-
-                // Use the German location name if available, otherwise null.
+                // Use the localized names from the respective language responses.
                 'location_name_de' => $apiresponses['de']->geonames[0]->name ?? null,
-
-                // Use the English location name if available, otherwise null.
                 'location_name_en' => $apiresponses['en']->geonames[0]->name ?? null,
             ];
         }

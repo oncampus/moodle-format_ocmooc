@@ -71,6 +71,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key"/>
         <FIELD NAME="location_name_de" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="German name of the location"/>
         <FIELD NAME="location_name_en" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="English name of the location"/>
+        <FIELD NAME="country" TYPE="char" LENGTH="2" NOTNULL="false" SEQUENCE="false" COMMENT="ISO 3166-1 Alpha-2 country code"/>
         <FIELD NAME="latitude" TYPE="float" NOTNULL="true" SEQUENCE="false" COMMENT="Latitude coordinate"/>
         <FIELD NAME="longitude" TYPE="float" NOTNULL="true" SEQUENCE="false" COMMENT="Longitude coordinate"/>
         <FIELD NAME="last_checked" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp of last API check"/>
