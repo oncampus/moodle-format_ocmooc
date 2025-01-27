@@ -143,7 +143,7 @@ class map {
 
         $locationinfos = $this->batch_get_location_info($citybatch);
 
-        foreach ($locationinfos as $locationinfo) {
+        foreach ($locationinfos['valid'] as $locationinfo) {
             // Skip invalid or empty location data.
             if (!$locationinfo) {
                 continue;
@@ -184,6 +184,11 @@ class map {
             if (!in_array($city, [$locationinfo['location_name_de'], $locationinfo['location_name_en']])) {
                 $this->add_location_alias($locationid, $city);
             }
+        }
+
+        foreach ($locationinfos['invalid'] as $locationinfo) {
+            $this->add_invalid_location($locationinfo['city'], $locationinfo['country']);
+
         }
     }
 
@@ -325,44 +330,45 @@ class map {
             [$key, $lang] = explode('_', $handlekey);
             $responsedecoded = json_decode($response);
 
+            if (isset($responsedecoded->status)) {
+                $status = $responsedecoded->status;
+                if (isset($status->value) && $status->value == 19) {
+                    // API-Limit überschritten.
+                    break; // Exit the loop if rate limit is reached.
+                }
+            }
+
+            //debugging("API ANSWER: $responsedecoded", DEBUG_DEVELOPER);
+
             // Check if the response contains valid GeoNames data.
-            if (empty($responsedecoded->geonames) || $responsedecoded->totalResultsCount == 0) {
-                $this->add_invalid_location($locations[$key]['city'], !empty($locations[$key]['country'])
-                    ? $locations[$key]['country'] : null);
+            if ($responsedecoded->totalResultsCount < 1) {
+                $results['invalid'][] = $locations[$key]; // Collect invalid locations.
                 continue;
             }
 
             // Initialize the result for this city if it hasn't been set yet.
             $geodata = $responsedecoded->geonames[0];
-            if (!isset($results[$key])) {
-                $results[$key] = [
-                    'city' => $locations[$key]['city'], // Original city name from the input.
-                    'country' => !empty($locations[$key]['country'])
-                        ? $locations[$key]['country']
-                        : ($geodata->countryCode ?? null), // Use API-suggested country if not provided.
-                    'latitude' => null,
-                    'longitude' => null,
-                    'location_name_de' => null,
-                    'location_name_en' => null,
+            if (!isset($results['valid'][$key])) {
+                $results['valid'][$key] = [
+                    'city' => $locations[$key]['city'],
+                    'country' => !empty($locations[$key]['country']) ? $locations[$key]['country'] : $geodata->countryCode,
+                    'latitude' => $geodata->lat,
+                    'longitude' => $geodata->lng,
+                    'location_name_de' => $lang === 'de' ? $geodata->name : null,
+                    'location_name_en' => $lang === 'en' ? $geodata->name : null,
                 ];
+            } else {
+                // Merge language-specific data.
+                if ($lang === 'de') {
+                    $results['valid'][$key]['location_name_de'] = $geodata->name;
+                } else if ($lang === 'en') {
+                    $results['valid'][$key]['location_name_en'] = $geodata->name;
+                }
             }
-
-            if ($lang === 'de') { // Store German-specific data.
-                $results[$key]['latitude'] = $results[$key]['latitude'] ?? $geodata->lat;
-                $results[$key]['longitude'] = $results[$key]['longitude'] ?? $geodata->lng;
-                $results[$key]['location_name_de'] = $geodata->name;
-            } else if ($lang === 'en') { // Store English-specific data.
-                $results[$key]['latitude'] = $results[$key]['latitude'] ?? $geodata->lat;
-                $results[$key]['longitude'] = $results[$key]['longitude'] ?? $geodata->lng;
-                $results[$key]['location_name_en'] = $geodata->name;
-            }
-
         }
 
         // Close the multi-handle after all requests are processed.
         curl_multi_close($multihandle);
-        debugging("Batch cities: " . print_r($locations, true), DEBUG_DEVELOPER);
-        debugging("API Response for {$city}: " . $response, DEBUG_DEVELOPER);
         // Return the aggregated results for all queried cities.
         return $results;
     }

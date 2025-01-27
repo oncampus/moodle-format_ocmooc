@@ -159,7 +159,7 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024052700, 'format', 'ocmooc');
     }
 
-    if ($oldversion < 2025012700) {
+    if ($oldversion < 2025012701) {
 
         // Define table format_ocmooc_locations to be created.
         $table = new xmldb_table('format_ocmooc_locations');
@@ -227,7 +227,7 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
 
 
         // Ocmooc savepoint reached.
-        upgrade_plugin_savepoint(true, 2025012700, 'format', 'ocmooc');
+        upgrade_plugin_savepoint(true, 2025012701, 'format', 'ocmooc');
     }
     return true;
 }
