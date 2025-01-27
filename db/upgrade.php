@@ -225,7 +225,6 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
             $dbman->create_table($table);
         }
 
-
         // Ocmooc savepoint reached.
         upgrade_plugin_savepoint(true, 2025012701, 'format', 'ocmooc');
     }

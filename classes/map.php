@@ -340,8 +340,15 @@ class map {
 
             //debugging("API ANSWER: $responsedecoded", DEBUG_DEVELOPER);
 
+            if ($responsedecoded === null) {
+                debugging("Decoded Response is null. Skipping location: " . json_encode($location), DEBUG_DEVELOPER);
+                continue; // Überspringe diesen Eintrag, da die Antwort ungültig ist.
+            }
+
             // Check if the response contains valid GeoNames data.
-            if ($responsedecoded->totalResultsCount < 1) {
+            if (empty($responsedecoded->geonames) || $responsedecoded->totalResultsCount < 1) {
+                debugging("totalResultsCount: " . json_encode($responsedecoded->totalResultsCount), DEBUG_DEVELOPER);
+                debugging("Decoded Response: " . json_encode($responsedecoded), DEBUG_DEVELOPER);
                 $results['invalid'][] = $locations[$key]; // Collect invalid locations.
                 continue;
             }
