@@ -4,7 +4,7 @@ import {get_string as getString} from 'core/str';
 
 export const init = async (courseid) => {
 
-    const overlay = document.getElementById('mapoverlay');
+    const overlay = document.getElementById('map-overlay');
     if (overlay) {
         overlay.style.transition = 'opacity 0.3s';
         overlay.style.opacity = '0';
