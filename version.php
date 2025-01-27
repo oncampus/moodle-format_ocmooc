@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'format_ocmooc';
 $plugin->release = '0.1.5';
-$plugin->version = 2025012312;
+$plugin->version = 2025012319;
 $plugin->requires = 2022112800;
 $plugin->maturity = MATURITY_ALPHA;

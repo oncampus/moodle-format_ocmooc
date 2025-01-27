@@ -30,27 +30,27 @@ require_once(__DIR__ . "/locallib.php");
 class format_ocmooc_external extends external_api {
 
     public static function setgrade_parameters() {
-        return new external_function_parameters(array(
+        return new external_function_parameters([
             'contentid' => new external_value(PARAM_INT, 'H5P content id'),
             'score' => new external_value(PARAM_FLOAT, 'H5P score'),
-            'maxscore' => new external_value(PARAM_FLOAT, 'H5P max score')
-        ));
+            'maxscore' => new external_value(PARAM_FLOAT, 'H5P max score'),
+        ]);
     }
     public static function setgrade($contentid, $score, $maxscore) {
         global $SESSION;
-        //Parameter validation
-        //REQUIRED
+        // Parameter validation
+        // REQUIRED.
         $params = self::validate_parameters(
             self::setgrade_parameters(),
-            array(
+            [
                 'contentid' => $contentid,
                 'score' => $score,
-                'maxscore' => $maxscore
-            )
+                'maxscore' => $maxscore,
+            ]
         );
 
-        //Context validation
-        //OPTIONAL but in most web service it should present
+        // Context validation
+        // OPTIONAL but in most web service it should present.
         $context = \context_system::instance();
         self::validate_context($context);
         $cm = get_coursemodule_from_instance('hvp', $contentid);
@@ -58,38 +58,38 @@ class format_ocmooc_external extends external_api {
 
         $debug = "CONTENT DEBUG: Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore . " progress: " . $progress['percentage'];
         if ($cm == null) {
-            // Kursmodul wurde nicht gefunden
-            return array(
+            // Kursmodul wurde nicht gefunden.
+            return [
                 'sectionId' => null,
                 'percentage' => null,
-            );
+            ];
         }
-        
-        // Rückgabe der Daten, wenn das Kursmodul gefunden wurde
-        return array(
+
+        // Rückgabe der Daten, wenn das Kursmodul gefunden wurde.
+        return [
             'sectionId' => $cm->section,
             'percentage' => $progress['percentage'],
-            'debug' => $debug
-        );
+            'debug' => $debug,
+        ];
     }
-    
+
     public static function setgrade_returns() {
-        return new \external_single_structure(array(
+        return new \external_single_structure([
             'sectionId' => new external_value(PARAM_INT, 'section ID'),
             'percentage' => new external_value(PARAM_FLOAT, 'Percentage of section progress'),
             'debug' => new external_value(PARAM_TEXT, 'Debug Text'),
-        ), 'Section progress');
+        ], 'Section progress');
     }
 
     public static function setgrade_subcontent_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'contentid' => new external_value(PARAM_INT, 'The ID of the content', VALUE_REQUIRED),
                 'subcontentid' => new external_value(PARAM_TEXT, 'The ID of the subcontent', VALUE_REQUIRED),
                 'score' => new external_value(PARAM_FLOAT, 'The score of the subcontent', VALUE_REQUIRED),
                 'maxscore' => new external_value(PARAM_FLOAT, 'The maximum possible score for the subcontent', VALUE_REQUIRED),
-                'totalinteractions' => new external_value(PARAM_INT, 'The interaction amount of the activity', VALUE_REQUIRED)
-            )
+                'totalinteractions' => new external_value(PARAM_INT, 'The interaction amount of the activity', VALUE_REQUIRED),
+            ]
         );
     }
 
@@ -98,102 +98,143 @@ class format_ocmooc_external extends external_api {
      */
     public static function setgrade_subcontent($contentid, $subcontentid, $score, $maxscore, $totalinteractions) {
         global $DB, $USER;
-        
-        //Get DB Entries by contentID and UserID
-        $hvp_content = $DB->get_record('format_ocmooc_hvp', array('content_id' => $contentid, 'user_id' => $USER->id));
 
-        //If no entry exists with the contentid create a entry in the table
-        if (!$hvp_content) {
-            $new_entry = new stdClass();
-            $new_entry->user_id = $USER->id;
-            $new_entry->content_id = $contentid;
-            $new_entry->subcontent_id = $subcontentid;
-            $new_entry->score = $score;
-            $new_entry->maxscore = $maxscore;
-            $DB->insert_record('format_ocmooc_hvp', $new_entry);
+        // Get DB Entries by contentID and UserID
+        $hvpcontent = $DB->get_record('format_ocmooc_hvp', ['content_id' => $contentid, 'user_id' => $USER->id]);
+
+        // If no entry exists with the contentid create a entry in the table
+        if (!$hvpcontent) {
+            $newentry = new stdClass();
+            $newentry->user_id = $USER->id;
+            $newentry->content_id = $contentid;
+            $newentry->subcontent_id = $subcontentid;
+            $newentry->score = $score;
+            $newentry->maxscore = $maxscore;
+            $DB->insert_record('format_ocmooc_hvp', $newentry);
         } else {
             // If an entry with the contentid and user_id exists, proceed with the existing entry logic
             // Get existing entry for the given subcontentid and user_id, if any
-            $existing_subcontent_entry = $DB->get_record('format_ocmooc_hvp', array(
-                'content_id' => $contentid, 
-                'subcontent_id' => $subcontentid, 
-                'user_id' => $USER->id
-            ));
-            if ($existing_subcontent_entry) {
+            $existingsubcontententry = $DB->get_record('format_ocmooc_hvp', [
+                'content_id' => $contentid,
+                'subcontent_id' => $subcontentid,
+                'user_id' => $USER->id,
+            ]);
+            if ($existingsubcontententry) {
                 // If an entry exists, update the score if the new score is higher
-                if ($existing_subcontent_entry->score < $score) {
-                    $existing_subcontent_entry->score = $score;
-                    $DB->update_record('format_ocmooc_hvp', $existing_subcontent_entry);
+                if ($existingsubcontententry->score < $score) {
+                    $existingsubcontententry->score = $score;
+                    $DB->update_record('format_ocmooc_hvp', $existingsubcontententry);
                 }
             } else {
                 // If no entry exists, create a new one
-                $new_entry = new stdClass();
-                $new_entry->user_id = $USER->id;
-                $new_entry->content_id = $contentid;
-                $new_entry->subcontent_id = $subcontentid;
-                $new_entry->score = $score;
-                $new_entry->maxscore = $maxscore;
-                $DB->insert_record('format_ocmooc_hvp', $new_entry);
+                $newentry = new stdClass();
+                $newentry->user_id = $USER->id;
+                $newentry->content_id = $contentid;
+                $newentry->subcontent_id = $subcontentid;
+                $newentry->score = $score;
+                $newentry->maxscore = $maxscore;
+                $DB->insert_record('format_ocmooc_hvp', $newentry);
             }
         }
 
-        //Get DB Entries for the current user and contentID
-        $updated_hvp_content = $DB->get_records('format_ocmooc_hvp', array('content_id' => $contentid, 'user_id' => $USER->id));
-        
-        //Get all subcontents from the content and calculate the new total score (count($score) / count($maxscore))
-        $total_score = 0.0;
-        foreach ($updated_hvp_content as $subcontent) {
-            $total_score += ($subcontent->score / $subcontent->maxscore);
+        // Get DB Entries for the current user and contentID
+        $updatedhvpcontent = $DB->get_records('format_ocmooc_hvp', ['content_id' => $contentid, 'user_id' => $USER->id]);
+
+        // Get all subcontents from the content and calculate the new total score (count($score) / count($maxscore))
+        $totalscore = 0.0;
+        foreach ($updatedhvpcontent as $subcontent) {
+            $totalscore += ($subcontent->score / $subcontent->maxscore);
         }
-        $score = $totalinteractions > 0 ? ($total_score / $totalinteractions) * 100 : 0;
+        $score = $totalinteractions > 0 ? ($totalscore / $totalinteractions) * 100 : 0;
         $maxscore = 100;
 
-        //Parameter validation
-        //REQUIRED
+        // Parameter validation
+        // REQUIRED
         $params = self::validate_parameters(
             self::setgrade_subcontent_parameters(),
-            array(
+            [
                 'contentid' => $contentid,
                 'subcontentid' => $subcontentid,
                 'score' => $score,
                 'maxscore' => $maxscore,
                 'totalinteractions' => $totalinteractions,
-            )
+            ]
         );
 
-        //Context validation
-        //OPTIONAL but in most web service it should present
+        // Context validation
+        // OPTIONAL but in most web service it should present.
         $context = \context_system::instance();
         self::validate_context($context);
         $cm = get_coursemodule_from_instance('hvp', $contentid);
         $progress = \setgrade($contentid, $score, $maxscore);
 
-
         $debug = "SUBCONTENT DEBUG: setGrade Data: " . $progress['sectionId'] . " ,Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore . " progress: " . $progress['percentage'];
         if ($cm == null) {
-            // Kursmodul wurde nicht gefunden
-            return array(
+            // Kursmodul wurde nicht gefunden.
+            return [
                 'sectionId' => null,
                 'percentage' => null,
-                'debug' => $debug
-            );
+                'debug' => $debug,
+            ];
         }
-        
-        // Rückgabe der Daten, wenn das Kursmodul gefunden wurde
-        return array(
+
+        // Rückgabe der Daten, wenn das Kursmodul gefunden wurde.
+        return [
             'sectionId' => $cm->section,
             'percentage' => $progress['percentage'],
-            'debug' => $debug
-        );
+            'debug' => $debug,
+        ];
     }
 
 
 
     public static function setgrade_subcontent_returns() {
-        return new \external_single_structure(array(
+        return new \external_single_structure([
             'sectionId' => new external_value(PARAM_INT, 'section ID'),
             'percentage' => new external_value(PARAM_FLOAT, 'Percentage of section progress'),
             'debug' => new external_value(PARAM_TEXT, 'Debug Text'),
-        ), 'Section progress');
+        ], 'Section progress');
+    }
+
+    public static function get_participant_locations($courseid) {
+        global $DB;
+
+        // Parameter validieren
+        self::validate_parameters(
+            self::get_participant_locations_parameters(), ['courseid' => $courseid]
+        );
+
+        // Kontext validieren
+        $context = \context_course::instance($courseid);
+        self::validate_context($context);
+
+        if (!has_capability('moodle/course:viewparticipants', $context)) {
+            throw new \moodle_exception('nopermission');
+        }
+
+        // Datenbankabfrage mit Limit und Offset
+        $map = new \format_ocmooc\map();
+        $locations = $map->fetch_course_participant_locations($courseid);
+
+        return ['locations' => array_values($locations)];
+    }
+
+    public static function get_participant_locations_parameters() {
+        return new \external_function_parameters([
+            'courseid' => new \external_value(PARAM_INT, 'Course ID'),
+        ]);
+    }
+
+    public static function get_participant_locations_returns() {
+        return new \external_single_structure([
+            'locations' => new \external_multiple_structure(
+                new \external_single_structure([
+                    'location_name' => new \external_value(PARAM_TEXT, 'Location name'),
+                    'latitude' => new \external_value(PARAM_FLOAT, 'Latitude'),
+                    'longitude' => new \external_value(PARAM_FLOAT, 'Longitude'),
+                    'participant_count' => new \external_value(PARAM_INT, 'Participant count'),
+                ])
+            ),
+        ]);
     }
 }
