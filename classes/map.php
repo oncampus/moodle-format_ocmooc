@@ -88,20 +88,11 @@ class map {
               FROM {user} u
               JOIN {user_enrolments} ue ON ue.userid = u.id
               JOIN {enrol} e ON e.id = ue.enrolid
-              LEFT JOIN {format_ocmooc_locations} loc
-                     ON (loc.location_name_de = u.city OR loc.location_name_en = u.city)
-                     AND (loc.country = u.country OR u.country = '')
-              LEFT JOIN {format_ocmooc_aliases} alias
-                     ON alias.alias = u.city
-                     AND EXISTS (
-                         SELECT 1
-                           FROM {format_ocmooc_locations} loc_alias
-                          WHERE loc_alias.id = alias.location_id
-                            AND (loc_alias.country = u.country OR u.country = '')
-                     )
+              LEFT JOIN {format_ocmooc_mappings} mapping
+                        ON LOWER(mapping.city) = LOWER(u.city)
+                        AND (mapping.country = u.country OR u.country = '')
               WHERE e.courseid = :courseid
-                AND loc.id IS NULL
-                AND alias.id IS NULL
+                AND mapping.location_id IS NULL
                 AND u.city <> ''
                 AND NOT EXISTS (
                     SELECT 1
@@ -165,9 +156,11 @@ class map {
             ]);
 
             if ($existinglocation) {
-                if (!in_array($city, [$locationinfo['location_name_de'], $locationinfo['location_name_en']])) {
-                    $this->add_location_alias($existinglocation->id, $city);
-                }
+                $DB->insert_record('format_ocmooc_mappings', [
+                    'location_id' => $existinglocation->id,
+                    'city' => $city,
+                    'country' => $country,
+                ]);
                 continue;
             }
 
@@ -181,9 +174,15 @@ class map {
 
             $locationid = $DB->insert_record('format_ocmooc_locations', $record);
 
-            if (!in_array($city, [$locationinfo['location_name_de'], $locationinfo['location_name_en']])) {
+            $DB->insert_record('format_ocmooc_mappings', [
+                'location_id' => $locationid,
+                'city' => $city,
+                'country' => $country,
+            ]);
+
+            /*if (!in_array($city, [$locationinfo['location_name_de'], $locationinfo['location_name_en']])) {
                 $this->add_location_alias($locationid, $city);
-            }
+            }*/
         }
 
         foreach ($locationinfos['invalid'] as $locationinfo) {
@@ -215,33 +214,22 @@ class map {
         $lang = current_language();
         $locationfield = ($lang === 'de') ? 'location_name_de' : 'location_name_en';
 
-        $sql = "SELECT COALESCE(loc.{$locationfield}, alias_loc.{$locationfield}) AS location_name,
-                       COALESCE(loc.latitude, alias_loc.latitude)                 AS latitude,
-                       COALESCE(loc.longitude, alias_loc.longitude)               AS longitude,
-                       COUNT(DISTINCT u.id)                                       AS participant_count
-                FROM mdl_user u
-                         JOIN mdl_user_enrolments ue ON ue.userid = u.id
-                         JOIN mdl_enrol e ON e.id = ue.enrolid
-                         LEFT JOIN mdl_format_ocmooc_locations loc
-                                   ON (loc.location_name_de = u.city OR loc.location_name_en = u.city)
-                                       AND (loc.country = u.country OR u.country = '')
-                         LEFT JOIN (
-                    SELECT alias.alias,
-                           loc.id AS location_id,
-                           loc.location_name_de,
-                           loc.location_name_en,
-                           loc.latitude,
-                           loc.longitude,
-                           loc.country
-                    FROM mdl_format_ocmooc_aliases alias
-                             JOIN mdl_format_ocmooc_locations loc ON alias.location_id = loc.id
-                ) alias_loc
-                                   ON alias_loc.alias = u.city
-                                       AND (alias_loc.country = u.country OR u.country = '')
-                WHERE e.courseid = :courseid
-                  AND u.city <> ''
-                  AND (loc.id IS NOT NULL OR alias_loc.location_id IS NOT NULL)
-                GROUP BY location_name, latitude, longitude";
+        $sql = "SELECT loc.{$locationfield} AS location_name,
+               loc.latitude,
+               loc.longitude,
+               COUNT(DISTINCT u.id) AS participant_count
+        FROM mdl_user u
+        JOIN mdl_user_enrolments ue ON ue.userid = u.id
+        JOIN mdl_enrol e ON e.id = ue.enrolid
+        LEFT JOIN mdl_format_ocmooc_mappings mapping
+               ON LOWER(mapping.city) = LOWER(u.city)
+               AND (mapping.country = u.country OR u.country = '')
+        LEFT JOIN mdl_format_ocmooc_locations loc
+               ON mapping.location_id = loc.id
+        WHERE e.courseid = :courseid
+          AND u.city <> ''
+          AND mapping.location_id IS NOT NULL
+        GROUP BY loc.{$locationfield}, loc.latitude, loc.longitude";
 
         $params = [
             'courseid' => $courseid,
@@ -296,6 +284,7 @@ class map {
             $countryparam = isset($location['country']) ? '&country=' . urlencode($location['country']) : '';
 
             // Define the API URLs for German and English responses.
+            //http://api.geonames.org/searchJSON?q=%27Freiburg%27&country=%27DE%27&maxRows=1&username=j_l_r&lang=en&lang=de&featureClass=P
             $apiurls = [
                 'de' => "http://api.geonames.org/searchJSON?q={$city}{$countryparam}&maxRows=1&username=j_l_r&lang=de&featureClass=P",
                 'en' => "http://api.geonames.org/searchJSON?q={$city}{$countryparam}&maxRows=1&username=j_l_r2&lang=en&featureClass=P",
@@ -334,7 +323,7 @@ class map {
                 $status = $responsedecoded->status;
                 if (isset($status->value) && $status->value == 19) {
                     // API-Limit überschritten.
-                    break; // Exit the loop if rate limit is reached.
+                    continue; // Exit the loop if rate limit is reached.
                 }
             }
 
@@ -378,45 +367,6 @@ class map {
         curl_multi_close($multihandle);
         // Return the aggregated results for all queried cities.
         return $results;
-    }
-
-    /**
-     * Adds an alias for a given location.
-     *
-     * This function checks if an alias for the given location already exists in the database.
-     * If no such alias exists, it creates a new record in the `format_ocmooc_aliases` table
-     * linking the alias name to the specified location ID. Aliases are used to map alternative
-     * names for the same geographic location (e.g., different spellings or translations of city names).
-     *
-     * @param int $locationid The ID of the location to which the alias should be linked.
-     * @param string $alias The alias name to be added for the location.
-     * @return void
-     * @throws dml_exception If a database error occurs during execution.
-     */
-    private function add_location_alias(int $locationid, string $alias) {
-        global $DB;
-
-        // Check if the alias already exists for the specified location.
-        // This query ensures no duplicate aliases are added to the database.
-        $sql = "SELECT id
-                  FROM {format_ocmooc_aliases}
-                 WHERE location_id = :location_id AND alias = :alias";
-
-        // Execute the query with the provided location ID and alias as parameters.
-        $existingalias = $DB->get_record_sql($sql, [
-            'location_id' => $locationid,
-            'alias' => $alias,
-        ]);
-
-        // If the alias does not already exist, insert a new record.
-        if (!$existingalias) {
-            $record = new stdClass();
-            $record->location_id = $locationid; // Link the alias to the location.
-            $record->alias = $alias;           // Store the alias name.
-
-            // Insert the new alias record into the `format_ocmooc_aliases` table.
-            $DB->insert_record('format_ocmooc_aliases', $record);
-        }
     }
 
     /**
