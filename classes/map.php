@@ -222,7 +222,7 @@ class map {
         JOIN mdl_user_enrolments ue ON ue.userid = u.id
         JOIN mdl_enrol e ON e.id = ue.enrolid
         LEFT JOIN mdl_format_ocmooc_mappings mapping
-               ON LOWER(mapping.city) = LOWER(u.city)
+               ON mapping.city = u.city
                AND (mapping.country = u.country OR u.country = '')
         LEFT JOIN mdl_format_ocmooc_locations loc
                ON mapping.location_id = loc.id
