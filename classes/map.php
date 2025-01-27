@@ -278,7 +278,6 @@ class map {
      *               - 'location_name_en' (string|null): The city name in English.
      */
     private function batch_get_location_info(array $locations): array {
-        debugging("Locations for batch processing: " . print_r($locations, true), DEBUG_DEVELOPER);
         // Initialize cURL handles for parallel API requests.
         $curlhandles = [];
         $multihandle = curl_multi_init();
@@ -317,7 +316,6 @@ class map {
         foreach ($curlhandles as $handlekey => $handle) {
             // Get the API response for the current cURL handle.
             $response = curl_multi_getcontent($handle);
-            debugging("API Response: " . $response, DEBUG_DEVELOPER);
 
             // Close the current cURL handle and remove it from the multi-handle.
             curl_multi_remove_handle($multihandle, $handle);
@@ -329,8 +327,6 @@ class map {
 
             // Check if the response contains valid GeoNames data.
             if (empty($responsedecoded->geonames) || $responsedecoded->totalResultsCount == 0) {
-                // Speichere die ungültige Stadt in der neuen Tabelle
-                debugging("Processing invalid city: Key = $key, City = {$locations[$key]['city']}, Country = {$locations[$key]['country']}", DEBUG_DEVELOPER);
                 $this->add_invalid_location($locations[$key]['city'], !empty($locations[$key]['country'])
                     ? $locations[$key]['country'] : null);
                 continue;
