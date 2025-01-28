@@ -5,7 +5,7 @@ import {get_string as getString} from 'core/str';
 export const init = async (courseid) => {
 
     const overlay = document.getElementById('map-overlay');
-    const map = L.map('map').setView([51.1657, 10.4515], 5);
+    const map = L.map('map', {preferCanvas: true}).setView([51.1657, 10.4515], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
