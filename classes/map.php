@@ -289,7 +289,7 @@ class map {
      */
     private function batch_get_location_info(array $locations): array {
         // List of available GeoNames API accounts to handle rate limits.
-        $accounts = ['apple', 'adidas'];
+        $accounts = ['j_l_r', 'j_l_r2'];
 
         $lastusedaccount = 0; // Initialize with the first account.
         $maxretries = count($accounts); // Number of retries corresponds to available accounts.
