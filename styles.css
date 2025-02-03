@@ -1043,3 +1043,8 @@ p + .accordion {
 .editing .ocmooc .lection .d-flex {
     margin-left: 10px;
 }
+
+/* Participants & Map */
+#page-course-format-ocmooc-views-participants #fitem_id_searchtext {
+    margin-top: 1rem;
+}
