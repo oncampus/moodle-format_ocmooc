@@ -69,8 +69,8 @@
     <TABLE NAME="format_ocmooc_locations" COMMENT="Stores unique geographic locations based on user-provided city names, with latitude and longitude coordinates.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key"/>
-        <FIELD NAME="location_name_de" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="German name of the location"/>
-        <FIELD NAME="location_name_en" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="English name of the location"/>
+        <FIELD NAME="location_name_de" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="German name of the location"/>
+        <FIELD NAME="location_name_en" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="English name of the location"/>
         <FIELD NAME="country" TYPE="char" LENGTH="2" NOTNULL="false" SEQUENCE="false" COMMENT="ISO 3166-1 Alpha-2 country code"/>
         <FIELD NAME="latitude" TYPE="float" NOTNULL="true" SEQUENCE="false" COMMENT="Latitude coordinate"/>
         <FIELD NAME="longitude" TYPE="float" NOTNULL="true" SEQUENCE="false" COMMENT="Longitude coordinate"/>
@@ -91,6 +91,16 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="unique_alias" TYPE="unique" FIELDS="location_id, alias"/>
         <KEY NAME="fk_location" TYPE="foreign" FIELDS="location_id" REFTABLE="format_ocmooc_locations" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="format_ocmooc_invalidlocs" COMMENT="Stores invalid geographic locations that cannot be resolved.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key"/>
+        <FIELD NAME="city" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Invalid city name" SEQUENCE="false"/>
+        <FIELD NAME="country" TYPE="char" LENGTH="2" NOTNULL="false" COMMENT="Optional country code (ISO 3166-1 Alpha-2)" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

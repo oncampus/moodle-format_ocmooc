@@ -21,35 +21,46 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$functions = array(
-        'format_ocmooc_setgrade_subcontent' => array(
+defined('MOODLE_INTERNAL') || die();
+
+$functions = [
+        'format_ocmooc_setgrade_subcontent' => [
                 'classname' => 'format_ocmooc_external',
                 'methodname' => 'setgrade_subcontent',
                 'classpath' => 'course/format/ocmooc/externallib.php',
                 'description' => 'Set H5P grade for activites with subcontent interactions',
                 'type' => 'write',
-                'ajax' => true
-        ),
-        'format_ocmooc_setgrade' => array(
+                'ajax' => true,
+        ],
+        'format_ocmooc_setgrade' => [
                 'classname' => 'format_ocmooc_external',
                 'methodname' => 'setgrade',
                 'classpath' => 'course/format/ocmooc/externallib.php',
                 'description' => 'Set H5P grade',
                 'type' => 'write',
-                'ajax' => true
-        )
-);
+                'ajax' => true,
+        ],
+        'format_ocmooc_get_participant_locations' => [
+        'classname'   => 'format_ocmooc_external',
+        'methodname'  => 'get_participant_locations',
+        'classpath'   => 'course/format/ocmooc/externallib.php',
+        'description' => 'Returns participant locations for a course.',
+        'type'        => 'read',
+        'ajax'        => true,
+        ],
 
-$services = array(
-        'ocmooc_setgrade_subcontent' => array(
-                'functions' => array('format_ocmooc_setgrade_subcontent'),
-                'restrictedusers' => 0,
-                'enabled' => 1,
-        ),
-        'ocmooc_setgrade' => array(
-                'functions' => array('format_ocmooc_setgrade'),
-                'restrictedusers' => 0,
-                'enabled' => 1,
-        )
-);
+];
+
+$services = [
+    'ocmooc_setgrade_subcontent' => [
+        'functions' => ['format_ocmooc_setgrade_subcontent'],
+        'restrictedusers' => 0,
+        'enabled' => 1,
+    ],
+    'ocmooc_setgrade' => [
+        'functions' => ['format_ocmooc_setgrade'],
+        'restrictedusers' => 0,
+        'enabled' => 1,
+    ],
+];
 
