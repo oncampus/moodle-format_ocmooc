@@ -1,20 +1,63 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Participants management class.
+ *
+ * @package    format_ocmooc
+ * @copyright  2025 oncampus GmbH <support@oncampus.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace format_ocmooc;
 
+use coding_exception;
 use core_group\output\group_details;
 use dml_exception;
 use format_ocmooc\forms\participantsform;
 use format_ocmooc\forms\searchform;
+use moodle_exception;
+use moodle_url;
 use stdClass;
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/enrol/locallib.php');
 
 require_once($CFG->libdir . '/tablelib.php');
 require_once($CFG->dirroot . '/blocks/online_users/lib.php');
 
+/**
+ * Handles the participant listing and related operations.
+ *
+ * This class manages the rendering of the participants list,
+ * search functionality, and user actions such as unenrolling.
+ *
+ * @package    format_ocmooc
+ */
 class participants extends base {
 
+    /**
+     * List of enrolment methods that allow self-unenrolment.
+     *
+     * This array defines which enrolment methods support self-unenrolment
+     * and specifies the required capability and the unenrolment URL.
+     *
+     * @var array
+     */
     const UNENROLS = [
             'manual' => [
                     'capability' => 'enrol/manual:unenrolself',
@@ -26,14 +69,43 @@ class participants extends base {
             ],
     ];
 
+    /**
+     * Holds participant data retrieved from the database.
+     *
+     * @var stdClass
+     */
     private $data;
 
+    /**
+     * Counter used for numbering participants in the list.
+     *
+     * @var int
+     */
     private $counter = 1;
 
+    /**
+     * Stores time-related strings for formatting last access time.
+     *
+     * @var stdClass
+     */
     private $datestring;
 
+    /**
+     * Instance of the search form used to filter participants.
+     *
+     * @var searchform
+     */
     private $searchform;
 
+    /**
+     * Constructor for the participants class.
+     *
+     * Initializes the participants form, loads language strings for time formatting,
+     * and sets up the search form.
+     *
+     * @param int $courseid The ID of the course.
+     * @param moodle_url $url The URL for navigation.
+     */
     public function __construct($courseid, $url) {
         parent::__construct($courseid, $url);
         $this->mform = new participantsform($this->url, ['courseid' => $this->courseid]);
@@ -56,16 +128,30 @@ class participants extends base {
         $this->title = get_string('participants', 'format_ocmooc');
     }
 
+    /**
+     * Checks if the current user is a guest and redirects if access is not allowed.
+     *
+     * This function verifies if the user is a guest in the course context.
+     * If guest access is disabled, the user is redirected to the course page.
+     * @throws moodle_exception If guest access is not allowed and the user is redirected.
+     */
     public function check_guest_access() {
         $coursecontext = \context_course::instance($this->courseid);
         if (is_guest($coursecontext)) {
             $allowed = get_config('format_ocmooc', 'participants_guest');
             if (!$allowed) {
-                redirect(new \moodle_url('/course/view.php', ['id' => $this->courseid]));
+                redirect(new moodle_url('/course/view.php', ['id' => $this->courseid]));
             }
         }
     }
 
+    /**
+     * Renders the custom participant list view.
+     *
+     * This method retrieves participant data, applies search filters,
+     * and displays the list in a flexible table. It also includes
+     * pagination and the option to show a world map.
+     */
     protected function render_view_custom() {
         global $PAGE, $COURSE, $DB, $OUTPUT, $CFG, $USER;
 
@@ -74,16 +160,15 @@ class participants extends base {
 
         $this->show_unenrol_button();
 
+        if ($showmap) {
+            echo $OUTPUT->render_from_template('format_ocmooc/map/map', ['courseid' => $this->courseid]);
+        }
+
         if ($showlist) {
             $page = optional_param('page', 0, PARAM_INT);
             $perpage = optional_param('perpage', 10, PARAM_INT);
 
             $data = $this->get_data();
-
-            if ($data->town && $data->country) {
-                #$map = get_html_osmmap();
-                #echo \html_writer::span($map, 'mb-2');
-            }
 
             $manager = new \course_enrolment_manager($PAGE, $COURSE);
 
@@ -116,7 +201,7 @@ class participants extends base {
             unset($instances);
 
             [$insql, $params] = $DB->get_in_or_equal($ids);
-            //raise memory limit for big courses
+            // Raise memory limit for big courses.
             raise_memory_limit(MEMORY_EXTRA);
             $sql = "SELECT u.* FROM {user} u
                 INNER JOIN {user_enrolments} ue
@@ -159,21 +244,22 @@ class participants extends base {
 
             unset($table);
         }
-
-        if ($showmap) {
-           echo $OUTPUT->render_from_template('format_ocmooc/map/map', ['courseid' => $this->courseid]);
-
-            //$PAGE->requires->js_call_amd('format_ocmooc/map', 'init', [$this->courseid]);
-            /*$participantlocations = $this->fetch_course_participant_locations($this->courseid);
-
-            $templatecontext = [
-                'markers' => array_values($participantlocations),
-            ];*/
-
-        }
     }
 
-    private function prepare_table_header() {
+    /**
+     * Prepares the table header for the participant list.
+     *
+     * This method defines the columns, headers, and sortable properties
+     * for the participant list table. It dynamically adjusts based on
+     * available user data settings.
+     *
+     * @return array Contains three arrays:
+     *               - List of column identifiers
+     *               - List of column headers
+     *               - List of non-sortable columns
+     * @throws coding_exception If a required language string is missing.
+     */
+    private function prepare_table_header(): array {
         $data = $this->get_data();
 
         $header = [];
@@ -183,7 +269,7 @@ class participants extends base {
         if ($data->profilepicture) {
             $notsortable[] = 'profilepicture';
             $header[] = 'profilepicture';
-            $titles[] = get_string('userpic',);
+            $titles[] = get_string('userpic', );
         }
 
         switch ($data->namedisplay) {
@@ -244,6 +330,12 @@ class participants extends base {
         return [$header, $titles, $notsortable];
     }
 
+    /**
+     * Displays the unenrolment button if the user has permission.
+     *
+     * This method checks if the current user has the capability to unenrol
+     * themselves from the course. If so, an unenrolment button is rendered.
+     */
     private function show_unenrol_button() {
         global $OUTPUT;
 
@@ -256,6 +348,21 @@ class participants extends base {
         }
     }
 
+    /**
+     * Retrieves the unenrolment URL for the current user if allowed.
+     *
+     * This method checks whether the user is enrolled via a method that allows
+     * self-unenrolment. If the user has the necessary capability, it returns
+     * the appropriate unenrolment URL and button text.
+     *
+     * @return array|false An array containing:
+     *                     - moodle_url The unenrolment URL
+     *                     - string The button label for unenrolment
+     *                     Returns false if unenrolment is not allowed.
+     * @throws coding_exception If a required language string cannot be retrieved.
+     * @throws dml_exception If an error occurs while querying the database.
+     * @throws moodle_exception If the user does not have permission to unenrol.
+     */
     public function get_unenrol_url() {
         global $DB, $USER;
 
@@ -264,7 +371,7 @@ class participants extends base {
                 $params = [
                         'enrolid' => $enrol->id,
                         'status' => 0,
-                        'userid' => $USER->id
+                        'userid' => $USER->id,
                 ];
                 if ($DB->record_exists('user_enrolments', $params)) {
                     if (array_key_exists($enrol->enrol, self::UNENROLS)) {
@@ -272,7 +379,7 @@ class participants extends base {
 
                         if (has_capability($unenrolparams['capability'], $this->context)) {
                             $string = get_string('unenrolme', 'enrol', $this->course->fullname ?? $this->course->shortname);
-                            $url = new \moodle_url($unenrolparams['url'], ['enrolid' => $enrol->id]);
+                            $url = new moodle_url($unenrolparams['url'], ['enrolid' => $enrol->id]);
                             return [$url, $string];
                         }
                     }
@@ -282,7 +389,20 @@ class participants extends base {
         return false;
     }
 
-    private function prepare_user_entry($user) {
+    /**
+     * Prepares the user entry for display in the participants table.
+     *
+     * This method retrieves relevant user information, formats it according to
+     * the selected display settings, and returns an array containing the
+     * formatted user data.
+     *
+     * @param stdClass $user The user object containing profile information.
+     * @return array An array containing formatted user data for table display.
+     *
+     * @throws dml_exception If there is an error retrieving user roles or groups.
+     * @throws coding_exception If a required language string is missing.
+     */
+    private function prepare_user_entry($user): array {
         global $OUTPUT, $DB;
 
         $page = optional_param('page', 0, PARAM_INT);
@@ -351,7 +471,7 @@ class participants extends base {
             $badges = badges_get_user_badges($user->id, $this->courseid);
             $images = [];
             foreach ($badges as $badge) {
-                $imageurl = \moodle_url::make_pluginfile_url(\context_course::instance($this->courseid)->id, 'badges', 'badgeimage',
+                $imageurl = moodle_url::make_pluginfile_url(\context_course::instance($this->courseid)->id, 'badges', 'badgeimage',
                         $badge->id, '/', 'f1', false);
                 $images[] = \html_writer::img($imageurl, $badge->name, ['style' => 'width: 30px; heigth: 30px;']);
             }
@@ -367,7 +487,18 @@ class participants extends base {
         return $userdata;
     }
 
-    private function get_data() {
+    /**
+     * Retrieves and caches participant data for the current course.
+     *
+     * This method fetches participant-related settings from the database
+     * and caches them for subsequent use. If the user is a guest,
+     * it retrieves default guest settings instead.
+     *
+     * @return stdClass An object containing participant-related settings.
+     *
+     * @throws dml_exception If an error occurs while querying the database.
+     */
+    private function get_data(): stdClass {
         global $DB;
 
         if (!isset($this->data)) {
@@ -410,7 +541,23 @@ class participants extends base {
         return $this->data;
     }
 
-    private function handle_search_data($sql) {
+    /**
+     * Handles search data for filtering participants.
+     *
+     * This method processes the submitted search form data and modifies the given SQL query
+     * to include filtering conditions based on the user's input. It also prepares the necessary
+     * query parameters for secure SQL execution.
+     *
+     * @param string $sql The base SQL query to be modified.
+     * @return array An array containing:
+     *               - string The modified SQL query with search conditions.
+     *               - array The parameters for the modified SQL query.
+     *
+     * @throws coding_exception If a required language string cannot be retrieved.
+     * @throws dml_exception If there is an error executing the database query.
+     * @throws moodle_exception If there is an issue with user permissions or form processing.
+     */
+    private function handle_search_data(string $sql): array {
         if ($this->searchform->is_cancelled()) {
             redirect($this->url);
         } else if ($fromform = $this->searchform->get_data()) {
@@ -458,14 +605,38 @@ class participants extends base {
         return [$sql, $params ?? false];
     }
 
+    /**
+     * Renders a custom editor view.
+     *
+     * This method is currently not implemented but can be extended
+     * to provide a customized editor interface for participants.
+     */
     protected function render_editor_custom() {
 
     }
 
+    /**
+     * Renders an overview of participants.
+     *
+     * This method is currently not implemented but can be extended
+     * to provide a summary or dashboard view of course participants.
+     */
     public function render_overview() {
 
     }
 
+    /**
+     * Processes and stores participant settings data.
+     *
+     * This method saves or updates participant-related settings in the database.
+     * If a record for the current course exists, it updates it; otherwise,
+     * a new record is inserted.
+     *
+     * @param stdClass $data The data object containing participant settings.
+     * @return bool|int Returns true if the record was updated, or the new record ID if inserted.
+     *
+     * @throws dml_exception If there is an error while interacting with the database.
+     */
     protected function handle_data($data) {
         global $DB;
 
