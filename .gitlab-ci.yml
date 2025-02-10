@@ -1,21 +1,6 @@
-phpcs moodle:
-  tags:
-  - moodle
-  stage: test
-  image: gitlab.oncampus-system.de:5050/moodle/docker-templates:codesniffer
-  script:
-    - phpcs -s -p --colors --extensions=php,js --ignore=*/amd/build/* --standard=moodle .
-    
-php-compatibility 8.3:
-  tags:
-  - moodle
-  stage: test
-  image: gitlab.oncampus-system.de:5050/moodle/docker-templates:codesniffer
-  variables:
-    PHPVERSION: "8.3"
-  script:
-    - >-
-      phpcs -s -p --colors
-      --standard=PHPCompatibility
-      --extensions=php
-      --runtime-set testVersion ${PHPVERSION} .
+# This file is a template, and might need editing before it works on your project.
+include:
+  - template: "Moodle/current.gitlab-ci.yml"
+
+stages:
+  - test
