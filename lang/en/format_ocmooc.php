@@ -75,7 +75,7 @@ $string['addlection'] = 'Add an lection';
 $string['badges']            = 'Badges';
 $string['badges_nav']        = 'Badges';
 $string['no_badges_awarded'] = 'No badges have been earned yet';
-//certifcates
+// certifcates
 $string['certificate_and_badges'] = 'Certificate & badges';
 $string['cert_descr'] = 'Congratulations! You have answered at least {$a}% of all video questions correctly. You can now download your certificate for course completion.';
 $string['cert_descr_general']         = 'Congratulations! You have answered enough questions correctly and can download your certificate here.';
@@ -116,6 +116,7 @@ $string['courseid']   = 'Course ID';
 $string['sectionnum'] = 'Section Number';
 /* participants.php*/
 $string['worldmap'] = 'Worldmap';
+$string['enroleduserscount'] = 'Users enrolled in the course: {$a}';
 
 /**  edit **/
 /* htmlpage.php */

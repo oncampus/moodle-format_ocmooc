@@ -115,6 +115,7 @@ $string['courseid']   = 'Kurs ID';
 $string['sectionnum'] = 'Sektionsnummer';
 /* participants.php*/
 $string['worldmap'] = 'Weltkarte';
+$string['enroleduserscount'] = 'In den Kurs eingeschriebene Teilnehmer/innen: {$a}';
 
 /**  edit **/
 /* htmlpage.php */

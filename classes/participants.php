@@ -49,7 +49,6 @@ require_once($CFG->dirroot . '/blocks/online_users/lib.php');
  * @package    format_ocmooc
  */
 class participants extends base {
-
     /**
      * List of enrolment methods that allow self-unenrolment.
      *
@@ -158,12 +157,14 @@ class participants extends base {
         $showlist = get_config('format_ocmooc', 'displaylist');
         $showmap = get_config('format_ocmooc', 'displayworldmap');
 
-        $this->show_unenrol_button();
-
         if ($showmap) {
             echo $OUTPUT->render_from_template('format_ocmooc/map/map', ['courseid' => $this->courseid]);
+            if (!$showlist) {
+                $context = \context_course::instance($this->courseid);
+                $usercount = count_enrolled_users($context);
+                echo \html_writer::tag('p', get_string('enroleduserscount', 'format_ocmooc', $usercount));
+            }
         }
-
         if ($showlist) {
             $page = optional_param('page', 0, PARAM_INT);
             $perpage = optional_param('perpage', 10, PARAM_INT);
@@ -244,6 +245,7 @@ class participants extends base {
 
             unset($table);
         }
+        $this->show_unenrol_button();
     }
 
     /**
