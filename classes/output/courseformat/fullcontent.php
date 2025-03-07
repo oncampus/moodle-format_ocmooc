@@ -25,7 +25,7 @@
 namespace format_ocmooc\output\courseformat;
 
 use core_courseformat\output\local\content as content_base;
-use format_ocmooc\output\courseformat\content as content;
+use format_ocmooc\output\courseformat\content;
 
 /**
  * Format ocmooc class to render course content.
@@ -35,7 +35,6 @@ use format_ocmooc\output\courseformat\content as content;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class fullcontent extends content_base {
-
     /**
      * Export this data so it can be used as the context for a mustache template (core/inplace_editable).
      *
@@ -51,7 +50,8 @@ class fullcontent extends content_base {
 
         $courseformatoptions = $this->format->get_format_options();
         $data->editing = $isediting;
-        // TODO for now this class is only used if user is editing but check anyway as one day it will be used when not editing.
+        // MDL-OC TODO for now this class is only used if user is editing but check anyway as one day it will
+        // be used when not editing.
         if ($isediting) {
             $course = $this->format->get_course();
             $content = new content($this->format);
@@ -66,7 +66,7 @@ class fullcontent extends content_base {
                 $section = $chapters[$lastchapter]->sections[$lastlection];
                 echo \html_writer::tag('input', '', ['type' => 'hidden', 'id' => 'oc-jump-lection', 'value' => $section->num]);
             }
-            
+
             // Workaround to fix index count of chapters for mustache template iterating.
             // We NEED index from 0 to x. Otherwise mustache templates would not iterate through the array.
             // It would only use the first element. All other would be ignored.
@@ -77,7 +77,6 @@ class fullcontent extends content_base {
             $maxsections = $format->get_max_sections();
 
             foreach ($data->chapters as $chapternumber => $chapter) {
-
                 // Workaround to fix index count of sections for mustache template iterating.
                 // We NEED index from 0 to x. Otherwise mustache templates would not iterate through the array.
                 // It would only use the first element. All other would be ignored.
@@ -87,7 +86,7 @@ class fullcontent extends content_base {
                         'courseid' => $COURSE->id,
                         'action' => 'addchapter',
                         'sesskey' => sesskey(),
-                        'position' => $maxsections - $lastsection
+                        'position' => $maxsections - $lastsection,
 
                 ];
                 $chapter->addchapter = [
@@ -106,36 +105,38 @@ class fullcontent extends content_base {
                 ];
             }
 
-            if (get_config('format_ocmooc', 'allowsubocmoocview')
-                    && isset($courseformatoptions['courseusesubocmooc']) && $courseformatoptions['courseusesubocmooc']) {
-                // TODO for now (Beta version) we warn editor about sub ocmooc only appearing in non-edit view.
+            if (
+                get_config('format_ocmooc', 'allowsubocmoocview')
+                    && isset($courseformatoptions['courseusesubocmooc']) && $courseformatoptions['courseusesubocmooc']
+            ) {
+                // MDL TODO for now (Beta version) we warn editor about sub ocmooc only appearing in non-edit view.
                 $messgage = get_string('editoradvicesubocmooc', 'format_ocmooc');
                 if (has_capability('moodle/site:config', \context_system::instance())) {
                     $messgage .= ' (' . get_string('version', 'format_ocmooc', self::get_ocmooc_plugin_release()) . ')';
                 }
                 $data->editoradvice[] = [
                         'text' => $messgage,
-                        'icon' => 'info-circle', 'class' => 'secondary'
+                        'icon' => 'info-circle', 'class' => 'secondary',
                 ];
             }
             // If completion tracking is on but nothing to track at activity level, display help to teacher.
             $hasnotrackableactivities = $DB->record_exists('course_modules', ['course' => $course->id, 'visible' => 1])
                     && !$DB->record_exists_sql(
-                            "SELECT id FROM {course_modules} WHERE course = ? AND visible = 1 AND completion != 0",
-                            [$course->id]
+                        "SELECT id FROM {course_modules} WHERE course = ? AND visible = 1 AND completion != 0",
+                        [$course->id]
                     );
             if ($hasnotrackableactivities) {
                 $bulklink = \html_writer::link(
-                        new \moodle_url('/course/bulkcompletion.php', array('id' => $course->id)),
-                        get_string('completionwarning_changeinbulk', 'format_ocmooc')
+                    new \moodle_url('/course/bulkcompletion.php', ['id' => $course->id]),
+                    get_string('completionwarning_changeinbulk', 'format_ocmooc')
                 );
                 $helplink = \html_writer::link(
-                        get_docs_url('Activity_completion_settings#Changing_activity_completion_settings_in_bulk'),
-                        $output->pix_icon('help', '', 'core')
+                    get_docs_url('Activity_completion_settings#Changing_activity_completion_settings_in_bulk'),
+                    $output->pix_icon('help', '', 'core')
                 );
                 $data->editoradvice[] = [
                         'text' => get_string('completionwarning', 'format_ocmooc') . ' ' . $bulklink . ' ' . $helplink,
-                        'icon' => 'exclamation-triangle', 'class' => 'warning'
+                        'icon' => 'exclamation-triangle', 'class' => 'warning',
                 ];
             }
         }
@@ -146,6 +147,12 @@ class fullcontent extends content_base {
         return $data;
     }
 
+    /**
+     * Get the section number for a specific chapter.
+     *
+     * @param int $chapter The chapter number to find the section for.
+     * @return int|false The section number if found, false otherwise.
+     */
     private function get_chapter_section_number($chapter) {
         $modinfo = $this->format->get_modinfo();
 

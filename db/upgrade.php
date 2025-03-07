@@ -23,8 +23,6 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Execute format_ocmooc upgrade from the given old version.
  *
@@ -42,7 +40,6 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
     // Documentation for the XMLDB Editor can be found at {@link https://docs.moodle.org/dev/XMLDB_editor}.
 
     if ($oldversion < 2023062800) {
-
         // Define table format_ocmooc_htmlsite to be created.
         $table = new xmldb_table('format_ocmooc_htmlsite');
 
@@ -88,7 +85,6 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023070501) {
-
         // Define field sortorder to be added to format_ocmooc_social.
         $table = new xmldb_table('format_ocmooc_social');
         $field = new xmldb_field('sortorder', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'type');
@@ -103,7 +99,6 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023071700) {
-
         // Define table format_ocmooc_parts to be created.
         $table = new xmldb_table('format_ocmooc_parts');
 
@@ -135,7 +130,6 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
     }
 
     if ($oldversion < 2024052700) {
-
         // Define field id to be added to format_ocmooc_hvp.
         $table = new xmldb_table('format_ocmooc_hvp');
 
@@ -160,7 +154,6 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
     }
 
     if ($oldversion < 2025012702) {
-
         // Define table format_ocmooc_locations to be created.
         $table = new xmldb_table('format_ocmooc_locations');
 

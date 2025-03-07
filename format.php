@@ -41,13 +41,18 @@ $renderer = $format->get_renderer($PAGE);
 
 // Setup the format base instance.
 if (!empty($displaysection)) {
-    $format->set_section_number($displaysection);
+    $format->set_sectionnum($displaysection);
 }
 $isediting = $PAGE->user_is_editing();
 if ($isediting) {
-    $templateable = new \format_ocmooc\output\courseformat\fullcontent($format);
-    $data = $templateable->export_for_template($renderer);
-    echo $renderer->render_from_template('format_ocmooc/local/content/content', $data);
+    try {
+        $templateable = new \format_ocmooc\output\courseformat\fullcontent($format);
+        $data = $templateable->export_for_template($renderer);
+        echo $renderer->render_from_template('format_ocmooc/local/content/content', $data);
+    } catch (\Exception $e) {
+        echo $OUTPUT->notification(get_string('sectionnotexist', 'error'), 'error');
+        echo $OUTPUT->continue_button(new moodle_url('/course/view.php', ['id' => $course->id]));
+    }
     $PAGE->requires->js_call_amd('format_ocmooc/jumpto_section', 'init');
 } else {
     // Render the enrol Button, if a user is not yet enrolled in the course.

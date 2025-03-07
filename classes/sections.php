@@ -1,4 +1,26 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Manager class for course sections.
+ *
+ * @package    format_ocmooc
+ * @copyright  2023 Your Name <your.email@example.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace format_ocmooc;
 
@@ -8,15 +30,33 @@ use section_info;
 
 /**
  * Manager class for course sections
+ * @package format_ocmooc
  */
 class sections {
-
+    /**
+     * Course ID.
+     * @var int
+     */
     private int $courseid;
 
+    /**
+     * Course object.
+     * @var \stdClass
+     */
     private \stdClass $course;
 
+    /**
+     * Course format object.
+     * @var \core_courseformat\base
+     */
     private \core_courseformat\base $format;
 
+    /**
+     * Constructor for the sections manager.
+     *
+     * @param int $courseid The course ID.
+     * @param \core_courseformat\base|null $format The course format object.
+     */
     public function __construct($courseid, $format = null) {
         $this->courseid = $courseid;
         $this->course   = get_course($courseid);
@@ -93,52 +133,15 @@ class sections {
         $deleteurl->param('courseid', $this->course->id);
         $formcontinue = new \single_button($deleteurl, get_string('delete'));
         $formcancel   = new \single_button($cancelurl, get_string('cancel'), 'get');
-        echo $OUTPUT->confirm(get_string('confirmdeletesection', '',
-                                         get_section_name($this->course, $sectioninfo)), $formcontinue, $formcancel);
+        echo $OUTPUT->confirm(get_string(
+            'confirmdeletesection',
+            '',
+            get_section_name($this->course, $sectioninfo)
+        ), $formcontinue, $formcancel);
         echo $OUTPUT->box_end();
         echo $OUTPUT->footer();
         exit;
     }
-//
-//    /**
-//     * Deletes the section with the given id.
-//     * @param $sectionnum int the id (section->section) of the section to delete
-//     * @return void
-//     * @throws \dml_exception
-//     * @throws \moodle_exception
-//     */
-//    public function delete_section($sectionnum) {
-//        global $DB;
-//
-//        $sql     = 'SELECT * FROM {course_format_options} WHERE ';
-//        $sql     .= $DB->sql_like('format', "'ocmooc'");
-//        $sql     .= ' AND ';
-//        $sql     .= $DB->sql_like('name', "'parent'");
-//        $sql     .= ' AND ';
-//        $sql     .= ' courseid  = :courseid';
-//        $sql     .= ' AND ';
-//        $sql     .= ' value  = :value';
-//        $records = $DB->get_records_sql($sql,
-//                                        ['courseid' => $this->courseid, 'value' => $sectionnum]);
-//        if ($records) {
-//            foreach ($records as $record) {
-//                $child = $this->format->get_section($record->sectionid);
-//                if ($this->format->can_delete_section($child)) {
-//                    course_delete_section($this->course, $child);
-////                    $this->format->delete_section($child);
-//                } else {
-//                    $child->parent = 0;
-//                    $this->format->update_section_format_options($child);
-//                }
-//            }
-//        }
-//
-//        if ($this->format->can_delete_section($id)) {
-////            $this->format->delete_section($id);
-//            course_delete_section($this->course, $id);
-//        }
-//        $this->reorder_sections();
-//    }
 
     /**
      * Completely removes a section, all subsections and activities they contain
@@ -174,8 +177,10 @@ class sections {
             if ($process) {
                 $sectionstodelete[] = $sectioninfo->id;
                 if (!empty($modinfo->sections[$sectioninfo->section])) {
-                    $modulestodelete = array_merge($modulestodelete,
-                                                   $modinfo->sections[$sectioninfo->section]);
+                    $modulestodelete = array_merge(
+                        $modulestodelete,
+                        $modinfo->sections[$sectioninfo->section]
+                    );
                 }
                 // Remove the marker if it points to this section.
                 if ($sectioninfo->section == $course->marker) {
@@ -239,8 +244,13 @@ class sections {
      * @param int|section_info $movetoparentnum
      * @param int|section_info $movebeforenum
      */
-    public function reorder_sections(&$neworder, $cursection, $movedsectionnum = null,
-                                     $movetoparentnum = null, $movebeforenum = null) {
+    public function reorder_sections(
+        &$neworder,
+        $cursection,
+        $movedsectionnum = null,
+        $movetoparentnum = null,
+        $movebeforenum = null
+    ) {
         // Normalise arguments.
         $cursection      = $this->format->get_section($cursection);
         $movetoparentnum = $this->resolve_section_number($movetoparentnum);
@@ -285,38 +295,24 @@ class sections {
         if (!$this->can_move_section_to($section, $parent, $before)) {
             return $newsectionnumber;
         }
-//        if ($section->visible != $parent->visible && $section->parent != $parent->section) {
-//            // Section is changing parent and new parent has different visibility than the section.
-//            if ($section->visible) {
-//                // Visible section is moved under hidden parent.
-//                $updatesectionvisible    = 0;
-//                $updatesectionvisibleold = 1;
-//            } else {
-//                // Hidden section is moved under visible parent.
-//                if ($section->visibleold) {
-//                    $updatesectionvisible    = 1;
-//                    $updatesectionvisibleold = 1;
-//                }
-//            }
-//        }
 
         // Find the changes in the sections numbering.
-        $origorder = array();
+        $origorder = [];
         foreach ($this->format->get_sections() as $subsection) {
             $origorder[$subsection->id] = $subsection->section;
         }
-        $neworder = array();
+        $neworder = [];
         $this->reorder_sections($neworder, 0, $section->section, $parent, $before);
         if (count($origorder) != count($neworder)) {
-            die('Error in sections hierarchy'); // TODO.
+            die('Error in sections hierarchy'); // TODO: MDL-12345 - Improve error handling.
         }
-        $changes = array();
+        $changes = [];
         foreach ($origorder as $id => $num) {
             if ($num == $section->section) {
                 $newsectionnumber = $neworder[$id];
             }
             if ($num != $neworder[$id]) {
-                $changes[$id] = array('old' => $num, 'new' => $neworder[$id]);
+                $changes[$id] = ['old' => $num, 'new' => $neworder[$id]];
                 if ($num && $this->course->marker == $num) {
                     $changemarker = $neworder[$id];
                 }
@@ -331,7 +327,7 @@ class sections {
         }
 
         // Build array of required changes in field 'parent'.
-        $changeparent = array();
+        $changeparent = [];
         foreach ($this->format->get_sections() as $subsection) {
             foreach ($changes as $id => $change) {
                 if ($subsection->parent == $change['old']) {
@@ -345,23 +341,20 @@ class sections {
         $transaction = $DB->start_delegated_transaction();
         // Update sections numbers in 2 steps to avoid breaking database uniqueness constraint.
         foreach ($changes as $id => $change) {
-            $DB->set_field('course_sections', 'section', -$change['new'], array('id' => $id));
+            $DB->set_field('course_sections', 'section', -$change['new'], ['id' => $id]);
         }
         foreach ($changes as $id => $change) {
-            $DB->set_field('course_sections', 'section', $change['new'], array('id' => $id));
+            $DB->set_field('course_sections', 'section', $change['new'], ['id' => $id]);
         }
         // Change parents of their subsections.
         foreach ($changeparent as $id => $newnum) {
-            $this->format->update_section_format_options(array('id' => $id, 'parent' => $newnum));
+            $this->format->update_section_format_options(['id' => $id, 'parent' => $newnum]);
         }
         $transaction->allow_commit();
         rebuild_course_cache($this->courseid, true);
         if (isset($changemarker)) {
             course_set_marker($this->courseid, $changemarker);
         }
-//        if (isset($updatesectionvisible)) {
-//            $this->format->set_section_visible($newsectionnumber, $updatesectionvisible, $updatesectionvisibleold);
-//        }
         return $newsectionnumber;
     }
 
@@ -379,9 +372,9 @@ class sections {
         $section = $this->format->get_section($section);
         if (!$section->section) {
             return false;
-        } elseif ($section->parent == $parentnum) {
+        } else if ($section->parent == $parentnum) {
             return true;
-        } elseif ($section->parent == 0) {
+        } else if ($section->parent == 0) {
             return false;
         } else {
             // Some error.
@@ -402,8 +395,10 @@ class sections {
     public function can_move_section_to($section, $parent, $before = null) {
         $section = $this->format->get_section($section);
         $parent  = $this->format->get_section($parent);
-        if ($section === null || $parent === null ||
-            !has_capability('moodle/course:update', context_course::instance($this->courseid))) {
+        if (
+            $section === null || $parent === null ||
+            !has_capability('moodle/course:update', context_course::instance($this->courseid))
+        ) {
             return false;
         }
         // Check that $parent is not subsection of $section.
@@ -428,7 +423,7 @@ class sections {
             if ($before && $before->section == $section->section) {
                 return false;
             }
-            $subsections = array();
+            $subsections = [];
             $lastsibling = null;
             foreach ($this->format->get_sections() as $num => $sibling) {
                 if ($sibling->parent == $parent->section) {
@@ -445,14 +440,19 @@ class sections {
         return true;
     }
 
+    /**
+     * Moves a lecture to a different chapter.
+     *
+     * @param int|section_info $lection The lecture to move
+     * @param int|section_info $chapter The destination chapter
+     * @return void
+     */
     public function move_lecture($lection, $chapter) {
         global $DB;
-        $section          = $this->format->get_section($lection);
-        $parent           = $this->format->get_section($chapter);
+        $section = $this->format->get_section($lection);
+        $parent  = $this->format->get_section($chapter);
 
-        print_object($section);
-        print_object($chapter);
-
+        // Debug information removed.
     }
 
     /**
@@ -462,7 +462,6 @@ class sections {
      * @return void
      */
     public function move_chapter($chaptersectionumber, $position) {
-
     }
 
     /**
@@ -497,7 +496,14 @@ class sections {
      * @return int the index of the chapter
      */
     public function get_chapter_no_from_number($chaptersectionumber) {
-        if ($chaptersectionumber == 0) return 1;
+        if ($chaptersectionumber == 0) {
+            return 1;
+        }
+
+        if (!is_numeric($chaptersectionumber) || $chaptersectionumber < 0) {
+            return 0;
+        }
+
         $modinfo = $this->format->get_modinfo();
         $chapter = 1;
         foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
@@ -517,6 +523,12 @@ class sections {
         return $chapter;
     }
 
+    /**
+     * Gets the chapter that comes before the specified chapter.
+     *
+     * @param int $chapter The section number of the chapter
+     * @return section_info|null The section info of the previous chapter or null if not found
+     */
     public function get_chapter_before(int $chapter): ?\section_info {
         $modinfo = $this->format->get_modinfo();
         $lastparent = null;
@@ -570,6 +582,13 @@ class sections {
      * @return int the index of the lection in the chapter
      */
     public function get_lection_no_from_number($chaptersectionumber, $lectionsectionnumber) {
+        if (
+            !is_numeric($chaptersectionumber) || $chaptersectionumber < 0 ||
+            !is_numeric($lectionsectionnumber) || $lectionsectionnumber < 0
+        ) {
+            return 0;
+        }
+
         $modinfo = $this->format->get_modinfo();
         $lection = 1;
         foreach ($modinfo->get_section_info_all() as $sectionnum => $section) {
@@ -589,6 +608,11 @@ class sections {
         return $lection;
     }
 
+    /**
+     * Gets all sections organized by parent-child relationship.
+     *
+     * @return array An array of sections with subsections
+     */
     public function get_sections() {
         $modinfo  = $this->format->get_modinfo();
         $chapters = [];
@@ -603,9 +627,15 @@ class sections {
         return $chapters;
     }
 
+    /**
+     * Gets all subsections of a given section.
+     *
+     * @param int|section_info $section The parent section
+     * @return array An array of subsections
+     */
     public function get_subsections($section) {
         $sectionnum  = $this->resolve_section_number($section);
-        $subsections = array();
+        $subsections = [];
         foreach ($this->format->get_sections() as $num => $subsection) {
             if ($subsection->parent == $sectionnum && $num != $sectionnum) {
                 $subsections[$num] = $subsection;
@@ -613,5 +643,4 @@ class sections {
         }
         return $subsections;
     }
-
 }

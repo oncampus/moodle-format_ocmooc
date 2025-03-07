@@ -17,11 +17,13 @@
 /**
  * Forum event handler definition.
  *
- * @package oc_mooc
+ * @package format_ocmooc
  * @category event
  * @copyright 2023 OnCampus GmbH
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
 
 $observers = [
     [
@@ -31,5 +33,5 @@ $observers = [
     [
         'eventname' => '\core\event\course_updated',
         'callback' => 'format_ocmooc_observer::course_updated',
-    ]
+    ],
 ];

@@ -19,10 +19,9 @@ namespace format_ocmooc\courseformat;
 /**
  * class stateupdates
  *
- * @package   format_flextiles
+ * @package   format_ocmooc
  * @copyright 2022 Marina Glancy
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class stateupdates extends \core_courseformat\stateupdates {
-
 }

@@ -19,8 +19,17 @@ namespace format_ocmooc;
 use dml_exception;
 use stdClass;
 
+/**
+ * Map class for handling geographic data in the OCMOOC format.
+ *
+ * This class provides functionality for managing and displaying
+ * participant location data on a map for courses using the OCMOOC format.
+ *
+ * @package   format_ocmooc
+ * @copyright 2025 oncampus GmbH <info@oncampus.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class map {
-
     /**
      * Fetches participant locations for a given course.
      *
@@ -316,8 +325,10 @@ class map {
 
                 // Generate API URLs for both German and English.
                 $apiurls = [
-                    'de' => "http://api.geonames.org/searchJSON?q={$city}{$countryparam}&maxRows=1&username={$account}&lang=de&featureClass=P",
-                    'en' => "http://api.geonames.org/searchJSON?q={$city}{$countryparam}&maxRows=1&username={$account}&lang=en&featureClass=P",
+                    'de' => "http://api.geonames.org/searchJSON?q={$city}{$countryparam}&maxRows=1&username={$account}" .
+                        "&lang=de&featureClass=P",
+                    'en' => "http://api.geonames.org/searchJSON?q={$city}{$countryparam}&maxRows=1&username={$account}" .
+                        "&lang=en&featureClass=P",
                 ];
 
                 // Initialize cURL requests for both languages.

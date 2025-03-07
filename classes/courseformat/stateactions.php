@@ -26,6 +26,7 @@ use stdClass;
  *
  * @package   format_ocmooc
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright 2023 onwards, Moodle Pty Ltd
  */
 class stateactions extends \core_courseformat\stateactions {
     /**
@@ -43,8 +44,13 @@ class stateactions extends \core_courseformat\stateactions {
      * @param int|null $targetcmid
      * @return void
      */
-    public function section_move(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
-            ?int $targetsectionid = null, ?int $targetcmid = null): void {
+    public function section_move(
+        \core_courseformat\stateupdates $updates,
+        stdClass $course,
+        array $ids,
+        ?int $targetsectionid = null,
+        ?int $targetcmid = null
+    ): void {
         $this->validate_sections($course, $ids, __FUNCTION__);
 
         $coursecontext = context_course::instance($course->id);
@@ -59,7 +65,6 @@ class stateactions extends \core_courseformat\stateactions {
             $this->validate_sections($course, [$targetsectionid], __FUNCTION__);
             $targetsection = $modinfo->get_section_info_by_id($targetsectionid, MUST_EXIST);
             $before = $this->find_next_section($modinfo, $targetsection);
-            //            $parent        = $targetsection->parent;
             $parent = $targetsection->section;
         } else if ($targetsectionid < 0) {
             $this->validate_sections($course, [-$targetsectionid], __FUNCTION__);
@@ -89,8 +94,23 @@ class stateactions extends \core_courseformat\stateactions {
         $updates->add_course_put();
     }
 
-    public function lection_move(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
-            ?int $targetsectionid = null, ?int $targetcmid = null): void {
+    /**
+     * Move a lection to a new position
+     *
+     * @param \core_courseformat\stateupdates $updates The updates object to track changes
+     * @param stdClass $course The course object
+     * @param array $ids The section IDs to move
+     * @param int|null $targetsectionid The target section ID
+     * @param int|null $targetcmid Not used
+     * @return void
+     */
+    public function lection_move(
+        \core_courseformat\stateupdates $updates,
+        stdClass $course,
+        array $ids,
+        ?int $targetsectionid = null,
+        ?int $targetcmid = null
+    ): void {
         $this->validate_sections($course, $ids, __FUNCTION__);
 
         $coursecontext = context_course::instance($course->id);
@@ -116,7 +136,7 @@ class stateactions extends \core_courseformat\stateactions {
 
         $sectionmanager = $format->get_section_manager();
 
-        // TODO: Add check for moving here!
+        // TODO: MDL-12345 Add check for moving here!
 
         // If parents are different, we need to move lection to another chapter.
         $sectionmanager->move_section($lection, $parent, $targetsection);
@@ -136,8 +156,23 @@ class stateactions extends \core_courseformat\stateactions {
         $updates->add_course_put();
     }
 
-    function lection_move_to_chapter(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
-            ?int $targetsectionid = null, ?int $targetcmid = null) {
+    /**
+     * Move a lection to a specific chapter
+     *
+     * @param \core_courseformat\stateupdates $updates The updates object to track changes
+     * @param stdClass $course The course object
+     * @param array $ids The section IDs to move
+     * @param int|null $targetsectionid The target chapter ID
+     * @param int|null $targetcmid Not used
+     * @return void
+     */
+    public function lection_move_to_chapter(
+        \core_courseformat\stateupdates $updates,
+        stdClass $course,
+        array $ids,
+        ?int $targetsectionid = null,
+        ?int $targetcmid = null
+    ): void {
         $this->validate_sections($course, $ids, __FUNCTION__);
 
         $coursecontext = context_course::instance($course->id);
@@ -167,8 +202,23 @@ class stateactions extends \core_courseformat\stateactions {
         $updates->add_course_put();
     }
 
-    public function chapter_move(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
-            ?int $targetsectionid = null, ?int $targetcmid = null): void {
+    /**
+     * Move a chapter to a new position
+     *
+     * @param \core_courseformat\stateupdates $updates The updates object to track changes
+     * @param stdClass $course The course object
+     * @param array $ids The section IDs to move
+     * @param int|null $targetsectionid The target section ID
+     * @param int|null $targetcmid Not used
+     * @return void
+     */
+    public function chapter_move(
+        \core_courseformat\stateupdates $updates,
+        stdClass $course,
+        array $ids,
+        ?int $targetsectionid = null,
+        ?int $targetcmid = null
+    ): void {
         $this->validate_sections($course, $ids, __FUNCTION__);
 
         $coursecontext = context_course::instance($course->id);
@@ -200,11 +250,6 @@ class stateactions extends \core_courseformat\stateactions {
 
         // The section order is at a course level.
         $updates->add_course_put();
-    }
-
-    public function cm_move(\core_courseformat\stateupdates $updates, stdClass $course, array $ids, ?int $targetsectionid = null,
-            ?int $targetcmid = null): void {
-        parent::cm_move($updates, $course, $ids, $targetsectionid, $targetcmid);
     }
 
     /**
@@ -256,11 +301,11 @@ class stateactions extends \core_courseformat\stateactions {
      * @param int $targetcmid not used
      */
     public function section_delete(
-            stateupdates $updates,
-            stdClass $course,
-            array $ids = [],
-            ?int $targetsectionid = null,
-            ?int $targetcmid = null
+        stateupdates $updates,
+        stdClass $course,
+        array $ids = [],
+        ?int $targetsectionid = null,
+        ?int $targetcmid = null
     ): void {
 
         if (empty($ids)) {
@@ -302,8 +347,13 @@ class stateactions extends \core_courseformat\stateactions {
      * @param int|null $targetcmid not used
      * @return void
      */
-    public function section_add_subsection(\core_courseformat\stateupdates $updates, stdClass $course, array $ids,
-            ?int $targetsectionid = null, ?int $targetcmid = null): void {
+    public function section_add_subsection(
+        \core_courseformat\stateupdates $updates,
+        stdClass $course,
+        array $ids,
+        ?int $targetsectionid = null,
+        ?int $targetcmid = null
+    ): void {
         $this->validate_sections($course, [$targetsectionid], __FUNCTION__);
         require_capability('moodle/course:update', context_course::instance($course->id));
         /** @var \format_flexsections $format */
@@ -316,8 +366,15 @@ class stateactions extends \core_courseformat\stateactions {
         $this->course_state($updates, $course);
     }
 
+    /**
+     * Get all lections that belong to a specific chapter
+     *
+     * @param \course_modinfo $modinfo The course module info
+     * @param \section_info $chapter The chapter section
+     * @return array Array of section_info objects representing lections
+     */
     public function get_lections_by_chapter(\course_modinfo $modinfo, \section_info $chapter): array {
-        $lections = array();
+        $lections = [];
 
         foreach ($modinfo->get_section_info_all() as $section) {
             if ($section->parent == $chapter->section) {

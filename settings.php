@@ -30,7 +30,6 @@ if ($hassiteconfig) {
 
     // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
     if ($ADMIN->fulltree) {
-
         $options = [
                 0 => get_string('fullname'),
                 1 => get_string('username'),
@@ -38,10 +37,7 @@ if ($hassiteconfig) {
                 3 => get_string('shortened_surname', 'format_ocmooc'),
         ];
 
-        //////////////////////////////////////////////////////////
-        ///       GLOBAK SETTINGS : PARTICIPANTS & WORLDMAP    ///
-        //////////////////////////////////////////////////////////
-
+        // GLOBAL SETTINGS: PARTICIPANTS & WORLDMAP.
         $settings->add(
             new admin_setting_heading(
                 'global_participants_header',
@@ -68,200 +64,195 @@ if ($hassiteconfig) {
             )
         );
 
-        //////////////////////////////////////////////////////////
-        ///           DEFAULT SETTINGS : PARTICIPANTS          ///
-        //////////////////////////////////////////////////////////
-
+        // DEFAULT SETTINGS: PARTICIPANTS.
         $settings->add(
-                new admin_setting_heading(
-                        'default_participants_header',
-                        get_string('participants_default', 'format_ocmooc'),
-                        ''
-                )
+            new admin_setting_heading(
+                'default_participants_header',
+                get_string('participants_default', 'format_ocmooc'),
+                ''
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/profilepicture',
-                        get_string('userpic', ''),
-                        '',
-                        true
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/profilepicture',
+                get_string('userpic', ''),
+                '',
+                true
+            )
         );
 
         $settings->add(
-                new admin_setting_configselect(
-                        'format_ocmooc/namedisplay',
-                        get_string('namedisplay', 'format_ocmooc'),
-                        '',
-                        0,
-                        $options
-                )
+            new admin_setting_configselect(
+                'format_ocmooc/namedisplay',
+                get_string('namedisplay', 'format_ocmooc'),
+                '',
+                0,
+                $options
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/email',
-                        get_string('email', ''),
-                        '',
-                        true
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/email',
+                get_string('email', ''),
+                '',
+                true
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/town',
-                        get_string('city', ''),
-                        '',
-                        true
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/town',
+                get_string('city', ''),
+                '',
+                true
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/country',
-                        get_string('country', ''),
-                        '',
-                        true
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/country',
+                get_string('country', ''),
+                '',
+                true
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/badges',
-                        get_string('badges', 'format_ocmooc'),
-                        '',
-                        true
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/badges',
+                get_string('badges', 'format_ocmooc'),
+                '',
+                true
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/roles',
-                        get_string('roles', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/roles',
+                get_string('roles', ''),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/groups',
-                        get_string('groups', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/groups',
+                get_string('groups', ''),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/lastaccess',
-                        get_string('lastaccess', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/lastaccess',
+                get_string('lastaccess', ''),
+                '',
+                false
+            )
         );
-        //////////////////////////////////////////////////////////
-        ///            GUEST SETTINGS : PARTICIPANTS           ///
-        //////////////////////////////////////////////////////////
 
+        // GUEST SETTINGS: PARTICIPANTS.
         $settings->add(
-                new admin_setting_heading(
-                        'guest_participants_header',
-                        get_string('participants_guest', 'format_ocmooc'),
-                        ''
-                )
+            new admin_setting_heading(
+                'guest_participants_header',
+                get_string('participants_guest', 'format_ocmooc'),
+                ''
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/participants_guest',
-                        get_string('participants', 'format_ocmooc'),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/participants_guest',
+                get_string('participants', 'format_ocmooc'),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/profilepicture_guest',
-                        get_string('userpic', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/profilepicture_guest',
+                get_string('userpic', ''),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configselect(
-                        'format_ocmooc/namedisplay_guest',
-                        get_string('namedisplay', 'format_ocmooc'),
-                        '',
-                        2,
-                        $options
-                )
+            new admin_setting_configselect(
+                'format_ocmooc/namedisplay_guest',
+                get_string('namedisplay', 'format_ocmooc'),
+                '',
+                2,
+                $options
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/email_guest',
-                        get_string('email', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/email_guest',
+                get_string('email', ''),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/town_guest',
-                        get_string('city', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/town_guest',
+                get_string('city', ''),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/country_guest',
-                        get_string('country', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/country_guest',
+                get_string('country', ''),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/badges_guest',
-                        get_string('badges', 'format_ocmooc'),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/badges_guest',
+                get_string('badges', 'format_ocmooc'),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/roles_guest',
-                        get_string('roles', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/roles_guest',
+                get_string('roles', ''),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/groups_guest',
-                        get_string('groups', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/groups_guest',
+                get_string('groups', ''),
+                '',
+                false
+            )
         );
 
         $settings->add(
-                new admin_setting_configcheckbox(
-                        'format_ocmooc/lastaccess_guest',
-                        get_string('lastaccess', ''),
-                        '',
-                        false
-                )
+            new admin_setting_configcheckbox(
+                'format_ocmooc/lastaccess_guest',
+                get_string('lastaccess', ''),
+                '',
+                false
+            )
         );
     }
 }

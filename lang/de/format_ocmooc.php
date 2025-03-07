@@ -25,150 +25,103 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname']      = 'OC MOOC';
-$string['addsections']     = 'Abschnitt hinzufügen';
-$string['currentsection']  = 'Dieser Abschnitt';
-$string['deletesection']   = 'Abschnitt Löschen';
-$string['editsection']     = 'Abschnitt bearbeiten';
-$string['editsectionname'] = 'Abschnittsnamen bearbeiten';
-$string['hidefromothers']  = 'Abschnitt verstecken';
 $string['Manage']          = 'verwalten';
-$string['newsectionname']  = 'Neuer Abschnittsname {$a}';
-$string['sectionname']     = 'Abschnitt';
-$string['settings']        = 'Einstellungen';
-$string['showfromothers']  = 'Abschnitt anzeigen';
-
-/** course options **/
-$string['certpercentage']  = 'Teilnahmebestätigung verfügbar ab (%) ';
-$string['certpercentage_help']  = 'Anzahl korrekter Antworten in Prozent, damit eine Teilnahmebestätigung herunterladbar ist ';
-
-/** forms **/
-/* htmlpageform.php */
-$string['title']   = 'Title';
-$string['content'] = 'Inhalt';
-/* participantsform.php */
-$string['anonymized']  = 'Anonymer Nutzername';
-$string['shortened_surname'] = 'Vorname und gekürzter Nachname';
-$string['namedisplay'] = 'Anzeigeart des Nutzernamens';
-/* socialform.php */
-$string['url']      = 'URL:';
-$string['youtube']  = 'Youtube';
-$string['twitter']  = 'X';
-$string['facebook'] = 'Facebook';
-$string['mastodon'] = 'Mastodon';
-$string['linkedin'] = 'LinkedIn';
-$string['xing']     = 'Xing';
-$string['other']    = 'Andere';
-$string['type']     = 'Type:';
-
-/**  classes/output **/
-/* content.php */
+$string['action']     = 'Aktion';
+$string['actions']  = 'Aktionen';
 $string['addchapter'] = 'Kapitel hinzufügen';
 $string['addlection'] = 'Abschnitt hinzufügen';
-
-/** classes/output/state **/
-/* addsection.php */
-
-/**  classes **/
-/* badges.php */
+$string['addsections']     = 'Abschnitt hinzufügen';
+$string['all_badges']     = 'Alle Auszeichnungen';
+$string['anonymized']  = 'Anonymer Nutzername';
+$string['badge_overview_description']  = 'Mit Kursbadges bzw. digitale Lernabzeichen wird der Fortschritt im Kurs belohnt und sichtbar gemacht.';
 $string['badges']            = 'Abzeichen';
 $string['badges_nav']        = 'Abzeichen';
-$string['no_badges_awarded'] = 'Bisher wurden keine Abzeichen verdient';
-// Zertifikate
-$string['certificate_and_badges'] = 'Teilnahmebestätigung & Badges';
+$string['cert_addtext']          = 'Lorem ipsum';
+$string['cert_available'] = 'In diesem Kurs kann eine Teilnahmebestätigung erworben werden.';
 $string['cert_descr']                 = 'Herzlichen Glückwunsch! Sie haben mindestens {$a} Prozent der im Kurs enthaltenen Selbsttests erfolgreich bearbeitet und können sich hier Ihre Teilnahmebestätigung herunterladen.';
 $string['cert_descr_general'] = 'Herzlichen Glückwunsch! Sie haben die im Kurs enthaltenen Selbsttests erfolgreich bearbeitet und können sich hier Ihre Teilnahmebestätigung herunterladen.';
-$string['certificate']                = 'Teilnahmebestätigung';
 $string['cert_need']                = 'In diesem Kurs können Sie sich die Teilnahmebestätigung herunterladen, wenn Sie mindestens {$a->min_per} Prozent der erforderlichen Online-Selbsttests bestanden haben. Aktuell stehen Sie bei {$a->current} Prozent.';
-$string['only_for_trainers']          = 'Nur für Admins und Trainer sichtbar';
-$string['cert_addtext']          = 'Lorem ipsum';
 $string['cert_nocert'] = 'In diesem Kurs kann man keine Teilnahmebestätigung erwerben.';
-$string['cert_available'] = 'In diesem Kurs kann eine Teilnahmebestätigung erworben werden.';
-
-/* base.php */
-$string['default_title'] = 'Standart Title';
-$string['editor']        = 'Editor';
-$string['success']       = 'Erfolgreich';
-$string['failed']        = 'Fehlgeschlagen';
-/* htmlpage.php */
-$string['htmlpage'] = 'HTML-Seite';
-$string['edit']     = 'Bearbeiten';
-$string['overview'] = 'Übersicht';
-$string['create']   = 'Erstellen';
-$string['title']    = 'Title';
-$string['created']  = 'Erstellt';
-$string['updated']  = 'Bearbeited';
-$string['actions']  = 'Aktionen';
-$string['view']     = 'Ansicht';
-$string['delete']   = 'Löschen';
-/* moocnav.php */
-$string['coursetab']       = 'Kursinhalt';
-$string['newsforum']       = 'Neuigkeiten';
-$string['discussionforum'] = 'Diskussionsforum';
-$string['social']          = 'Soziale Medien';
-/* sections.php */
-$string['deletesection'] = 'Sektion Löschen';
-/* social.php */
-$string['action']     = 'Aktion';
-$string['sesskey']    = 'Sitzungsschlüssel';
-$string['courseid']   = 'Kurs ID';
-$string['sectionnum'] = 'Sektionsnummer';
-/* participants.php*/
-$string['worldmap'] = 'Weltkarte';
-$string['enroleduserscount'] = 'In den Kurs eingeschriebene Teilnehmer/innen: {$a}';
-
-/**  edit **/
-/* htmlpage.php */
-$string['error:nocapability'] = 'Do hast nicht die benötigten berechtigungen';
-$string['participant']       = 'Teilnehmer/in';
-$string['participants']       = 'Teilnehmer/in';
-$string['participants_unenrol'] = 'Selber aus dem Kurs ausschreiben';
-/* participants.php */
-/* social.php */
-
-/**  templates **/
-/* bagdes.mustache */
-$string['profile_badges'] = 'Profil Auszeichnungen';
-$string['mybackpack']     = 'Mein Rucksack';
-$string['all_badges']     = 'Alle Auszeichnungen';
-/* chapterheader.mustache */
+$string['certificate']                = 'Teilnahmebestätigung';
+$string['certificate_and_badges'] = 'Teilnahmebestätigung & Badges';
+$string['certpercentage']  = 'Teilnahmebestätigung verfügbar ab (%) ';
+$string['certpercentage_help']  = 'Anzahl korrekter Antworten in Prozent, damit eine Teilnahmebestätigung herunterladbar ist ';
 $string['chapter'] = 'Kapitel';
-/* sectionnav.mustache */
-$string['lection'] = 'Lektion';
-/* sectionquicknav.mustache */
-$string['footernav:prev'] = 'Vorherige Lektion';
-$string['footernav:top']  = 'Nach oben';
-$string['footernav:next'] = 'Nächste Lektion';
-/* enrolbutton.mustache */
-$string['enrolbutton'] = 'In den Kurs einschreiben';
-
-/**  lib.php **/
-$string['edit:participants'] = 'Teilnehmer bearbeiten';
-$string['edit:social']       = 'Soziale Links bearbeiten';
-$string['edit:htmlpage']     = 'HTML-Seite bearbeiten';
-
-$string['rootsection']     = 'Kurs Administration';
-$string['numberedchapter'] = 'Kapitel {a}';
-$string['numberedlection'] = 'Lektion {a}';
-
-/* badges.php */
-$string['badge_overview_description']  = 'Mit Kursbadges bzw. digitale Lernabzeichen wird der Fortschritt im Kurs belohnt und sichtbar gemacht.';
-$string['no_badges_available']  = 'Es sind keine Auszeichnungen verfügbar';
-$string['my_badges']  = 'Meine Auszeichnungen';
-
-$string['participants_and_map_global'] = 'Teilnehmerliste und Weltkarte Global';
-$string['participants_and_map_global_info'] = 'Diese Einstellungen ermöglichen es, global festzulegen, ob die Nutzertabelle und die Weltkarte in Kursen angezeigt werden.';
+$string['completionwarning'] = 'Bearbeitet';
+$string['completionwarning_changeinbulk'] = 'Mehrere Elemente bearbeiten';
+$string['content'] = 'Inhalt';
+$string['courseid']   = 'Kurs ID';
+$string['coursetab']       = 'Kursinhalt';
+$string['create']   = 'Erstellen';
+$string['created']  = 'Erstellt';
+$string['currentsection']  = 'Dieser Abschnitt';
+$string['default_title'] = 'Standart Title';
+$string['delete']   = 'Löschen';
+$string['deletesection']   = 'Abschnitt Löschen';
+$string['discussionforum'] = 'Diskussionsforum';
 $string['display_list'] = 'Liste anzeigen';
 $string['display_list_desc'] = 'Aktivieren Sie diese Option, um die Teilnehmerliste in Kursen anzuzeigen.';
 $string['display_worldmap'] = 'Weltkarte anzeigen';
 $string['display_worldmap_desc'] = 'Aktivieren Sie diese Option, um die Weltkarte in Kursen anzuzeigen.';
-
+$string['edit']     = 'Bearbeiten';
+$string['edit:htmlpage']     = 'HTML-Seite bearbeiten';
+$string['edit:participants'] = 'Teilnehmer bearbeiten';
+$string['edit:social']       = 'Soziale Links bearbeiten';
+$string['editor']        = 'Editor';
+$string['editsection']     = 'Abschnitt bearbeiten';
+$string['editsectionname'] = 'Abschnittsnamen bearbeiten';
+$string['enrolbutton'] = 'In den Kurs einschreiben';
+$string['enroleduserscount'] = 'In den Kurs eingeschriebene Teilnehmer/innen: {$a}';
+$string['error:nocapability'] = 'Do hast nicht die benötigten berechtigungen';
+$string['facebook'] = 'Facebook';
+$string['failed']        = 'Fehlgeschlagen';
+$string['footernav:next'] = 'Nächste Lektion';
+$string['footernav:prev'] = 'Vorherige Lektion';
+$string['footernav:top']  = 'Nach oben';
+$string['forumlist'] = 'Forenliste';
+$string['hidefromothers']  = 'Abschnitt verstecken';
+$string['htmlpage'] = 'HTML-Seite';
+$string['lection'] = 'Lektion';
+$string['linkedin'] = 'LinkedIn';
+$string['mastodon'] = 'Mastodon';
+$string['my_badges']  = 'Meine Auszeichnungen';
+$string['mybackpack']     = 'Mein Rucksack';
+$string['name_forumlist'] = 'Liste aller Foren';
+$string['namedisplay'] = 'Anzeigeart des Nutzernamens';
+$string['newsectionname']  = 'Neuer Abschnittsname {$a}';
+$string['newsforum']       = 'Neuigkeiten';
+$string['no_badges_available']  = 'Es sind keine Auszeichnungen verfügbar';
+$string['no_badges_awarded'] = 'Bisher wurden keine Abzeichen verdient';
+$string['no_forumlist_available'] = 'Es sind keine Foren im Kurs verfügbar';
+$string['numberedchapter'] = 'Kapitel {a}';
+$string['numberedlection'] = 'Lektion {a}';
+$string['only_for_trainers']          = 'Nur für Admins und Trainer sichtbar';
+$string['other']    = 'Andere';
+$string['overview'] = 'Übersicht';
+$string['participant']       = 'Teilnehmer/in';
+$string['participants']       = 'Teilnehmer/in';
+$string['participants_and_map_global'] = 'Teilnehmerliste und Weltkarte Global';
+$string['participants_and_map_global_info'] = 'Diese Einstellungen ermöglichen es, global festzulegen, ob die Nutzertabelle und die Weltkarte in Kursen angezeigt werden.';
 $string['participants_default'] = 'Teilnehmerliste Default';
 $string['participants_guest'] = 'Teilnehmerliste Gast';
-$string['completionwarning'] = 'Bearbeitet';
-$string['completionwarning_changeinbulk'] = 'Mehrere Elemente bearbeiten';
-
-/* forumlist.php */
-$string['forumlist'] = 'Forenliste';
-$string['no_forumlist_available'] = 'Es sind keine Foren im Kurs verfügbar';
-$string['name_forumlist'] = 'Liste aller Foren';
+$string['participants_unenrol'] = 'Selber aus dem Kurs ausschreiben';
+$string['pluginname']      = 'OC MOOC';
+$string['profile_badges'] = 'Profil Auszeichnungen';
+$string['rootsection']     = 'Kurs Administration';
+$string['sectionname']     = 'Abschnitt';
+$string['sectionnum'] = 'Sektionsnummer';
+$string['sesskey']    = 'Sitzungsschlüssel';
+$string['settings']        = 'Einstellungen';
+$string['shortened_surname'] = 'Vorname und gekürzter Nachname';
+$string['showfromothers']  = 'Abschnitt anzeigen';
+$string['social']          = 'Soziale Medien';
+$string['success']       = 'Erfolgreich';
+$string['title']   = 'Title';
+$string['twitter']  = 'X';
+$string['type']     = 'Type:';
+$string['updated']  = 'Bearbeited';
+$string['url']      = 'URL:';
+$string['view']     = 'Ansicht';
+$string['worldmap'] = 'Weltkarte';
+$string['xing']     = 'Xing';
+$string['youtube']  = 'Youtube';

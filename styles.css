@@ -16,6 +16,21 @@
     padding: 0;
 }
 
+/* Fix for course index drawer */
+#courseindex.courseindex {
+    overflow-y: auto;
+    min-height: 100%;
+}
+
+.drawer.drawer-left.show #courseindex-content {
+    display: block;
+}
+
+#courseindex-content {
+    height: 100%;
+    position: relative;
+}
+
 @media (max-width: 575px) {
     #page-course-view-ocmooc #region-main {
         padding: 0.25rem 0rem;

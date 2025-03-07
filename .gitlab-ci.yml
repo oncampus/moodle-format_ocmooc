@@ -1,6 +1,5 @@
-# This file is a template, and might need editing before it works on your project.
 include:
-  - template: "Moodle/current.gitlab-ci.yml"
+  - template: "Moodle/405.gitlab-ci.yml"
 
 stages:
   - test

@@ -271,7 +271,7 @@ class participants extends base {
         if ($data->profilepicture) {
             $notsortable[] = 'profilepicture';
             $header[] = 'profilepicture';
-            $titles[] = get_string('userpic', );
+            $titles[] = get_string('userpic');
         }
 
         switch ($data->namedisplay) {
@@ -342,7 +342,7 @@ class participants extends base {
         global $OUTPUT;
 
         if ($params = $this->get_unenrol_url()) {
-            list($url, $string) = $params;
+            [$url, $string] = $params;
 
             echo \html_writer::start_div('mt-2 text-right');
             echo $OUTPUT->single_button($url, $string, 'post');
@@ -473,8 +473,15 @@ class participants extends base {
             $badges = badges_get_user_badges($user->id, $this->courseid);
             $images = [];
             foreach ($badges as $badge) {
-                $imageurl = moodle_url::make_pluginfile_url(\context_course::instance($this->courseid)->id, 'badges', 'badgeimage',
-                        $badge->id, '/', 'f1', false);
+                $imageurl = moodle_url::make_pluginfile_url(
+                    \context_course::instance($this->courseid)->id,
+                    'badges',
+                    'badgeimage',
+                    $badge->id,
+                    '/',
+                    'f1',
+                    false
+                );
                 $images[] = \html_writer::img($imageurl, $badge->name, ['style' => 'width: 30px; heigth: 30px;']);
             }
 
@@ -614,7 +621,6 @@ class participants extends base {
      * to provide a customized editor interface for participants.
      */
     protected function render_editor_custom() {
-
     }
 
     /**
@@ -624,7 +630,6 @@ class participants extends base {
      * to provide a summary or dashboard view of course participants.
      */
     public function render_overview() {
-
     }
 
     /**

@@ -24,7 +24,6 @@ namespace format_ocmooc\output\courseformat\state;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cm extends \core_courseformat\output\local\state\cm {
-
     /** @var \format_ocmooc the course format class */
     protected $format;
 

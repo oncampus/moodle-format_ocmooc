@@ -16,20 +16,17 @@
 
 namespace format_ocmooc\output;
 
-use core_courseformat\base as course_format;
 use core_courseformat\base as format_base;
 use core_courseformat\output\section_renderer;
-use moodle_page;
 
 /**
  * OC MOOC content class.
  *
  * @package     format_ocmooc
- * @copyright   2022 oncampus GmbH <support@oncampus.de>
+ * @copyright   2025 oncampus GmbH <support@oncampus.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class renderer extends section_renderer {
-
     // Override any necessary renderer method here.
 
     /**
@@ -58,14 +55,27 @@ class renderer extends section_renderer {
         return $this->render(format_base::instance($course)->inplace_editable_render_section_name($section, false));
     }
 
+    /**
+     * Render the course index drawer.
+     *
+     * @param format_base $format The format instance.
+     * @return string|null The rendered HTML or null if the course index is not used.
+     */
     public function course_index_drawer(format_base $format): ?string {
+        global $PAGE, $COURSE;
+
         if ($format->uses_course_index()) {
             include_course_editor($format);
+            // Add course ID to page requirements to ensure M.cfg.courseId is set
+            $PAGE->requires->js_call_amd('core_courseformat/courseeditor', 'setViewFormat', [
+                $COURSE->id,
+                [
+                    'editing' => $PAGE->user_is_editing(),
+                    'statekey' => $format->get_format_options()['statekey'] ?? '',
+                ]
+            ]);
             return $this->render_from_template('format_ocmooc/local/courseindex/drawer', []);
         }
         return '';
     }
-
-
-
 }

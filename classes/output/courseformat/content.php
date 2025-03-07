@@ -1,15 +1,40 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace format_ocmooc\output\courseformat;
 
 use core_courseformat\output\local\content as content_base;
-use core_reportbuilder\local\aggregation\count;
 use format_ocmooc\moocnav;
 use section_info;
 use stdClass;
 
+/**
+ * Content output class for the OCMOOC course format.
+ *
+ * @package    format_ocmooc
+ * @copyright  2023 OnCampus GmbH <support@oncampus.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class content extends content_base {
-
+    /**
+     * Export this data so it can be used as the context for a mustache template.
+     *
+     * @param \renderer_base $output Renderer base.
+     * @return stdClass
+     */
     public function export_for_template(\renderer_base $output) {
         global $COURSE, $USER;
 
@@ -133,18 +158,20 @@ class content extends content_base {
             }
         }
 
-        #$data->chapters = $this->get_chapters($output);
-        #$data->singlesection = $chapters[$chapter];
-        #$data->sectionreturn = $data->singlesection;
-
         $data->moocnav = moocnav::get_moocnav_entries();
         $data->moocnavdropdown = moocnav::get_drowdown_items();
         $data->showdropdown = !empty($data->moocnavdropdown);
         return $data;
     }
 
+    /**
+     * Get all chapters for the course.
+     *
+     * @param \renderer_base $output Renderer base.
+     * @return array Array of chapter objects.
+     */
     public function get_chapters($output) {
-        global $COURSE, $PAGE, $DB;
+        global $COURSE, $PAGE;
 
         $chapters = [];
         $context = \context_course::instance($COURSE->id);
@@ -172,11 +199,11 @@ class content extends content_base {
                     if ($PAGE->user_is_editing()) {
                         $section->editurl = (new \moodle_url('/course/editsection.php', ['id' => $sectionid]));
                     }
-                    //get images
+                    // Get images.
                     if ($section->summary->summarytext) {
-                        $img_link = explode('src="', $section->summary->summarytext);
-                        if (count($img_link) > 1) {
-                            $img = substr($img_link[1], 0, strpos($img_link[1], '"'));
+                        $imglink = explode('src="', $section->summary->summarytext);
+                        if (count($imglink) > 1) {
+                            $img = substr($imglink[1], 0, strpos($imglink[1], '"'));
                             $section->imgurl = $img;
                         }
                     }
@@ -197,10 +224,12 @@ class content extends content_base {
     }
 
     /**
-     * @param $chapter section_info|stdClass|int the chapter section
-     * @param $chapternum
-     * @param $output
-     * @return array
+     * Get all sections for a specific chapter.
+     *
+     * @param mixed $chapter The chapter section info, section number, or object.
+     * @param int $chapternum The chapter number.
+     * @param \renderer_base $output Renderer base.
+     * @return array Array of section objects.
      * @throws \moodle_exception
      */
     public function get_chapter_sections($chapter, $chapternum, $output) {
@@ -242,6 +271,12 @@ class content extends content_base {
         return $sections;
     }
 
+    /**
+     * Calculate the progress percentage for a collection of sections.
+     *
+     * @param array $sections Array of section objects.
+     * @return int The calculated progress percentage.
+     */
     private function get_progress_by_sections($sections) {
         $progress = 0;
         if (!empty($sections)) {
@@ -254,8 +289,10 @@ class content extends content_base {
     }
 
     /**
-     * @param $section section_info|stdClass the section
-     * @return false|float|int
+     * Calculate the progress percentage for a single section.
+     *
+     * @param section_info|stdClass $section The section object.
+     * @return false|float|int The calculated progress percentage or false if completion not enabled.
      */
     private function get_progress_by_section($section) {
         global $USER, $COURSE, $CFG;
@@ -274,24 +311,24 @@ class content extends content_base {
                 $count++;
                 $data = $completion->get_data($module, true, $USER->id);
 
-                // For other modules, continue with existing completion status
                 if (($data->completionstate == COMPLETION_INCOMPLETE) || ($data->completionstate == COMPLETION_COMPLETE_FAIL)) {
-
                     require_once($CFG->libdir . '/gradelib.php');
-                    $grading_info = \grade_get_grades($module->course, 'mod', 'hvp', $module->instance, $USER->id);
-                    //Cheks if a Activity has a grademax > 0 and the current reached Grade is > 0
-                    if ($grading_info->items[0]->grademax != null && $grading_info->items[0]->grademax > 0 &&
-                            $grading_info->items[0]->grades[$USER->id]->grade != null &&
-                            $grading_info->items[0]->grades[$USER->id]->grade > 0) {
-                        //Set the completed status to the current grade of a activity (grade = 2.5, maxgrade = 10 => completed += 0.25)
-                        $completed += $grading_info->items[0]->grades[$USER->id]->grade / $grading_info->items[0]->grademax;
+                    $gradinginfo = \grade_get_grades($module->course, 'mod', 'hvp', $module->instance, $USER->id);
+                    // Check if activity has a grademax > 0 and the current reached grade is > 0.
+                    if (
+                        isset($gradinginfo->items[0]) && $gradinginfo->items[0]->grademax != null &&
+                        $gradinginfo->items[0]->grademax > 0 && isset($gradinginfo->items[0]->grades[$USER->id]) &&
+                        $gradinginfo->items[0]->grades[$USER->id]->grade != null &&
+                        $gradinginfo->items[0]->grades[$USER->id]->grade > 0
+                    ) {
+                        // Set completed status to current grade ratio (e.g., grade = 2.5, maxgrade = 10 => completed += 0.25).
+                        $completed += $gradinginfo->items[0]->grades[$USER->id]->grade / $gradinginfo->items[0]->grademax;
                     } else {
                         $completed += 0;
                     }
                 } else {
                     $completed += 1;
                 }
-
             }
         }
 
@@ -302,8 +339,13 @@ class content extends content_base {
         return round(($completed / $count) * 100);
     }
 
+    /**
+     * Returns the template name for rendering.
+     *
+     * @param \renderer_base $renderer The renderer instance.
+     * @return string The template name.
+     */
     public function get_template_name(\renderer_base $renderer): string {
         return 'format_ocmooc/local/content';
     }
-
 }

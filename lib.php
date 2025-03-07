@@ -15,24 +15,46 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- *  Format base class.
+ * Format base class.
+ *
+ * This file defines the base class for the OCMOOC course format.
+ * It includes the necessary code to render the base class and handle
+ * the course context.
  *
  * @package     format_ocmooc
- * @copyright   2022 oncampus GmbH <support@oncampus.de>
+ * @copyright   2025 oncampus GmbH <support@oncampus.de>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use format_ocmooc\sections;
-
 defined('MOODLE_INTERNAL') || die();
+
+use core_courseformat\base;
+use core\context;
+use core\context\course as context_course;
+
 require_once($CFG->dirroot . '/course/format/lib.php');
 
-class format_ocmooc extends core_courseformat\base {
-    private sections $sectionmanager;
+/**
+ * Format base class for the OCMOOC course format.
+ *
+ * This class extends the core_courseformat\base class and provides
+ * additional functionality for the OCMOOC course format.
+ *
+ */
+class format_ocmooc extends base {
+    /**
+     * @var \format_ocmooc\sections The section manager instance
+     */
+    protected $sectionmanager;
 
-    public function get_section_manager(): sections {
+    /**
+     * Get the section manager instance
+     *
+     * @return \format_ocmooc\sections The section manager instance
+     */
+    public function get_section_manager() {
         if (!isset($this->sectionmanager)) {
-            $this->sectionmanager = new sections($this->courseid, $this);
+            $this->sectionmanager = new \format_ocmooc\sections($this->courseid, $this);
         }
         return $this->sectionmanager;
     }
@@ -46,6 +68,14 @@ class format_ocmooc extends core_courseformat\base {
         return true;
     }
 
+    /**
+     * Handles section actions.
+     *
+     * @param int|section_info $section The section to act on
+     * @param string $action The action to perform
+     * @param int $sr The section number to set
+     * @return array
+     */
     public function section_action($section, $action, $sr) {
         global $PAGE;
 
@@ -58,11 +88,15 @@ class format_ocmooc extends core_courseformat\base {
             $renderer = $this->get_renderer($PAGE);
 
             if ($sr) {
-                $this->set_section_number($sr);
+                $this->set_sectionnum($sr);
             }
 
             if (!($section instanceof section_info)) {
-                $section = $modinfo->get_section_info($section->section);
+                if (is_object($section)) {
+                    $section = $modinfo->get_section_info($section->section);
+                } else {
+                    $section = $modinfo->get_section_info($section);
+                }
             }
 
             if ($section->parent == 0) {
@@ -70,21 +104,36 @@ class format_ocmooc extends core_courseformat\base {
             }
 
             return [
-                    'content' => $renderer->course_section_updated($this, $section),
+                'content' => $renderer->course_section_updated($this, $section),
             ];
         } else {
             return parent::section_action($section, $action, $sr);
         }
     }
 
+    /**
+     * Returns true if the course format uses indentation.
+     *
+     * @return bool
+     */
     public function uses_indentation(): bool {
         return false;
     }
 
+    /**
+     * Returns true if the course format uses a course index.
+     *
+     * @return bool
+     */
     public function uses_course_index() {
         return true;
     }
 
+    /**
+     * Returns the section number.
+     *
+     * @return int
+     */
     public function get_section_number(): int {
         return 0;
     }
@@ -103,6 +152,11 @@ class format_ocmooc extends core_courseformat\base {
         return $ajaxsupport;
     }
 
+    /**
+     * Returns true if the course format supports components.
+     *
+     * @return bool
+     */
     public function supports_components() {
         return true;
     }
@@ -128,26 +182,32 @@ class format_ocmooc extends core_courseformat\base {
         return true;
     }
 
+    /**
+     * Returns the section format options.
+     *
+     * @param bool $foreditform
+     * @return array
+     */
     public function section_format_options($foreditform = false) {
         $course               = $this->get_course();
-        $sectionformatoptions = array(
-            'parent' => [
-                'type'         => PARAM_INT,
-                'label'        => '',
-                'element_type' => 'hidden',
-                'default'      => 0,
-                'cache'        => true,
-                'cachedefault' => 0,
-            ],
-            'depth'  => [
-                'type'         => PARAM_INT,
-                'label'        => '',
-                'element_type' => 'hidden',
-                'default'      => 0,
-                'cache'        => true,
-                'cachedefault' => 0,
-            ]
-        );
+        $sectionformatoptions = [
+        'parent' => [
+            'type'         => PARAM_INT,
+            'label'        => '',
+            'element_type' => 'hidden',
+            'default'      => 0,
+            'cache'        => true,
+            'cachedefault' => 0,
+        ],
+        'depth'  => [
+            'type'         => PARAM_INT,
+            'label'        => '',
+            'element_type' => 'hidden',
+            'default'      => 0,
+            'cache'        => true,
+            'cachedefault' => 0,
+        ],
+        ];
 
         return $sectionformatoptions;
     }
@@ -172,15 +232,26 @@ class format_ocmooc extends core_courseformat\base {
             if ($section->section == 0) {
                 return get_string('rootsection', 'format_ocmooc');
             } else if ($section->parent == 0) {
-               return get_string('chapter', 'format_ocmooc') . " " . $this->get_section_manager()->get_chapter_no_from_number($section->section);
+                return get_string(
+                    'chapter',
+                    'format_ocmooc'
+                ) . " " . $this->get_section_manager()->get_chapter_no_from_number($section->section);
             } else {
-                return get_string('lection', 'format_ocmooc') . " " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
+                return get_string(
+                    'lection',
+                    'format_ocmooc'
+                ) . " " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
             }
         }
     }
 
+    /**
+     * Returns the chapters of the course.
+     *
+     * @return array
+     */
     public function get_chapters() {
-        $chapters = array();
+        $chapters = [];
         foreach ($this->get_sections() as $num => $section) {
             if ($section->parent == 0 && $section->depth == 0) {
                 $section->children = $this->get_chapter_sections($section);
@@ -190,9 +261,15 @@ class format_ocmooc extends core_courseformat\base {
         return $chapters;
     }
 
+    /**
+     * Returns the chapter sections of the course.
+     *
+     * @param section_info $chapter
+     * @return array
+     */
     public function get_chapter_sections($chapter) {
         $sectionnum = $this->resolve_section_number($chapter);
-        $sections   = array();
+        $sections   = [];
         foreach ($this->get_sections() as $num => $subsection) {
             if ($subsection->parent == $sectionnum && $num != $sectionnum) {
                 $sections[$num] = $subsection;
@@ -201,31 +278,52 @@ class format_ocmooc extends core_courseformat\base {
         return $sections;
     }
 
-    public function get_view_url($section, $options = array()) {
+    /**
+     * Returns the view URL for the given section.
+     *
+     * @param int|section_info $section The section to get the view URL for
+     * @param array $options Additional options
+     * @return moodle_url
+     */
+    public function get_view_url($section, $options = []) {
         global $CFG, $USER;
         $course = $this->get_course();
-        $url    = new moodle_url('/course/view.php', array('id' => $course->id));
+        $url    = new moodle_url('/course/view.php', ['id' => $course->id]);
 
         if (array_key_exists('sr', $options)) {
-            if($section){
-                if (is_object($section)){
+            if ($section) {
+                if (is_object($section)) {
                     $sectionno = $section->section;
                 } else {
-                    $sectionno =$section;
+                    $sectionno = $section;
                 }
-                $url->set_anchor('section-'. $sectionno);
-            }else {
+                $url->set_anchor('section-' . $sectionno);
+            } else {
                 $sectionno = $options['sr'];
             }
             $modinfo = get_fast_modinfo($course);
-            $section = $modinfo->get_section_info($sectionno, MUST_EXIST);
+            $section = $modinfo->get_section_info($sectionno, IGNORE_MISSING);
+            if (!$section) {
+                return new moodle_url('/course/view.php', ['id' => $course->id]);
+            }
         } else if (is_object($section)) {
             $sectionno = $section->section;
         } else {
             $sectionno = $section;
             $modinfo   = get_fast_modinfo($course);
-            $section   = $modinfo->get_section_info($sectionno, MUST_EXIST);
+            $section   = $modinfo->get_section_info($sectionno, IGNORE_MISSING);
+            if (!$section) {
+                $url = new moodle_url('/course/view.php', ['id' => $course->id]);
+                if (!empty($options['navigation'])) {
+                    return null;
+                }
+                return $url;
+            }
         }
+
+        $chapterno = 1;
+        $lectionno = 1;
+
         if ($section->parent == 0) {
             $chapterno = $this->get_section_manager()->get_chapter_no_from_number($section->section);
             $lectionno = 1;
@@ -243,7 +341,7 @@ class format_ocmooc extends core_courseformat\base {
             $url->param('lection', $lectionno);
         }
 
-        if($USER->editing){
+        if ($USER->editing) {
             $url->set_anchor('section-' . $sectionno);
         }
 
@@ -264,13 +362,14 @@ class format_ocmooc extends core_courseformat\base {
         // If section is specified in course/view.php, make sure it is expanded in navigation.
         if ($navigation->includesectionnum === false) {
             $selectedsection = optional_param('section', null, PARAM_INT);
-            if ($selectedsection !== null && (!defined('AJAX_SCRIPT') || AJAX_SCRIPT == '0') &&
-                $PAGE->url->compare(new moodle_url('/course/view.php'), URL_MATCH_BASE)) {
+            if (
+                $selectedsection !== null && (!defined('AJAX_SCRIPT') || AJAX_SCRIPT == '0') &&
+                $PAGE->url->compare(new moodle_url('/course/view.php'), URL_MATCH_BASE)
+            ) {
                 $navigation->includesectionnum = $selectedsection;
             }
         }
         // Check if there are callbacks to extend course navigation.
-//        parent::extend_course_navigation($navigation, $node);
 
         // We want to remove the general section if it is empty.
         $course   = $this->get_course();
@@ -312,7 +411,7 @@ class format_ocmooc extends core_courseformat\base {
             return null;
         }
         $sectionname = get_section_name($this->get_course(), $section);
-        $url         = course_get_url($this->get_course(), $section->section, array('navigation' => true));
+        $url         = course_get_url($this->get_course(), $section->section, ['navigation' => true]);
 
         $sectionnode           = $node->add($sectionname, $url, navigation_node::TYPE_SECTION, null, $section->id);
         $sectionnode->nodetype = navigation_node::NODETYPE_BRANCH;
@@ -320,8 +419,10 @@ class format_ocmooc extends core_courseformat\base {
         if ($section->section == $this->get_viewed_section()) {
             $sectionnode->force_open();
         }
-        if ($this->get_section_manager()->section_has_parent($navigation->includesectionnum, $section->section)
-            || $navigation->includesectionnum == $section->section) {
+        if (
+            $this->get_section_manager()->section_has_parent($navigation->includesectionnum, $section->section)
+            || $navigation->includesectionnum == $section->section
+        ) {
             $modinfo = get_fast_modinfo($this->courseid);
             if (!empty($modinfo->sections[$section->section])) {
                 foreach ($modinfo->sections[$section->section] as $cmid) {
@@ -420,7 +521,7 @@ class format_ocmooc extends core_courseformat\base {
             // Section 0 is always available.
             return true;
         }
-        $context = context_course::instance($this->courseid);
+        $context = \context::instance_by_id(context_course::instance($this->courseid)->id);
         if (has_capability('moodle/course:viewhiddensections', $context)) {
             // For the purpose of this function only return true for teachers.
             return true;
@@ -438,22 +539,22 @@ class format_ocmooc extends core_courseformat\base {
     public function course_format_options($foreditform = false) {
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
-            $courseformatoptions = array(
-                'certpercentage' => array(
-                    'default' => 0,
-                    'type' => PARAM_INT,
-                ),
-            );
+            $courseformatoptions = [
+            'certpercentage' => [
+                'default' => 0,
+                'type' => PARAM_INT,
+            ],
+            ];
         }
         if ($foreditform && !isset($courseformatoptions['certpercentage']['label'])) {
-            $courseformatoptionsedit = array(
-                'certpercentage' => array(
-                    'label' => new lang_string('certpercentage', 'format_ocmooc'),
-                    'help' => 'certpercentage',
-                    'help_component' => 'format_ocmooc',
-                    'element_type' => 'text',
-                ),
-            );
+            $courseformatoptionsedit = [
+            'certpercentage' => [
+                'label' => new lang_string('certpercentage', 'format_ocmooc'),
+                'help' => 'certpercentage',
+                'help_component' => 'format_ocmooc',
+                'element_type' => 'text',
+            ],
+            ];
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }
         return $courseformatoptions;
@@ -484,16 +585,24 @@ function format_ocmooc_inplace_editable($itemtype, $itemid, $newvalue) {
     }
 }
 
+/**
+ * Extends the course navigation node.
+ *
+ * @param navigation_node $parentnode The parent navigation node
+ * @param stdClass $course The course object
+ * @param context_course $context The course context
+ */
 function format_ocmooc_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
     if ($course->format != 'ocmooc') {
         return;
     }
 
-    if (!has_capability('format/ocmooc:edit', $context)) {
+    $contextinstance = \context::instance_by_id($context->id);
+    if (!has_capability('format/ocmooc:edit', $contextinstance)) {
         return;
     }
 
-    if (is_guest($context)) {
+    if (is_guest($contextinstance)) {
         return;
     }
 

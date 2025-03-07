@@ -1,4 +1,29 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Section handler for the OCMOOC course format
+ *
+ * This file handles section management operations like adding chapters,
+ * adding lections, deleting sections, and reordering sections.
+ *
+ * @package    format_ocmooc
+ * @copyright  2025 oncampus GmbH <info@oncampus.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 require_once(__DIR__ . '/../../../config.php');
 
@@ -27,7 +52,7 @@ switch ($action) {
     case 'addlection':
         $chaptersectionnumber = required_param('chaptersectionnumber', PARAM_INT);
         $position = required_param('position', PARAM_INT);
-        list($chapterno, $lectiono) = $sectionmanager->add_lection($chaptersectionnumber);
+        [$chapterno, $lectiono] = $sectionmanager->add_lection($chaptersectionnumber);
         $redirecturl->param('chapter', $chapterno);
         $redirecturl->param('lection', $lectiono);
         break;
@@ -42,11 +67,11 @@ switch ($action) {
         $redirecturl->param('chapter', $sectionmanager->get_chapter_no_from_number($section->parent));
         $redirecturl->param('lection', $sectionmanager->get_lection_no_from_number($section->parent, $sectionnum - 1));
         $sectionmanager->delete_section_with_children($section);
-        $neworder = array();
+        $neworder = [];
         $sectionmanager->reorder_sections($neworder, 0);
         break;
     case 'reorder':
-        $neworder = array();
+        $neworder = [];
         $sectionmanager->reorder_sections($neworder, 0);
         break;
 }

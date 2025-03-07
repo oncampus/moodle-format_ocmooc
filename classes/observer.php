@@ -22,13 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Event observer for mod_forum.
  */
 class format_ocmooc_observer {
-
     /**
      * Observer for \core\event\course_created event.
      *
@@ -40,7 +37,7 @@ class format_ocmooc_observer {
 
         $course = $event->get_record_snapshot('course', $event->objectid);
         $format = course_get_format($course);
-        $socialforum = $DB->get_record('forum', ['course' => $course->id, 'type'=> 'social']);
+        $socialforum = $DB->get_record('forum', ['course' => $course->id, 'type' => 'social']);
         if (!$socialforum && ($format->get_format() === 'ocmooc')) {
             require_once($CFG->dirroot . '/mod/forum/lib.php');
             // Auto create the Social forum.
@@ -59,13 +56,12 @@ class format_ocmooc_observer {
 
         $course = $event->get_record_snapshot('course', $event->objectid);
         $format = course_get_format($course);
-        $socialforum = $DB->get_record('forum', ['course' => $course->id, 'type'=> 'social']);
-        //Check if the social forum already exists
+        $socialforum = $DB->get_record('forum', ['course' => $course->id, 'type' => 'social']);
+        // Check if the social forum already exists.
         if (!$socialforum && ($format->get_format() === 'ocmooc')) {
             require_once($CFG->dirroot . '/mod/forum/lib.php');
             // Auto create the Social forum.
             forum_get_course_forum($event->objectid, 'social');
         }
     }
-
 }

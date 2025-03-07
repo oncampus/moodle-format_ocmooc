@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * External API for the OCMOOC course format.
+ *
  * @package    format_ocmooc
  * @copyright  2018 ILD, Technische Hochschule Lübeck (https://www.th-luebeck.de/ild)
  * @author     Eugen Ebel (eugen.ebel@th-luebeck.de)
@@ -24,11 +26,21 @@ defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
 
-require_once($CFG->libdir."/externallib.php");
+require_once($CFG->libdir . "/externallib.php");
 require_once(__DIR__ . "/locallib.php");
 
+/**
+ * External API class for OCMOOC course format
+ *
+ * @package    format_ocmooc
+ * @copyright  2018 ILD, Technische Hochschule Lübeck
+ */
 class format_ocmooc_external extends external_api {
-
+    /**
+     * Returns description of setgrade_parameters method parameters
+     *
+     * @return external_function_parameters
+     */
     public static function setgrade_parameters() {
         return new external_function_parameters([
             'contentid' => new external_value(PARAM_INT, 'H5P content id'),
@@ -36,10 +48,17 @@ class format_ocmooc_external extends external_api {
             'maxscore' => new external_value(PARAM_FLOAT, 'H5P max score'),
         ]);
     }
+
+    /**
+     * Sets grade for H5P content
+     *
+     * @param int $contentid The ID of the H5P content
+     * @param float $score The score achieved
+     * @param float $maxscore The maximum possible score
+     * @return array Section progress data
+     */
     public static function setgrade($contentid, $score, $maxscore) {
         global $SESSION;
-        // Parameter validation
-        // REQUIRED.
         $params = self::validate_parameters(
             self::setgrade_parameters(),
             [
@@ -56,7 +75,12 @@ class format_ocmooc_external extends external_api {
         $cm = get_coursemodule_from_instance('hvp', $contentid);
         $progress = \setgrade($contentid, $score, $maxscore);
 
-        $debug = "CONTENT DEBUG: Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore . " progress: " . $progress['percentage'];
+        $debug = "
+        CONTENT DEBUG: Contentid: " . $contentid .
+        " Score: " . $score .
+        " maxscore: " . $maxscore .
+        " progress: " . $progress['percentage'] . ".";
+
         if ($cm == null) {
             // Kursmodul wurde nicht gefunden.
             return [
@@ -73,6 +97,11 @@ class format_ocmooc_external extends external_api {
         ];
     }
 
+    /**
+     * Returns description of setgrade method return values
+     *
+     * @return external_single_structure
+     */
     public static function setgrade_returns() {
         return new \external_single_structure([
             'sectionId' => new external_value(PARAM_INT, 'section ID'),
@@ -81,6 +110,11 @@ class format_ocmooc_external extends external_api {
         ], 'Section progress');
     }
 
+    /**
+     * Returns description of setgrade_subcontent_parameters method parameters
+     *
+     * @return external_function_parameters
+     */
     public static function setgrade_subcontent_parameters() {
         return new external_function_parameters(
             [
@@ -95,14 +129,21 @@ class format_ocmooc_external extends external_api {
 
     /**
      * Stores individual H5P activities such as all individual activities of an interactive video or presentations.
+     *
+     * @param int $contentid The ID of the content
+     * @param string $subcontentid The ID of the subcontent
+     * @param float $score The score achieved
+     * @param float $maxscore The maximum possible score
+     * @param int $totalinteractions The total number of interactions
+     * @return array Section progress data
      */
     public static function setgrade_subcontent($contentid, $subcontentid, $score, $maxscore, $totalinteractions) {
         global $DB, $USER;
 
-        // Get DB Entries by contentID and UserID
+        // Get DB Entries by contentID and UserID.
         $hvpcontent = $DB->get_record('format_ocmooc_hvp', ['content_id' => $contentid, 'user_id' => $USER->id]);
 
-        // If no entry exists with the contentid create a entry in the table
+        // If no entry exists with the contentid create a entry in the table.
         if (!$hvpcontent) {
             $newentry = new stdClass();
             $newentry->user_id = $USER->id;
@@ -112,21 +153,21 @@ class format_ocmooc_external extends external_api {
             $newentry->maxscore = $maxscore;
             $DB->insert_record('format_ocmooc_hvp', $newentry);
         } else {
-            // If an entry with the contentid and user_id exists, proceed with the existing entry logic
-            // Get existing entry for the given subcontentid and user_id, if any
+            // If an entry with the contentid and user_id exists, proceed with the existing entry logic.
+            // Get existing entry for the given subcontentid and user_id, if any.
             $existingsubcontententry = $DB->get_record('format_ocmooc_hvp', [
                 'content_id' => $contentid,
                 'subcontent_id' => $subcontentid,
                 'user_id' => $USER->id,
             ]);
             if ($existingsubcontententry) {
-                // If an entry exists, update the score if the new score is higher
+                // If an entry exists, update the score if the new score is higher.
                 if ($existingsubcontententry->score < $score) {
                     $existingsubcontententry->score = $score;
                     $DB->update_record('format_ocmooc_hvp', $existingsubcontententry);
                 }
             } else {
-                // If no entry exists, create a new one
+                // If no entry exists, create a new one.
                 $newentry = new stdClass();
                 $newentry->user_id = $USER->id;
                 $newentry->content_id = $contentid;
@@ -137,10 +178,10 @@ class format_ocmooc_external extends external_api {
             }
         }
 
-        // Get DB Entries for the current user and contentID
+        // Get DB Entries for the current user and contentID.
         $updatedhvpcontent = $DB->get_records('format_ocmooc_hvp', ['content_id' => $contentid, 'user_id' => $USER->id]);
 
-        // Get all subcontents from the content and calculate the new total score (count($score) / count($maxscore))
+        // Get all subcontents from the content and calculate the new total score (count($score) / count($maxscore)).
         $totalscore = 0.0;
         foreach ($updatedhvpcontent as $subcontent) {
             $totalscore += ($subcontent->score / $subcontent->maxscore);
@@ -149,7 +190,7 @@ class format_ocmooc_external extends external_api {
         $maxscore = 100;
 
         // Parameter validation
-        // REQUIRED
+        // REQUIRED.
         $params = self::validate_parameters(
             self::setgrade_subcontent_parameters(),
             [
@@ -168,7 +209,8 @@ class format_ocmooc_external extends external_api {
         $cm = get_coursemodule_from_instance('hvp', $contentid);
         $progress = \setgrade($contentid, $score, $maxscore);
 
-        $debug = "SUBCONTENT DEBUG: setGrade Data: " . $progress['sectionId'] . " ,Contentid: " . $contentid . " Score: " . $score . " maxscore: " . $maxscore . " progress: " . $progress['percentage'];
+        $debug = "SUBCONTENT DEBUG: setGrade Data: " . $progress['sectionId'] . " ,Contentid: " . $contentid .
+                " Score: " . $score . " maxscore: " . $maxscore . " progress: " . $progress['percentage'] . ".";
         if ($cm == null) {
             // Kursmodul wurde nicht gefunden.
             return [
@@ -186,8 +228,11 @@ class format_ocmooc_external extends external_api {
         ];
     }
 
-
-
+    /**
+     * Returns description of setgrade_subcontent method return values
+     *
+     * @return external_single_structure
+     */
     public static function setgrade_subcontent_returns() {
         return new \external_single_structure([
             'sectionId' => new external_value(PARAM_INT, 'section ID'),
@@ -196,9 +241,16 @@ class format_ocmooc_external extends external_api {
         ], 'Section progress');
     }
 
+    /**
+     * Gets participant locations for a course
+     *
+     * @param int $courseid The course ID
+     * @return array Participant locations data
+     */
     public static function get_participant_locations($courseid) {
         self::validate_parameters(
-            self::get_participant_locations_parameters(), ['courseid' => $courseid]
+            self::get_participant_locations_parameters(),
+            ['courseid' => $courseid]
         );
 
         $context = \context_course::instance($courseid);
@@ -216,12 +268,22 @@ class format_ocmooc_external extends external_api {
         return ['locations' => array_values($locations)];
     }
 
+    /**
+     * Returns description of get_participant_locations_parameters method parameters
+     *
+     * @return external_function_parameters
+     */
     public static function get_participant_locations_parameters() {
         return new \external_function_parameters([
             'courseid' => new \external_value(PARAM_INT, 'Course ID'),
         ]);
     }
 
+    /**
+     * Returns description of get_participant_locations method return values
+     *
+     * @return external_single_structure
+     */
     public static function get_participant_locations_returns() {
         return new \external_single_structure([
             'locations' => new \external_multiple_structure(

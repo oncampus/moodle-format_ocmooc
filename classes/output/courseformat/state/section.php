@@ -24,7 +24,6 @@ namespace format_ocmooc\output\courseformat\state;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class section extends \core_courseformat\output\local\state\section {
-
     /** @var \format_ocmooc the course format class */
     protected $format;
 
@@ -81,7 +80,6 @@ class section extends \core_courseformat\output\local\state\section {
 
         $data->parent = $this->section->parent;
         $data->parentid = $this->section->parent ? $this->format->get_modinfo()->get_section_info($this->section->parent)->id : 0;
-        //        $data->collapsed = (bool)$this->section->collapsed;
 
         // For sections that are displayed as a link do not print list of cms or controls.
         $data->children = [];

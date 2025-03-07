@@ -15,9 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Services for the OCMOOC course format.
+ *
+ * This file defines the services for the OCMOOC course format.
+ * It includes the necessary code to render the services and handle
+ * the course context.
+ *
  * @package    format_ocmooc
- * @copyright  2018 ILD, Technische Hochschule Lübeck (https://www.th-luebeck.de/ild)
- * @author     Eugen Ebel (eugen.ebel@th-luebeck.de)
+ * @copyright  2025 oncampus GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -63,4 +68,3 @@ $services = [
         'enabled' => 1,
     ],
 ];
-

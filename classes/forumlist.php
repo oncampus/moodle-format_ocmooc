@@ -16,16 +16,32 @@
 
 namespace format_ocmooc;
 
-require_once ($CFG->libdir . '/modinfolib.php');
+defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->libdir . '/modinfolib.php');
+
+/**
+ * Class for handling forum lists in the OCMOOC format.
+ *
+ * @package   format_ocmooc
+ * @copyright 2025 oncampus GmbH
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class forumlist extends base {
-
+    /**
+     * Constructor for the forumlist class
+     *
+     * @param int $courseid The ID of the course
+     * @param string $url The URL for the forum list
+     */
     public function __construct($courseid, $url) {
         $this->title = get_string('forumlist', 'format_ocmooc');
         parent::__construct($courseid, $url);
     }
 
-
+    /**
+     * Render the forum list
+     */
     protected function render_view_custom() {
         global $OUTPUT, $CFG;
         $data = [];
@@ -34,10 +50,16 @@ class forumlist extends base {
             $data[] = get_fast_modinfo($this->courseid)->get_cm($forumid->id);
         }
         $data['forumslist'] = array_values($data);
-        $data['urllink'] = $CFG->wwwroot .'/theme/image.php/boost/forum/1700745946/monologo?filtericon=1';
+        $data['urllink'] = $CFG->wwwroot . '/theme/image.php/boost/forum/1700745946/monologo?filtericon=1';
         echo $OUTPUT->render_from_template('format_ocmooc/forumlist/forumlist', $data);
     }
 
+    /**
+     * Get the forum IDs for the course
+     *
+     * @param int $courseid The course ID
+     * @return array Array of stdClass objects with 'id' property
+     */
     private function get_forumslistids($courseid) {
         global $DB;
         $sql = "SELECT cm.id
@@ -46,8 +68,14 @@ class forumlist extends base {
                 WHERE cm.course = :courseid
                 AND m.name = 'forum'";
         return $DB->get_records_sql($sql, ['courseid' => $courseid]);
-
     }
+
+    /**
+     * Get the forum info
+     *
+     * @param int $forumid The forum ID
+     * @return array Array of forum info
+     */
     private function get_forum_info($forumid) {
         global $DB;
 
@@ -58,15 +86,22 @@ class forumlist extends base {
         $url = new \moodle_url('forum/view.php', ['id' => $records->id]);
         return [$records->name, $url];
     }
+
+    /**
+     * Render the editor custom
+     */
     protected function render_editor_custom() {
-
     }
 
+    /**
+     * Render the overview
+     */
     public function render_overview() {
-
     }
 
+    /**
+     * Handle the data
+     */
     protected function handle_data($data) {
     }
-
 }

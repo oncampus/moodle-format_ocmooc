@@ -17,7 +17,7 @@
 /**
  * Output cmitem for the format_pluginname plugin.
  *
- * @package   format_pluginname
+ * @package   format_ocmooc
  * @copyright Year, You Name <your@email.address>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,9 +25,16 @@
 namespace format_ocmooc\output\courseformat\content\section;
 
 use core_courseformat\output\local\content\section\cmitem as cmitem_base;
+use renderer_base;
 
+/**
+ * Content output class for the OCMOOC course format cmitem.
+ *
+ * @package    format_ocmooc
+ * @copyright  2025 oncampus GmbH <support@oncampus.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class cmitem extends cmitem_base {
-
     /**
      * Returns the output class template path.
      *
