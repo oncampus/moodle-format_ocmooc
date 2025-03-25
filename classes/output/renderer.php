@@ -36,7 +36,7 @@ class renderer extends section_renderer {
      *
      * @param section_info|stdClass $section The course_section entry from DB
      * @param stdClass $course The course entry from DB
-     * @return string HTML to output.
+     * @return \core\output\inplace_editable HTML to output.
      */
     public function section_title($section, $course) {
         return $this->render(format_base::instance($course)->inplace_editable_render_section_name($section));
@@ -49,7 +49,7 @@ class renderer extends section_renderer {
      *
      * @param section_info|stdClass $section The course_section entry from DB
      * @param int|stdClass $course The course entry from DB
-     * @return string HTML to output.
+     * @return \core\output\inplace_editable HTML to output.
      */
     public function section_title_without_link($section, $course) {
         return $this->render(format_base::instance($course)->inplace_editable_render_section_name($section, false));
@@ -62,17 +62,17 @@ class renderer extends section_renderer {
      * @return string|null The rendered HTML or null if the course index is not used.
      */
     public function course_index_drawer(format_base $format): ?string {
-        global $PAGE, $COURSE;
+        global $COURSE;
 
         if ($format->uses_course_index()) {
             include_course_editor($format);
-            // Add course ID to page requirements to ensure M.cfg.courseId is set
-            $PAGE->requires->js_call_amd('core_courseformat/courseeditor', 'setViewFormat', [
+            // Add course ID to page requirements to ensure M.cfg.courseId is set.
+            $this->page->requires->js_call_amd('core_courseformat/courseeditor', 'setViewFormat', [
                 $COURSE->id,
                 [
-                    'editing' => $PAGE->user_is_editing(),
+                    'editing' => $this->page->user_is_editing(),
                     'statekey' => $format->get_format_options()['statekey'] ?? '',
-                ]
+                ],
             ]);
             return $this->render_from_template('format_ocmooc/local/courseindex/drawer', []);
         }
