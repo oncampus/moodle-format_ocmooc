@@ -141,8 +141,8 @@ $string['chapter'] = 'Chapter';
 $string['lection'] = 'Lection';
 /* sectionquicknav.mustache */
 $string['footernav:top']  = 'Top';
-$string['footernav:next'] = 'Next lession';
-$string['footernav:prev'] = 'Previous lession';
+$string['footernav:next'] = 'Next lesson';
+$string['footernav:prev'] = 'Previous lesson';
 /* enrolbutton.mustache */
 $string['enrolbutton'] = 'Enroll in the course';
 
