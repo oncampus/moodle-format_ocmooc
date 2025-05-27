@@ -63,6 +63,8 @@ class renderer extends section_renderer {
      */
     public function course_index_drawer(format_base $format): ?string {
         global $COURSE;
+        $course = $format->get_course();
+        $statekey = format_base::session_cache($course);
 
         if ($format->uses_course_index()) {
             include_course_editor($format);
@@ -71,7 +73,7 @@ class renderer extends section_renderer {
                 $COURSE->id,
                 [
                     'editing' => $this->page->user_is_editing(),
-                    'statekey' => $format->get_format_options()['statekey'] ?? '',
+                    'stateKey' => $statekey,
                 ],
             ]);
             return $this->render_from_template('format_ocmooc/local/courseindex/drawer', []);

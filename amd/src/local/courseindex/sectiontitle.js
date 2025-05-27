@@ -14,41 +14,68 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course index section title component.
+ * Course index section title component for OC MOOC.
  *
- * This component is used to control specific course section interactions like drag and drop.
+ * This component enables drag-and-drop functionality for sections
+ * (chapters and lections) in the course index navigation.
  *
- * @module     core_courseformat/local/courseindex/sectiontitle
- * @class      core_courseformat/local/courseindex/sectiontitle
- * @copyright  2021 Ferran Recio <ferran@moodle.com>
+ * @module     format_ocmooc/local/courseindex/sectiontitle
+ * @class      format_ocmooc/local/courseindex/sectiontitle
+ * @extends    core_courseformat/local/courseindex/sectiontitle
+ * @copyright  2025 Oncampus GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 import SectionTitle from 'core_courseformat/local/courseindex/sectiontitle';
-import Exporter from "format_ocmooc/local/courseeditor/exporter";
+import Exporter from 'format_ocmooc/local/courseeditor/exporter';
 
-
+/**
+ * Extended section title class for OC MOOC course format.
+ */
 export default class extends SectionTitle {
 
-    create(descriptor){
+    /**
+     * Component creation hook.
+     *
+     * @param {object} descriptor Initial configuration for the component
+     */
+    create(descriptor) {
         this.type = descriptor.type;
         this.cm = descriptor.cm;
+
         super.create(descriptor);
+
+        // Provide drag-and-drop metadata via overridden method.
+        this.getDraggableData = this._getDraggableData;
     }
 
+    /**
+     * Prepare draggable data for this section.
+     *
+     * @returns {object|null} The draggable metadata for this section
+     */
     _getDraggableData() {
         const exporter = new Exporter();
-        if (this.type == 'chapter') {
+
+        if (this.type === 'chapter') {
             return exporter.chapterDraggableData(this.reactive.state, this.id);
         } else {
             return exporter.lectionDraggableData(this.reactive.state, this.id);
         }
     }
 
+    /**
+     * Validate incoming draggable data to determine if it's accepted.
+     *
+     * @param {object} dropdata The dragged item metadata
+     * @returns {boolean} True if valid drop, otherwise false
+     */
     validateDropData(dropdata) {
-        if (dropdata.type == 'cm') {
+        if (dropdata.type === 'cm') {
             return this.cm ?? false;
         }
-        super.validateDropData(dropdata);
+
+        // Fallback to default validation from superclass.
+        return super.validateDropData(dropdata);
     }
 }

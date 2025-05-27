@@ -62,6 +62,11 @@ class fullcontent extends content_base {
             $lastchapter = get_user_preferences($chapterpreferencename, 1);
             $lastlection = get_user_preferences($lectionpreferencename, 1);
 
+            $modinfo = $this->format->get_modinfo();
+            $section0 = $modinfo->get_section_info(0);
+            $section = new $this->sectionclass($this->format, $section0);
+            $data->initialsection = $section->export_for_template($output);
+
             if (array_key_exists($lastchapter, $chapters) && array_key_exists($lastlection, $chapters[$lastchapter]->sections)) {
                 $section = $chapters[$lastchapter]->sections[$lastlection];
                 echo \html_writer::tag('input', '', ['type' => 'hidden', 'id' => 'oc-jump-lection', 'value' => $section->num]);

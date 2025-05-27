@@ -207,7 +207,8 @@ ul#oc-coursenavlist {
 }
 
 #oc-chapters-nav-inner.frame ul li .icon.noimage {
-    position: absolute;
+    position: relative;
+    left: 8rem;
     top: 3.25rem;
     font-size: 2.75rem;
     width: 280px;
@@ -1031,11 +1032,11 @@ p + .accordion {
 }
 
 
-/*Temporary disabled Collapse Icons in courseindex on non-edit Page */
+/*Disabled Collapse Icons in courseindex on non-edit Page */
 
 /* Collapse-Icons standardmäßig für alle Kapitel und Lektionen anzeigen */
 .courseindex-section .courseindex-chevron {
-    display: inline-block;
+    display: flex;
 }
 
 /* Collapse-Icons nur für Lektionen im normalen Modus ausblenden */
@@ -1045,9 +1046,19 @@ p + .accordion {
 
 /* Im Editiermodus alle Collapse-Icons anzeigen (keine zusätzliche Regel nötig, da Standardanzeige inline-block ist) */
 .courseindex.editing .courseindex-section[data-for="lection"] .courseindex-chevron {
-    display: inline-block; /* Sicherstellen, dass im Editiermodus die Icons für Lektionen angezeigt werden */
+    display: flex; /* Sicherstellen, dass im Editiermodus die Icons für Lektionen angezeigt werden */
 }
 
+/*Disabled cmlist in courseindex on non-edit Page */
+/* CMList im normalen Modus ausblenden */
+.courseindex:not(.editing) .courseindex-sectioncontent[data-for="cmlist"]{
+    display: none;
+}
+
+/* Im Editiermodus CMList anzeigen */
+.courseindex.editing .courseindex-sectioncontent[data-for="cmlist"]{
+    display: block;
+}
 
 /* Make the Chaptername in Editmode bold */
 .editing .ocmooc .chapter .sectionname {

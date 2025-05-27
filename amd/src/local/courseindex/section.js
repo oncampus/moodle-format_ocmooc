@@ -13,27 +13,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-import BaseSection from "core_courseformat/local/courseindex/section";
+import BaseSection from 'core_courseformat/local/courseindex/section';
 import SectionTitle from 'format_ocmooc/local/courseindex/sectiontitle';
 
 /**
- * Course index section component.
+ * Custom course index section component for the OC MOOC format.
  *
- * This component is used to control specific course section interactions like drag and drop.
+ * Provides extended drag-and-drop behavior for hierarchical sections (chapters and lections).
  *
  * @module     format_ocmooc/local/courseindex/section
- * @copyright  2022 Marina Glancy
+ * @class      format_ocmooc/local/courseindex/section
+ * @extends    core_courseformat/local/courseindex/section
+ * @copyright  2025 Oncampus GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 export default class Component extends BaseSection {
-    // Extends course/format/amd/src/local/courseindex/section.js
-    // Extends course/format/amd/src/local/courseeditor/dndsection.js
 
     /**
-     * Static method to create a component instance form the mustahce template.
+     * Static initializer to create a section component instance.
      *
-     * @param {string} target the DOM main element or its ID
-     * @param {object} selectors optional css selector overrides
+     * @param {string} target DOM ID of the section root element
+     * @param {object} selectors Optional CSS selector overrides
      * @return {Component}
      */
     static init(target, selectors) {
@@ -43,17 +43,22 @@ export default class Component extends BaseSection {
         });
     }
 
+    /**
+     * Component creation hook.
+     */
     create() {
         super.create();
     }
 
+    /**
+     * Set the type of this section (chapter or lection).
+     *
+     * @param {string} type Section type: 'chapter' or 'lection'
+     */
     setType(type) {
-        if (type == 'chapter') {
+        if (type === 'chapter') {
             this.type = type;
-            this.types = [
-                'chapter',
-                'lection'
-            ];
+            this.types = ['chapter', 'lection'];
             this.cm = false;
         } else {
             this.type = type;
@@ -62,12 +67,17 @@ export default class Component extends BaseSection {
         }
     }
 
+    /**
+     * Called when the state is ready.
+     * Initializes drag-and-drop if supported and sets the current page section.
+     *
+     * @param {object} state The reactive state
+     */
     stateReady(state) {
         this.configState(state);
+
         const sectionItem = this.getElement(this.selectors.SECTION_ITEM);
-        // Drag and drop is only available for components compatible course formats.
         if (this.reactive.isEditing && this.reactive.supportComponents) {
-            // Init the inner dragable element passing the full section as affected region.
             const titleitem = new SectionTitle({
                 ...this,
                 element: sectionItem,
@@ -77,44 +87,54 @@ export default class Component extends BaseSection {
             });
             this.configDragDrop(titleitem);
         }
-        // Check if the current url is the section url.
+
         const section = state.section.get(this.id);
-        if (window.location.href == section.sectionurl.replace(/&amp;/g, "&")) {
+        if (window.location.href === section.sectionurl.replace(/&amp;/g, '&')) {
             this.reactive.dispatch('setPageItem', 'section', this.id);
             sectionItem.scrollIntoView();
         }
     }
 
+    /**
+     * Validate if the provided item can be dropped on this section.
+     *
+     * @param {object} dropdata The draggable data object
+     * @returns {boolean}
+     */
     validateDropData(dropdata) {
-        if (this.types.includes(dropdata?.type) && this.reactive.sectionReturn != 0) {
+        if (this.types.includes(dropdata?.type) && this.reactive.sectionReturn !== 0) {
             return false;
         }
 
-        // We accept any course module.
         if (dropdata?.type === 'cm') {
             return this.cm ?? false;
         }
 
-        // We accept any section but the section 0 or ourself
+        const sectionzeroid = this.course.sectionlist[0];
         if (this.types.includes(dropdata?.type)) {
-            const sectionzeroid = this.course.sectionlist[0];
-            return dropdata?.id != this.id && dropdata?.id != sectionzeroid && this.id != sectionzeroid;
+            return dropdata?.id !== this.id &&
+                dropdata?.id !== sectionzeroid &&
+                this.id !== sectionzeroid;
         }
+
         return false;
     }
 
     /**
-     * Display the component dropzone.
+     * Display visual indication for an available drop zone.
      *
-     * @param {Object} dropdata the accepted drop data
+     * @param {object} dropdata The draggable item data
      */
     showDropZone(dropdata) {
-        if (dropdata.type == 'cm' && this.cm) {
-            this.getLastCm()?.classList.add(this.classes.DROPDOWN);
+        if (dropdata?.type === 'cm' && this.cm) {
+            const lastCm = this.getLastCm();
+            if (lastCm) {
+                lastCm.classList.add(this.classes.DROPDOWN);
+            }
         }
-        if (this.type == 'chapter') {
-            if (dropdata?.type == 'chapter') {
-                // The relative move of section depends on the section number.
+
+        if (this.type === 'chapter') {
+            if (dropdata?.type === 'chapter') {
                 if (this.section.number > dropdata.number) {
                     this.element.classList.remove(this.classes.DROPUP);
                     this.element.classList.add(this.classes.DROPDOWN);
@@ -124,11 +144,11 @@ export default class Component extends BaseSection {
                 }
             }
 
-            if (dropdata?.type == 'lection') {
+            if (dropdata?.type === 'lection') {
                 this.element.classList.add(this.classes.DROPZONE);
             }
         } else {
-            if (this.section.parent != dropdata.parent) {
+            if (this.section.parent !== dropdata.parent) {
                 this.element.classList.remove(this.classes.DROPUP);
                 this.element.classList.add(this.classes.DROPDOWN);
             } else if (this.section.number > dropdata.number) {
@@ -142,7 +162,22 @@ export default class Component extends BaseSection {
     }
 
     /**
-     * Hide the component dropzone.
+     * Retrieve the DOM element of the last CM in this section.
+     *
+     * @returns {HTMLElement|null}
+     */
+    getLastCm() {
+        const cmIds = this.section?.cmlist ?? [];
+        if (!cmIds.length) {
+            return null;
+        }
+
+        const lastId = cmIds[cmIds.length - 1];
+        return this.getElement(this.selectors.CM, lastId);
+    }
+
+    /**
+     * Remove all drop zone indicators.
      */
     hideDropZone() {
         this.getLastCm()?.classList.remove(this.classes.DROPDOWN);
@@ -152,31 +187,38 @@ export default class Component extends BaseSection {
     }
 
     /**
-     * Register state values and the drag and drop subcomponent.
+     * Register the drag-and-drop handler for the given section component.
      *
-     * @param {BaseComponent} sectionitem section item component
+     * @param {BaseComponent} sectionitem The draggable section title component
      */
     configDragDrop(sectionitem) {
         super.configDragDrop(sectionitem);
     }
 
+    /**
+     * Dispatch the correct action for the dropped item.
+     *
+     * @param {object} dropdata The draggable item
+     */
     drop(dropdata) {
-        if (this.type == 'chapter') {
-            if (dropdata.type == 'chapter') {
+        if (this.type === 'chapter') {
+            if (dropdata.type === 'chapter') {
                 this.reactive.dispatch('chapterMove', [dropdata.id], this.id);
             }
-            if (dropdata.type == 'lection') {
+            if (dropdata.type === 'lection') {
                 this.reactive.dispatch('lectionMove2Chapter', [dropdata.id], this.id);
             }
         } else {
-            if (dropdata.type == 'lection') {
+            if (dropdata.type === 'lection') {
                 this.reactive.dispatch('lectionMove', [dropdata.id], this.id);
             }
         }
 
-        if (dropdata.type == 'cm' && !this.cm) {
+        if (dropdata.type === 'cm' && !this.cm) {
+            this.reactive.dispatch('cmMove', [dropdata.id], this.id, 0);
             return;
         }
+
         super.drop(dropdata);
     }
 }

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace format_ocmooc\output\courseformat\state;
+namespace format_ocmooc\output\local\state;
 
 /**
  * Contains the ajax update course module structure.
