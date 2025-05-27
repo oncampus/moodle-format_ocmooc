@@ -111,6 +111,23 @@ class format_ocmooc extends base {
         }
     }
 
+
+    /**
+     * Returns the list of output classes used by the course editor for this course format.
+     *
+     * This method tells Moodle which specific classes should be used to represent the course,
+     * sections, and course modules (activities/resources) in the course editor.
+     *
+     * It overrides the default core courseformat classes with custom classes from this format.
+     */
+    public function course_output_classes(\renderer_base $output): array {
+        return [
+            'course' => \format_ocmooc\output\local\state\course::class,
+            'section' => \format_ocmooc\output\local\state\section::class,
+            'cm' => \format_ocmooc\output\local\state\cm::class,
+        ];
+    }
+
     /**
      * Returns true if the course format uses indentation.
      *

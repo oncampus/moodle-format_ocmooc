@@ -17,19 +17,32 @@ import Section from 'core_courseformat/local/content/section';
 import Header from 'format_ocmooc/local/content/section/header';
 
 /**
- * Basic overriding Section class for chapter and lection.
- * Preparing all sharing modifications here!
+ * Section override class for custom course format.
+ *
+ * This class extends the core course format section component to support
+ * nested "chapter" and "lection" section types and custom drag-and-drop logic.
+ *
+ * @module     format_ocmooc/local/content/section
+ * @class      format_ocmooc/local/content/section
+ * @extends    core_courseformat/local/content/section
+ * @copyright  2025 Oncampus GmbH
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 export default class extends Section {
 
+    /**
+     * Triggered when the reactive state is ready.
+     *
+     * Registers the component state and initializes the drag-and-drop header.
+     *
+     * @param {Object} state The current reactive state object
+     */
     stateReady(state) {
         this.configState(state);
-        // Drag and drop is only available for components compatible course formats.
+
         if (this.reactive.isEditing && this.reactive.supportComponents) {
-            // Section zero and other formats sections may not have a title to drag.
             const sectionItem = this.getElement(this.selectors.SECTION_ITEM);
             if (sectionItem) {
-                // Init the inner dragable element.
                 const headerComponent = new Header({
                     ...this,
                     element: sectionItem,
@@ -41,35 +54,71 @@ export default class extends Section {
         }
     }
 
+    /**
+     * Define reactive watchers for the section.
+     *
+     * @returns {Array} List of watchers
+     */
+    getWatchers() {
+        return [
+            {watch: `section[${this.id}].title:updated`, handler: this._refreshSectionTitle},
+        ];
+    }
+
+    /**
+     * Handles drop events for course modules and sections.
+     *
+     * @param {Object} dropdata Data object containing drop context
+     */
+    drop(dropdata) {
+        if (dropdata.type === 'cm' && this.cm) {
+            this.reactive.dispatch('cmMove', [dropdata.id], this.section.id, 0);
+            return;
+        }
+
+        super.drop(dropdata);
+    }
+
+    /**
+     * Validates whether a given dropdata object is acceptable.
+     *
+     * @param {Object} dropdata Drop data object
+     * @returns {boolean} Whether the drop is valid
+     */
     validateDropData(dropdata) {
-        if (this.types.includes(dropdata?.type) && this.reactive.sectionReturn != 0) {
+        if (this.section?.number === 0) {
             return false;
         }
 
-        // We accept any course module.
+        if (this.types.includes(dropdata?.type) && this.reactive.sectionReturn !== 0) {
+            return false;
+        }
+
         if (dropdata?.type === 'cm') {
             return this.cm ?? false;
         }
 
-        // We accept any section but the section 0 or ourself
         if (this.types.includes(dropdata?.type)) {
             const sectionzeroid = this.course.sectionlist[0];
-            return dropdata?.id != this.id && dropdata?.id != sectionzeroid && this.id != sectionzeroid;
+            return dropdata?.id !== this.id &&
+                   dropdata?.id !== sectionzeroid &&
+                   this.id !== sectionzeroid;
         }
+
         return false;
     }
 
     /**
-     * Display the component dropzone.
+     * Display visual dropzone styling based on the dragged item type.
      *
-     * @param {Object} dropdata the accepted drop data
+     * @param {Object} dropdata Drop data object
      */
     showDropZone(dropdata) {
-        if (dropdata.type == 'cm' && this.cm) {
+        if (dropdata.type === 'cm' && this.cm) {
             this.getLastCm()?.classList.add(this.classes.DROPDOWN);
         }
+
         if (this.types.includes(dropdata?.type)) {
-            // The relative move of section depends on the section number.
             if (this.section.number > dropdata.number) {
                 this.element.classList.remove(this.classes.DROPUP);
                 this.element.classList.add(this.classes.DROPDOWN);
@@ -81,7 +130,22 @@ export default class extends Section {
     }
 
     /**
-     * Hide the component dropzone.
+     * Get the DOM element of the last course module in the section.
+     *
+     * @returns {HTMLElement|null} Last course module element or null
+     */
+    getLastCm() {
+        const cmIds = this.section?.cmlist ?? [];
+        if (!cmIds.length) {
+            return null;
+        }
+
+        const lastId = cmIds[cmIds.length - 1];
+        return this.getElement(this.selectors.CM, lastId);
+    }
+
+    /**
+     * Reset any dropzone UI styles on the section.
      */
     hideDropZone() {
         this.getLastCm()?.classList.remove(this.classes.DROPDOWN);
@@ -89,4 +153,35 @@ export default class extends Section {
         this.element.classList.remove(this.classes.DROPDOWN);
     }
 
+    /**
+     * Refresh the section title in the content area after a title update.
+     *
+     * Ensures inplace editable structure and icon are preserved.
+     *
+     * @param {Object} param
+     * @param {Object} param.element Updated section state object
+     */
+    _refreshSectionTitle({element}) {
+        const titleContainer = this.getElement('[data-for="section_title"]');
+        if (!titleContainer) {
+            return;
+        }
+
+        const inplaceWrapper = titleContainer.querySelector('.inplaceeditable');
+        const quickEditLink = inplaceWrapper?.querySelector('[data-inplaceeditablelink]');
+        if (!inplaceWrapper || !quickEditLink) {
+            return;
+        }
+
+        const title = element.title?.trim() || `Abschnitt ${element.number}`;
+        inplaceWrapper.setAttribute('data-value', title);
+        quickEditLink.setAttribute('title', 'Abschnittsname bearbeiten');
+
+        const icon = quickEditLink.querySelector('.quickediticon');
+        quickEditLink.textContent = '';
+        quickEditLink.append(title);
+        if (icon) {
+            quickEditLink.appendChild(icon);
+        }
+    }
 }

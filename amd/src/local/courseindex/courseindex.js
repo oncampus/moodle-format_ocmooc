@@ -25,18 +25,18 @@ import Exporter from "format_ocmooc/local/courseeditor/exporter";
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 export default class Component extends BaseCourseindex {
-    // Extends course/format/amd/src/local/courseindex/courseindex.js
 
     /**
-     * Static method to create a component instance form the mustache template.
+     * Static method to create a component instance from the mustache template.
      *
-     * @param {element|string} target the DOM main element or its ID
-     * @param {object} selectors optional css selector overrides
+     * @param {string} target the DOM main element ID
+     * @param {object} selectors optional CSS selector overrides
      * @return {Component}
      */
     static init(target, selectors) {
         const courseEditor = getCurrentCourseEditor();
         courseEditor.getExporter = () => new Exporter(courseEditor);
+
         return new Component({
             element: document.getElementById(target),
             reactive: courseEditor,
@@ -45,41 +45,81 @@ export default class Component extends BaseCourseindex {
     }
 
     /**
-     * Constructor hook.
+     * Component constructor.
      *
-     * @param {Object} descriptor the component descriptor
+     * @param {object} descriptor
      */
     create(descriptor) {
         super.create(descriptor);
-        // Optional component name for debugging.
         this.name = 'course_format_ocmooc_courseindex';
         this.selectors.COURSE_SUBSECTIONLIST = `[data-for='subsectionlist']`;
         this.selectors.CHAPTER = `[data-for='chapter']`;
         this.selectors.LECTION = `[data-for='lection']`;
+        this.sections = {};
     }
 
     /**
-     * Return the component watchers.
+     * Called when state is fully available.
      *
-     * @returns {Array} of watchers
+     * @param {object} state
      */
-    getWatchers() {
+    stateReady(state) {
+        const exporter = this.reactive.getExporter();
 
+        for (const id of state.course.sectionlist ?? []) {
+            const section = state.section.get(id);
+            const data = exporter.section(state, section);
+
+            const fakeelement = document.createElement('div');
+            fakeelement.classList.add('bg-pulse-grey', 'w-100');
+            fakeelement.innerHTML = '&nbsp;';
+            this.sections[id] = fakeelement;
+            this.element.appendChild(fakeelement);
+
+            this.renderComponent(fakeelement, 'format_ocmooc/local/courseindex/section', data)
+                .then(component => {
+                    const newelement = component.getElement();
+                    this.sections[id] = newelement;
+                    fakeelement.replaceWith(newelement);
+                });
+        }
+    }
+
+    getWatchers() {
         return [
             {watch: `section.indexcollapsed:updated`, handler: this._refreshSectionCollapsed},
             {watch: `cm:created`, handler: this._createCm},
             {watch: `cm:deleted`, handler: this._deleteCm},
-            {watch: `section:created`, handler: this._createSection},
             {watch: `section:deleted`, handler: this._deleteSection},
             {watch: `course.pageItem:created`, handler: this._refreshPageItem},
             {watch: `course.pageItem:updated`, handler: this._refreshPageItem},
-            // Sections and cm sorting.
             {watch: `course.sectionlist:updated`, handler: this._refreshCourseSectionlist},
             {watch: `section.cmlist:updated`, handler: this._refreshSectionCmlist},
-            // Custom
             {watch: `course.hierarchy:updated`, handler: this._refreshCourseSectionlist},
         ];
     }
+
+    /**
+     * Refresh the courseindex when drag and drop or deleting a cm item.
+     *
+     * @param {Event} event the triggered event
+     */
+    _refreshSectionCmlist({element}) {
+        const cmlist = element.cmlist ?? [];
+        const listparent = this.getElement(this.selectors.SECTION_CMLIST, element.id);
+        if (!listparent) {
+            return;
+        }
+        element.cmlist?.forEach(cmid => {
+            const cmElement = this.getElement(this.selectors.CM, cmid);
+            if (cmElement) {
+                this.cms[cmid] = cmElement;
+            }
+        });
+
+        this._fixOrderTiles(listparent, cmlist, this.cms);
+    }
+
 
     /**
      * Setup sections toggler.
@@ -92,12 +132,9 @@ export default class Component extends BaseCourseindex {
     _sectionTogglers(event) {
         const sectionlink = event.target.closest(this.selectors.TOGGLER);
         const closestCollapse = event.target.closest(this.selectors.COLLAPSE);
-        // Assume that chevron is the only collapse toggler in a section heading;
-        // I think this is the most efficient way to verify at the moment.
         const isChevron = closestCollapse?.closest(this.selectors.SECTION_ITEM);
 
         if (sectionlink || isChevron) {
-
             const lection = event.target.closest(this.selectors.LECTION);
             const chapter = event.target.closest(this.selectors.CHAPTER);
             const toggler = lection !== null
@@ -105,17 +142,10 @@ export default class Component extends BaseCourseindex {
                 : chapter.querySelector(this.selectors.COLLAPSE);
             const isCollapsed = toggler?.classList.contains(this.classes.COLLAPSED) ?? false;
 
-            if (isChevron || isCollapsed) {
-                // Update the state.
-                const sectionId = lection !== null
-                    ? lection.getAttribute('data-id')
-                    : chapter.getAttribute('data-id');
-                this.reactive.dispatch(
-                    'sectionContentCollapsed',
-                    [sectionId],
-                    !isCollapsed
-                );
-            }
+            const sectionId = lection !== null
+                ? lection.getAttribute('data-id')
+                : chapter.getAttribute('data-id');
+            this.reactive.dispatch('sectionContentCollapsed', [sectionId], !isCollapsed);
         }
     }
 
@@ -205,8 +235,10 @@ export default class Component extends BaseCourseindex {
         // Collect render data.
         const exporter = this.reactive.getExporter();
         const data = exporter.section(state, element);
+
         // Create the new content.
-        const newcomponent = await this.renderComponent(sectionItem, 'format_ocmooc/local/courseindex/section', data);
+        //const newcomponent = await this.renderComponent(sectionItem, 'format_ocmooc/local/courseindex/section', data);
+        const newcomponent = await this.renderComponent(sectionItem, 'core_courseformat/local/content/section', data);
         // Replace the fake node with the real content.
         const newelement = newcomponent.getElement();
         this.sections[element.id] = newelement;
