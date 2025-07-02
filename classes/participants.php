@@ -414,22 +414,45 @@ class participants extends base {
 
         $userdata = [];
 
-        if ($data->profilepicture) {
-            $userdata[] = $OUTPUT->user_picture($user, ['size' => 35, 'courseid' => $this->courseid]);
-        }
-
         switch ($data->namedisplay) {
             case 1:
+                if ($data->profilepicture) {
+                    $userdata[] = $OUTPUT->user_picture($user, [
+                        'size' => 35,
+                        'courseid' => $this->courseid,
+                    ]);
+                }
                 $userdata[] = $user->username;
                 break;
             case 2:
+                if ($data->profilepicture) {
+                    $picture = $OUTPUT->user_picture($user, [
+                        'size' => 35,
+                        'courseid' => $this->courseid,
+                        'link' => false,
+                    ]);
+                    $picture = preg_replace('/\s(title|aria-label)="[^"]*"/', '', $picture);
+                    $userdata[] = $picture;
+                }
                 $userdata[] = "User " . ($this->counter + ($page * $perpage));
                 $this->counter++;
                 break;
             case 3:
+                if ($data->profilepicture) {
+                    $userdata[] = $OUTPUT->user_picture($user, [
+                        'size' => 35,
+                        'courseid' => $this->courseid,
+                    ]);
+                }
                 $userdata[] = $user->firstname . ' ' . mb_substr($user->lastname, 0, 1) . '.';
                 break;
             default:
+                if ($data->profilepicture) {
+                    $userdata[] = $OUTPUT->user_picture($user, [
+                        'size' => 35,
+                        'courseid' => $this->courseid,
+                    ]);
+                }
                 $userdata[] = fullname($user);
         }
 
