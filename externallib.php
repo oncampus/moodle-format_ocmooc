@@ -197,22 +197,19 @@ class format_ocmooc_external extends external_api {
     }
 
     public static function get_participant_locations($courseid) {
-        global $DB;
-
-        // Parameter validieren
         self::validate_parameters(
             self::get_participant_locations_parameters(), ['courseid' => $courseid]
         );
 
-        // Kontext validieren
         $context = \context_course::instance($courseid);
         self::validate_context($context);
 
-        if (!has_capability('moodle/course:viewparticipants', $context)) {
+        $course = get_course($courseid);
+
+        if (!can_access_course($course)) {
             throw new \moodle_exception('nopermission');
         }
 
-        // Datenbankabfrage mit Limit und Offset
         $map = new \format_ocmooc\map();
         $locations = $map->fetch_course_participant_locations($courseid);
 
