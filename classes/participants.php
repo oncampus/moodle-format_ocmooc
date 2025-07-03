@@ -415,7 +415,7 @@ class participants extends base {
         $userdata = [];
 
         if ($data->profilepicture) {
-            //AnonymUserData is selected.
+            // AnonymUserData is selected.
             if ($data->namedisplay === "2") {
                     $picture = $OUTPUT->user_picture($user, [
                         'size' => 35,
