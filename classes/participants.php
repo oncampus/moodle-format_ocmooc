@@ -414,19 +414,9 @@ class participants extends base {
 
         $userdata = [];
 
-
-        switch ($data->namedisplay) {
-            case 1:
-                if ($data->profilepicture) {
-                    $userdata[] = $OUTPUT->user_picture($user, [
-                        'size' => 35,
-                        'courseid' => $this->courseid,
-                    ]);
-                }
-                $userdata[] = $user->username;
-                break;
-            case 2:
-                if ($data->profilepicture) {
+        if ($data->profilepicture) {
+            //AnonymUserData is selected.
+            if ($data->namedisplay === "2") {
                     $picture = $OUTPUT->user_picture($user, [
                         'size' => 35,
                         'courseid' => $this->courseid,
@@ -434,26 +424,24 @@ class participants extends base {
                     ]);
                     $picture = preg_replace('/\s(title|aria-label)="[^"]*"/', '', $picture);
                     $userdata[] = $picture;
-                }
+            } else {
+                $userdata[] = $OUTPUT->user_picture($user, ['size' => 35, 'courseid' => $this->courseid]);
+            }
+        }
+
+
+        switch ($data->namedisplay) {
+            case 1:
+                $userdata[] = $user->username;
+                break;
+            case 2:
                 $userdata[] = "User " . ($this->counter + ($page * $perpage));
                 $this->counter++;
                 break;
             case 3:
-                if ($data->profilepicture) {
-                    $userdata[] = $OUTPUT->user_picture($user, [
-                        'size' => 35,
-                        'courseid' => $this->courseid,
-                    ]);
-                }
                 $userdata[] = $user->firstname . ' ' . mb_substr($user->lastname, 0, 1) . '.';
                 break;
             default:
-                if ($data->profilepicture) {
-                    $userdata[] = $OUTPUT->user_picture($user, [
-                        'size' => 35,
-                        'courseid' => $this->courseid,
-                    ]);
-                }
                 $userdata[] = fullname($user);
         }
 
