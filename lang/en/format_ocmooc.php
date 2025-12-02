@@ -95,6 +95,7 @@ $string['no_badges_awarded'] = 'No badges have been earned yet';
 $string['no_forumlist_available'] = 'No Forums are available in this course.';
 $string['numberedchapter'] = 'Chapter {a}';
 $string['numberedlection'] = 'Lection {a}';
+$string['ocmooc:edit'] = "Edit ocmooc";
 $string['only_for_trainers'] = 'Only admins and trainers can see this';
 $string['other']    = 'Other';
 $string['overview'] = 'Overview';

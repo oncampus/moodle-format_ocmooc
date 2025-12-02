@@ -95,6 +95,7 @@ $string['no_badges_awarded'] = 'Bisher wurden keine Abzeichen verdient';
 $string['no_forumlist_available'] = 'Es sind keine Foren im Kurs verfügbar';
 $string['numberedchapter'] = 'Kapitel {a}';
 $string['numberedlection'] = 'Lektion {a}';
+$string['ocmooc:edit'] = "Ocmooc bearbeiten";
 $string['only_for_trainers']          = 'Nur für Admins und Trainer sichtbar';
 $string['other']    = 'Andere';
 $string['overview'] = 'Übersicht';
