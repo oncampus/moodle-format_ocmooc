@@ -406,6 +406,17 @@ class sections {
             return false;
         }
 
+        //Chapters (parent == 0) must stay top-level.
+        if ($section->parent == 0 && $parent->section != 0) {
+            return false;
+        }
+
+        //Lessons (parent != 0) may only be placed under chapters (parent == 0).
+        if ($section->parent != 0 && $parent->parent != 0) {
+            return false;
+        }
+
+        //Validate the $before section is a sibling in the same parent.
         if ($before) {
             if (is_string($before)) {
                 $before = (int)$before;
@@ -415,25 +426,9 @@ class sections {
             if (!$before || $before->parent !== $parent->section) {
                 return false;
             }
-        }
 
-        if ($section->parent == $parent->section) {
-            // Section's parent is not being changed
-            // do not insert section directly before or after itself.
-            if ($before && $before->section == $section->section) {
-                return false;
-            }
-            $subsections = [];
-            $lastsibling = null;
-            foreach ($this->format->get_sections() as $num => $sibling) {
-                if ($sibling->parent == $parent->section) {
-                    if ($before && $before->section == $num) {
-                        return !($lastsibling && $lastsibling->section == $section->section);
-                    }
-                    $lastsibling = $sibling;
-                }
-            }
-            if ($lastsibling && !$before && $lastsibling->section == $section->section) {
+            // Prevent no-op move before itself
+            if ($before->section == $section->section) {
                 return false;
             }
         }
