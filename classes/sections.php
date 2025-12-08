@@ -406,17 +406,17 @@ class sections {
             return false;
         }
 
-        //Chapters (parent == 0) must stay top-level.
+        // Chapters (parent == 0) must stay top-level.
         if ($section->parent == 0 && $parent->section != 0) {
             return false;
         }
 
-        //Lessons (parent != 0) may only be placed under chapters (parent == 0).
+        // Lessons (parent != 0) may only be placed under chapters (parent == 0).
         if ($section->parent != 0 && $parent->parent != 0) {
             return false;
         }
 
-        //Validate the $before section is a sibling in the same parent.
+        // Validate the $before section is a sibling in the same parent.
         if ($before) {
             if (is_string($before)) {
                 $before = (int)$before;
@@ -427,7 +427,7 @@ class sections {
                 return false;
             }
 
-            // Prevent no-op move before itself
+            // Prevent no-op move before itself.
             if ($before->section == $section->section) {
                 return false;
             }
