@@ -1,4 +1,3 @@
-#page-course-view-ocmooc {
     /* Layout Site */
     #oc-chapters-navigation.wrap {
         max-width: calc(100% - 1rem);
@@ -46,6 +45,7 @@
     }
 
     @media (min-width: 768px) {
+
         .header-maxwidth,
         #moocnav .chapter-name {
             padding: 0 15px;
@@ -219,7 +219,8 @@
         opacity: 0.25;
     }
 
-    .chapters-control-prev, .chapters-control-next {
+    .chapters-control-prev,
+    .chapters-control-next {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -238,7 +239,8 @@
         transition: opacity 0.15s ease;
     }
 
-    .chapters-control-prev .icon, .chapters-control-next .icon {
+    .chapters-control-prev .icon,
+    .chapters-control-next .icon {
         font-size: 30px;
         text-align: center;
         width: 100%;
@@ -255,12 +257,15 @@
         padding: 0 0 0 0.75rem !important;
     }
 
-    .chapters-control-prev:target, .chapters-control-next:target {
+    .chapters-control-prev:target,
+    .chapters-control-next:target {
         scroll-margin-top: unset;
     }
 
-    .chapters-control-prev:hover, .chapters-control-next:hover,
-    .chapters-control-prev:focus, .chapters-control-next:focus {
+    .chapters-control-prev:hover,
+    .chapters-control-next:hover,
+    .chapters-control-prev:focus,
+    .chapters-control-next:focus {
         text-decoration: none;
         outline: 0;
         box-shadow: none !important;
@@ -278,7 +283,8 @@
     .ocmooc-navigation li {
         margin: 0px;
         width: 96px;
-        height: 75px; /* Set the desired height */
+        height: 75px;
+        /* Set the desired height */
     }
 
     .ocmooc-navigation li:first-child,
@@ -293,7 +299,8 @@
     .ocmooc-navigation li button,
     .ocmooc-navigation li a {
         width: 100%;
-        height: 100%; /* Make the buttons and links fill the entire height of their parent */
+        height: 100%;
+        /* Make the buttons and links fill the entire height of their parent */
         background-color: #f8f9fa;
         border: 0px solid #f8f9fa;
         border-width: 0px 1px;
@@ -319,7 +326,8 @@
     }
 
     .ocmooc-nav-link .text-container {
-        align-items: flex-start; /* Align elements to the top */
+        align-items: flex-start;
+        /* Align elements to the top */
         overflow: hidden;
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -329,7 +337,9 @@
     }
 
     @media (max-width: 767.98px) {
-        .format-ocmooc .nav-tabs:not(.more-nav) .nav-link, .format-ocmooc .nav-pills .nav-link {
+
+        .format-ocmooc .nav-tabs:not(.more-nav) .nav-link,
+        .format-ocmooc .nav-pills .nav-link {
             border: 1px solid transparent;
             background-color: transparent;
             margin: 0 0 -1px 0;
@@ -366,7 +376,8 @@
         padding-left: 0px;
     }
 
-    .section .label .contentwithoutlink, .section .label .activityinstance {
+    .section .label .contentwithoutlink,
+    .section .label .activityinstance {
         padding: 0px;
     }
 
@@ -379,7 +390,7 @@
         padding: 1rem 1.25rem 0.5rem 1.25rem;
     }
 
-    .format-ocmooc.path-course-view li.activity > .activity-item {
+    .format-ocmooc.path-course-view li.activity>.activity-item {
         padding: 0.25rem 1.25rem;
     }
 
@@ -388,7 +399,7 @@
             padding: 1rem 1.5rem 0.5rem 1.5rem;
         }
 
-        .format-ocmooc.path-course-view li.activity > .activity-item {
+        .format-ocmooc.path-course-view li.activity>.activity-item {
             padding: 0.75rem 1.5rem;
         }
     }
@@ -397,7 +408,8 @@
         margin-bottom: 0.5rem;
     }
 
-    .ocmooc .section .label .contentwithoutlink, .section .label .activityinstance {
+    .ocmooc .section .label .contentwithoutlink,
+    .section .label .activityinstance {
         padding-right: 0px;
     }
 
@@ -424,7 +436,9 @@
     .oc-div-footerlinks {
         margin: 0 0.5rem;
     }
-    .oc-div-footerlinks #oc-div-prevlection, .oc-div-footerlinks #oc-div-nextlection {
+
+    .oc-div-footerlinks #oc-div-prevlection,
+    .oc-div-footerlinks #oc-div-nextlection {
         /*min-width: 175px;*/
         display: flex;
         align-items: center;
@@ -441,8 +455,8 @@
     /* ---- Neue Anpassungen --- */
     /* SCSS for course layout */
     /* Kapitelnavigation */
-    #page-course-view-ocmooc.format-ocmooc #topofscroll > .secondary-navigation,
-    .format-ocmooc.path-course #topofscroll > .secondary-navigation {
+    #page-course-view-ocmooc.format-ocmooc #topofscroll>.secondary-navigation,
+    .format-ocmooc.path-course #topofscroll>.secondary-navigation {
         max-width: 100px;
         float: right;
         padding-bottom: 0px;
@@ -450,25 +464,25 @@
         display: none;
     }
 
-    #page-course-view-ocmooc.editing #topofscroll > .secondary-navigation,
-    .format-ocmooc.path-course.editing #topofscroll > .secondary-navigation {
+    #page-course-view-ocmooc.editing #topofscroll>.secondary-navigation,
+    .format-ocmooc.path-course.editing #topofscroll>.secondary-navigation {
         display: block;
     }
 
-    #page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation,
-    .format-ocmooc.path-course #topofscroll > .secondary-navigation .navigation {
+    #page-course-view-ocmooc #topofscroll>.secondary-navigation .navigation,
+    .format-ocmooc.path-course #topofscroll>.secondary-navigation .navigation {
         padding: 0;
         background-color: transparent;
     }
 
-    #page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation .nav-link.active {
+    #page-course-view-ocmooc #topofscroll>.secondary-navigation .navigation .nav-link.active {
         border-bottom: 0px;
         padding-top: 10px;
         border-top: 1px solid transparent;
     }
 
-    #page-course-view-ocmooc #topofscroll > .secondary-navigation .navigation .nav-link.active:hover,
-    .format-ocmooc.path-course #topofscroll > .secondary-navigation .navigation .nav-link.active:hover {
+    #page-course-view-ocmooc #topofscroll>.secondary-navigation .navigation .nav-link.active:hover,
+    .format-ocmooc.path-course #topofscroll>.secondary-navigation .navigation .nav-link.active:hover {
         border-top: 1px solid #dee2e6;
     }
 
@@ -592,7 +606,29 @@
     }
 
     /* Bereichskennzeichnung */
-    .book-grey, .paragraph-blue, .math-blue, .example-green, .quest-orange, .cal-green, .download-blue, .pay-green, .important-purple, .education-orange, .browsercheck-blue, .quiz-green, .watch-turquoise, .link-pink, .docs-grey, .recommend-grey, .certificate-yellow, .forum-blue, .zitat-blue, .scorm-violet, .summary-dark, .target-dark, .task-blue {
+    .book-grey,
+    .paragraph-blue,
+    .math-blue,
+    .example-green,
+    .quest-orange,
+    .cal-green,
+    .download-blue,
+    .pay-green,
+    .important-purple,
+    .education-orange,
+    .browsercheck-blue,
+    .quiz-green,
+    .watch-turquoise,
+    .link-pink,
+    .docs-grey,
+    .recommend-grey,
+    .certificate-yellow,
+    .forum-blue,
+    .zitat-blue,
+    .scorm-violet,
+    .summary-dark,
+    .target-dark,
+    .task-blue {
         background-color: #30ade7;
         background-size: 65px 65px;
         background-position: 5px 0px;
@@ -604,36 +640,122 @@
     }
 
     @media (max-width: 480px) {
-        .book-grey, .paragraph-blue, .math-blue, .example-green, .quest-orange, .cal-green, .download-blue, .pay-green, .important-purple, .education-orange, .browsercheck-blue, .quiz-green, .watch-turquoise, .link-pink, .docs-grey, .recommend-grey, .certificate-yellow, .forum-blue, .zitat-blue, .scorm-violet, .summary-dark, .target-dark, .task-blue {
+
+        .book-grey,
+        .paragraph-blue,
+        .math-blue,
+        .example-green,
+        .quest-orange,
+        .cal-green,
+        .download-blue,
+        .pay-green,
+        .important-purple,
+        .education-orange,
+        .browsercheck-blue,
+        .quiz-green,
+        .watch-turquoise,
+        .link-pink,
+        .docs-grey,
+        .recommend-grey,
+        .certificate-yellow,
+        .forum-blue,
+        .zitat-blue,
+        .scorm-violet,
+        .summary-dark,
+        .target-dark,
+        .task-blue {
             background-size: 45px 45px;
             padding: 45px 20px 15px 15px;
         }
     }
 
-    .quest-orange, .cal-green, .download-blue, .pay-green, .important-purple, .education-orange, .browsercheck-blue, .quiz-green, .watch-turquoise, .link-pink, .docs-grey, .recommend-grey, .certificate-yellow, .forum-blue, .zitat-blue, .scorm-violet, .summary-dark, .target-dark, .task-blue {
+    .quest-orange,
+    .cal-green,
+    .download-blue,
+    .pay-green,
+    .important-purple,
+    .education-orange,
+    .browsercheck-blue,
+    .quiz-green,
+    .watch-turquoise,
+    .link-pink,
+    .docs-grey,
+    .recommend-grey,
+    .certificate-yellow,
+    .forum-blue,
+    .zitat-blue,
+    .scorm-violet,
+    .summary-dark,
+    .target-dark,
+    .task-blue {
         color: #fff;
     }
 
-    .quest-orange a, .cal-green a, .download-blue a, .pay-green a, .important-purple a, .education-orange a, .browsercheck-blue a, .quiz-green a, .watch-turquoise a, .link-pink a, .docs-grey a, .recommend-grey a, .certificate-yellow a, .forum-blue a, .zitat-blue a, .scorm-violet a, .summary-dark a, .target-dark a, .task-blue a {
+    .quest-orange a,
+    .cal-green a,
+    .download-blue a,
+    .pay-green a,
+    .important-purple a,
+    .education-orange a,
+    .browsercheck-blue a,
+    .quiz-green a,
+    .watch-turquoise a,
+    .link-pink a,
+    .docs-grey a,
+    .recommend-grey a,
+    .certificate-yellow a,
+    .forum-blue a,
+    .zitat-blue a,
+    .scorm-violet a,
+    .summary-dark a,
+    .target-dark a,
+    .task-blue a {
         color: #fff;
         text-decoration: underline;
     }
 
-    .quest-orange a:hover, .cal-green a:hover, .download-blue a:hover, .pay-green a:hover, .important-purple a:hover, .education-orange a:hover, .browsercheck-blue a:hover, .quiz-green a:hover, .watch-turquoise a:hover, .link-pink a:hover, .docs-grey a:hover, .recommend-grey a:hover, .certificate-yellow a:hover, .forum-blue a:hover, .zitat-blue a:hover, .scorm-violet a:hover, .summary-dark a:hover, .target-dark a:hover, .task-blue a:hover {
+    .quest-orange a:hover,
+    .cal-green a:hover,
+    .download-blue a:hover,
+    .pay-green a:hover,
+    .important-purple a:hover,
+    .education-orange a:hover,
+    .browsercheck-blue a:hover,
+    .quiz-green a:hover,
+    .watch-turquoise a:hover,
+    .link-pink a:hover,
+    .docs-grey a:hover,
+    .recommend-grey a:hover,
+    .certificate-yellow a:hover,
+    .forum-blue a:hover,
+    .zitat-blue a:hover,
+    .scorm-violet a:hover,
+    .summary-dark a:hover,
+    .target-dark a:hover,
+    .task-blue a:hover {
         color: rgba(255, 255, 255, 0.85);
     }
 
-    .book-grey, .paragraph-blue, .math-blue, .example-green {
+    .book-grey,
+    .paragraph-blue,
+    .math-blue,
+    .example-green {
         color: #333;
         background-color: #efefef;
     }
 
-    .book-grey a, .paragraph-blue a, .math-blue a, .example-green a {
+    .book-grey a,
+    .paragraph-blue a,
+    .math-blue a,
+    .example-green a {
         color: #333;
         text-decoration: underline;
     }
 
-    .book-grey a:hover, .paragraph-blue a:hover, .math-blue a:hover, .example-green a:hover {
+    .book-grey a:hover,
+    .paragraph-blue a:hover,
+    .math-blue a:hover,
+    .example-green a:hover {
         color: #1a1a1a;
     }
 
@@ -763,11 +885,11 @@
         overflow: hidden;
     }
 
-    .accordion + p {
+    .accordion+p {
         margin-top: 20px;
     }
 
-    p + .accordion {
+    p+.accordion {
         margin-top: 20px;
     }
 
@@ -814,33 +936,43 @@
         margin: 10px;
     }
 
-    .accordion input:checked ~ .accordion_content {
+    .accordion input:checked~.accordion_content {
         max-height: none;
         height: auto;
         border-bottom: 1px solid #ccc;
     }
 
-    .full_color input:checked ~ .accordion_content {
+    .full_color input:checked~.accordion_content {
         max-height: none;
         height: auto;
         border-bottom: none;
     }
 
-    .accordion input[type=checkbox] + label::before {
+    .accordion input[type=checkbox]+label::before {
         content: "\25BA";
         padding-right: 10px;
         font-family: Arial, sans-serif;
         font-size: 14px;
     }
 
-    .accordion input[type=checkbox]:checked + label::before {
+    .accordion input[type=checkbox]:checked+label::before {
         content: "\25BC";
         padding-right: 10px;
         font-family: unset;
     }
 
-    .accordion.green label, .accordion.red label, .accordion.blue label, .accordion.light-blue label, .accordion.purple label, .accordion.orange label, .accordion.dark-blue label, .accordion.blue-gray label,
-    .accordion.pink label, .accordion.turquoise label, .accordion.red-orange label, .accordion.yellow label {
+    .accordion.green label,
+    .accordion.red label,
+    .accordion.blue label,
+    .accordion.light-blue label,
+    .accordion.purple label,
+    .accordion.orange label,
+    .accordion.dark-blue label,
+    .accordion.blue-gray label,
+    .accordion.pink label,
+    .accordion.turquoise label,
+    .accordion.red-orange label,
+    .accordion.yellow label {
         border: none;
         color: white;
     }
@@ -893,7 +1025,7 @@
         background-color: rgba(104, 116, 151, 1);
     }
 
-    .accordion.full_color > .accordion_content {
+    .accordion.full_color>.accordion_content {
         border: none;
     }
 
@@ -1029,6 +1161,7 @@
     .format-ocmooc a.dropdown-item.editing_movecm.menu-action.cm-edit-action {
         display: none;
     }
+
     .format-ocmooc a.dropdown-item[data-action="moveSection"] {
         display: none;
     }
@@ -1048,17 +1181,18 @@
 
     /* Im Editiermodus alle Collapse-Icons anzeigen (keine zusätzliche Regel nötig, da Standardanzeige inline-block ist) */
     .courseindex.editing .courseindex-section[data-for="lection"] .courseindex-chevron {
-        display: flex; /* Sicherstellen, dass im Editiermodus die Icons für Lektionen angezeigt werden */
+        display: flex;
+        /* Sicherstellen, dass im Editiermodus die Icons für Lektionen angezeigt werden */
     }
 
     /*Disabled cmlist in courseindex on non-edit Page */
     /* CMList im normalen Modus ausblenden */
-    .courseindex:not(.editing) .courseindex-sectioncontent[data-for="cmlist"]{
+    .courseindex:not(.editing) .courseindex-sectioncontent[data-for="cmlist"] {
         display: none;
     }
 
     /* Im Editiermodus CMList anzeigen */
-    .courseindex.editing .courseindex-sectioncontent[data-for="cmlist"]{
+    .courseindex.editing .courseindex-sectioncontent[data-for="cmlist"] {
         display: block;
     }
 
@@ -1081,5 +1215,3 @@
     #page-course-format-ocmooc-views-participants #fitem_id_submitbutton {
         display: block;
     }
-
-}
