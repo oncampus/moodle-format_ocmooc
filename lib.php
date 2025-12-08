@@ -402,7 +402,6 @@ class format_ocmooc extends base {
             }
         }
 
-
         if (!empty($modinfo->sections[0])) {
             foreach ($modinfo->sections[0] as $cmid) {
                 $this->navigation_add_activity($node, $modinfo->get_cm($cmid));

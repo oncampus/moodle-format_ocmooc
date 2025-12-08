@@ -57,7 +57,7 @@ class participants extends base {
      *
      * @var array
      */
-    const UNENROLS = [
+    public const UNENROLS = [
             'manual' => [
                     'capability' => 'enrol/manual:unenrolself',
                     'url' => '/enrol/manual/unenrolself.php',
@@ -428,7 +428,6 @@ class participants extends base {
                 $userdata[] = $OUTPUT->user_picture($user, ['size' => 35, 'courseid' => $this->courseid]);
             }
         }
-
 
         switch ($data->namedisplay) {
             case 1:
