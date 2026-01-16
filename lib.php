@@ -106,9 +106,86 @@ class format_ocmooc extends base {
             return [
                 'content' => $renderer->course_section_updated($this, $section),
             ];
-        } else {
-            return parent::section_action($section, $action, $sr);
         }
+
+        $result = parent::section_action($section, $action, $sr);
+        return $result;
+    }
+
+    /**
+     * Duplicate a section and keep parent references consistent after renumbering.
+     *
+     * @param section_info $originalsection The section to be duplicated
+     * @return section_info The new duplicated section
+     */
+    public function duplicate_section(section_info $originalsection): section_info {
+        global $DB;
+
+        $courseid = $this->get_course()->id;
+        $sectioninfo = $this->get_section($originalsection);
+        if ($sectioninfo && $sectioninfo->section && $sectioninfo->parent == 0) {
+            // Prevent chapter duplication.
+            return $sectioninfo;
+        }
+
+        $beforesections = $DB->get_records('course_sections', ['course' => $courseid], '', 'id, section');
+        $newsection = parent::duplicate_section($sectioninfo);
+        $aftersections = $DB->get_records('course_sections', ['course' => $courseid], '', 'id, section');
+        $updated = $this->remap_parent_numbers($courseid, $beforesections, $aftersections);
+
+        if ($updated) {
+            rebuild_course_cache($courseid, true);
+        }
+
+        return $newsection;
+    }
+
+    /**
+     * Remap stored parent section numbers after a renumbering.
+     *
+     * @param int $courseid
+     * @param array $beforesections
+     * @param array $aftersections
+     * @return bool True if updates were applied
+     */
+    protected function remap_parent_numbers(int $courseid, array $beforesections, array $aftersections): bool {
+        global $DB;
+
+        $numbermap = [];
+        foreach ($beforesections as $id => $beforesection) {
+            if (!isset($aftersections[$id])) {
+                continue;
+            }
+            $oldnumber = (int)$beforesection->section;
+            $newnumber = (int)$aftersections[$id]->section;
+            if ($oldnumber !== $newnumber) {
+                $numbermap[$oldnumber] = $newnumber;
+            }
+        }
+        if (!$numbermap) {
+            return false;
+        }
+
+        $options = $DB->get_records('course_format_options', [
+            'courseid' => $courseid,
+            'format' => $this->get_format(),
+            'name' => 'parent',
+        ], '', 'id, value');
+        $updated = false;
+        foreach ($options as $option) {
+            $oldparent = (int)$option->value;
+            if ($oldparent && isset($numbermap[$oldparent])) {
+                $DB->set_field(
+                    'course_format_options',
+                    'value',
+                    (string)$numbermap[$oldparent],
+                    ['id' => $option->id]
+                );
+                $updated = true;
+            }
+        }
+
+        return $updated;
     }
 
 

@@ -356,7 +356,7 @@ class stateactions extends \core_courseformat\stateactions {
     ): void {
         $this->validate_sections($course, [$targetsectionid], __FUNCTION__);
         require_capability('moodle/course:update', context_course::instance($course->id));
-        /** @var \format_flexsections $format */
+        /** @var \format_ocmooc $format */
         $format = course_get_format($course);
         $modinfo = $format->get_modinfo();
         $targetsection = $modinfo->get_section_info_by_id($targetsectionid, MUST_EXIST);

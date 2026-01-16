@@ -64,7 +64,8 @@
 <div
     class="courseindex-section {{#current}}current{{/current}}"
     id="{{uniqid}}-course-index-section-{{id}}"
-    data-for="{{^parent}}chapter{{/parent}}{{#parent}}lection{{/parent}}"
+    data-for="section"
+    data-sectiontype="{{^parent}}chapter{{/parent}}{{#parent}}lection{{/parent}}"
     data-id="{{id}}"
     data-number="{{number}}"
     role="treeitem"

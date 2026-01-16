@@ -53,8 +53,8 @@ export default class Component extends BaseCourseindex {
         super.create(descriptor);
         this.name = 'course_format_ocmooc_courseindex';
         this.selectors.COURSE_SUBSECTIONLIST = `[data-for='subsectionlist']`;
-        this.selectors.CHAPTER = `[data-for='chapter']`;
-        this.selectors.LECTION = `[data-for='lection']`;
+        this.selectors.CHAPTER = `[data-sectiontype='chapter']`;
+        this.selectors.LECTION = `[data-sectiontype='lection']`;
         this.sections = {};
     }
 
