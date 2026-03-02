@@ -199,12 +199,34 @@ class content extends content_base {
                     if ($PAGE->user_is_editing()) {
                         $section->editurl = (new \moodle_url('/course/editsection.php', ['id' => $sectionid]));
                     }
-                    // Get images.
-                    if ($section->summary->summarytext) {
-                        $imglink = explode('src="', $section->summary->summarytext);
-                        if (count($imglink) > 1) {
-                            $img = substr($imglink[1], 0, strpos($imglink[1], '"'));
-                            $section->imgurl = $img;
+                    // Get chapter images and alt texts from the editor content.
+                    if (!empty($section->summary->summarytext)) {
+                        $section->images = [];
+                        if (preg_match_all('/<img\\b[^>]*>/i', $section->summary->summarytext, $tagmatches)) {
+                            foreach ($tagmatches[0] as $imgtag) {
+                                $imgsrc = '';
+                                $imgalt = '';
+
+                                if (preg_match('/\\bsrc\\s*=\\s*(["\\\'])(.*?)\\1/i', $imgtag, $srcmatch)) {
+                                    $imgsrc = $srcmatch[2];
+                                }
+                                if (preg_match('/\\balt\\s*=\\s*(["\\\'])(.*?)\\1/i', $imgtag, $altmatch)) {
+                                    $imgalt = trim(html_entity_decode($altmatch[2], ENT_QUOTES | ENT_HTML5));
+                                }
+
+                                if ($imgsrc !== '') {
+                                    $section->images[] = (object) [
+                                        'imgurl' => $imgsrc,
+                                        'imgalt' => $imgalt !== '' ? $imgalt : $rawtitle,
+                                    ];
+                                }
+                            }
+                        }
+
+                        // Keep backwards-compatible fields for the chapter card.
+                        if (!empty($section->images)) {
+                            $section->imgurl = $section->images[0]->imgurl;
+                            $section->imgalt = $section->images[0]->imgalt;
                         }
                     }
 
