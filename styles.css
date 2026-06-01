@@ -1215,3 +1215,8 @@
     #page-course-format-ocmooc-views-participants #fitem_id_submitbutton {
         display: block;
     }
+
+    /* Sammelaktionen im Bearbeitungsmpdus verstecken */
+    .format-ocmooc .bulkEnable {
+    display: none;
+    }
