@@ -1,5 +1,13 @@
+# This file is a template, and might need editing before it works on your project.
 include:
-  - template: "Moodle/405.gitlab-ci.yml"
+  - project: "moodle/ci-tools/moodle-pipeline"
+    file: "/moodle-pipeline.yml"
+    ref: MOODLE_502_STABLE
+  - project: "moodle/ci-tools/moodle-testing-pipeline"
+    file: "/moodle-testing-pipeline.yml"
+    ref: MOODLE_502_STABLE_DEPENDENCIES
 
 stages:
-  - test
+  - linting
+  - testing
+  

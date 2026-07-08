@@ -71,8 +71,21 @@ class sections {
      * @return int $sectionnum
      */
     public function create_new_section($parent = 0, $before = null): \stdClass {
-        $section          = course_create_section($this->courseid, 0);
-        $sectionnum       = $this->move_section($section, $parent, $before);
+        $section = course_create_section($this->courseid, 0);
+
+        // Set parent before moving so can_move_section_to() does not mistake a new lection
+        // for a chapter (default parent=0) and block the placement move.
+        if ($parent != 0) {
+            $this->format->update_section_format_options(['id' => $section->id, 'parent' => $parent]);
+            // Verify DB write.
+            global $DB;
+            $dbparent = $DB->get_field('course_format_options', 'value', [
+                'sectionid' => $section->id, 'name' => 'parent', 'format' => 'ocmooc',
+            ]);
+        }
+
+        // Pass section number (int) so move_section loads fresh section_info from rebuilt cache.
+        $sectionnum = $this->move_section($section->section, $parent, $before);
         $section->section = $sectionnum;
         return $section;
     }
@@ -92,9 +105,7 @@ class sections {
      * @return array the index of chapter and the index of the lection
      */
     public function add_lection($chaptersectionumber): array {
-        $section         = $this->create_new_section($chaptersectionumber);
-        $section->parent = $chaptersectionumber;
-        $this->format->update_section_format_options($section);
+        $section = $this->create_new_section($chaptersectionumber);
 
         $chapterno = $this->get_chapter_no_from_number($chaptersectionumber);
         $lectiono  = $this->get_lection_no_from_number($chaptersectionumber, $section->section);

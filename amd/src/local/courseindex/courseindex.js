@@ -68,6 +68,17 @@ export default class Component extends BaseCourseindex {
 
         for (const id of state.course.sectionlist ?? []) {
             const section = state.section.get(id);
+            if (!section) {
+                continue;
+            }
+
+            // If the section is already rendered by the static template, register it without re-rendering.
+            const existing = this.getElement(this.selectors.SECTION, id);
+            if (existing) {
+                this.sections[id] = existing;
+                continue;
+            }
+
             const data = exporter.section(state, section);
 
             const fakeelement = document.createElement('div');

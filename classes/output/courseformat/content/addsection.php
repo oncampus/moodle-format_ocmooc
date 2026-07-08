@@ -42,20 +42,17 @@ class addsection extends addsection_base {
 
         $format      = $this->format;
         $lastsection = $format->get_last_section_number();
-        $maxsections = $format->get_max_sections();
 
         $params = [
             'courseid' => $COURSE->id,
             'action'   => 'addchapter',
             'sesskey'  => sesskey(),
-            'position' => $maxsections - $lastsection,
-
         ];
 
         $data->addchapter = [
             'url'        => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
             'title'      => get_string('addchapter', 'format_ocmooc'),
-            'newsection' => $maxsections - $lastsection,
+            'newsection' => $lastsection + 1,
         ];
 
         $params['action']               = 'addlection';
@@ -64,7 +61,7 @@ class addsection extends addsection_base {
         $data->addlection = [
             'url'        => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
             'title'      => get_string('addlection', 'format_ocmooc'),
-            'newsection' => $maxsections - $lastsection,
+            'newsection' => $lastsection + 1,
         ];
 
         $context = \context_course::instance($COURSE->id);

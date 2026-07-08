@@ -39,7 +39,7 @@ class controlmenu extends core_controlmenu {
         if ($section->section && $section->parent == 0) {
             unset($controls['duplicate']);
         }
-        if (isset($controls['delete'])) {
+        if (!empty($controls['delete']) && is_array($controls['delete'])) {
             $controls['delete']['url'] = new \moodle_url(
                 '/course/format/ocmooc/sectionhandler.php',
                 [
@@ -49,9 +49,10 @@ class controlmenu extends core_controlmenu {
                     'sesskey' => sesskey(),
                 ]
             );
-            $controls['delete']['attr'] = [
-                'class' => 'icon editing_delete text-danger',
-            ];
+            $controls['delete']['attr'] = array_merge(
+                $controls['delete']['attr'] ?? [],
+                ['class' => 'icon editing_delete text-danger']
+            );
         }
         return $controls;
     }

@@ -153,11 +153,9 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024052700, 'format', 'ocmooc');
     }
 
-    if ($oldversion < 2025012702) {
-        // Define table format_ocmooc_locations to be created.
+    if ($oldversion < 2026042000) {
+        // Table format_ocmooc_locations.
         $table = new xmldb_table('format_ocmooc_locations');
-
-        // Adding fields to table format_ocmooc_locations.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, 'Primary key');
         $table->add_field('location_name_de', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'German locationname');
         $table->add_field('location_name_en', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'English locationname');
@@ -165,59 +163,39 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         $table->add_field('latitude', XMLDB_TYPE_NUMBER, '10, 7', null, XMLDB_NOTNULL, null, null, 'Latitude coordinate');
         $table->add_field('longitude', XMLDB_TYPE_NUMBER, '10, 7', null, XMLDB_NOTNULL, null, null, 'Longitude coordinate');
         $table->add_field('last_checked', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'Timestamp of last API check');
-
-        // Adding keys to table format_ocmooc_locations.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-
-        // Adding indexes to improve query performance.
         $table->add_index('idx_location_name_de_country', XMLDB_INDEX_NOTUNIQUE, ['location_name_de', 'country']);
         $table->add_index('idx_location_name_en_country', XMLDB_INDEX_NOTUNIQUE, ['location_name_en', 'country']);
         $table->add_index('idx_latitude_longitude', XMLDB_INDEX_NOTUNIQUE, ['latitude', 'longitude']);
-
-        // Conditionally launch create table for format_ocmooc_locations.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
 
-        // Define table format_ocmooc_mappings to be created.
+        // Table format_ocmooc_mappings.
         $table = new xmldb_table('format_ocmooc_mappings');
-
-        // Adding fields to table format_ocmooc_mappings.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, 'Primary key');
         $table->add_field('location_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'Reference to locations');
         $table->add_field('city', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'City name');
         $table->add_field('country', XMLDB_TYPE_CHAR, '2', null, null, null, null, 'Country code (ISO 3166-1)');
-
-        // Adding keys to table format_ocmooc_mappings.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $table->add_key('fk_location_reference', XMLDB_KEY_FOREIGN, ['location_id'], 'format_ocmooc_locations', ['id']);
-
-        // Adding indexes for fast lookups.
         $table->add_index('idx_city_country', XMLDB_INDEX_NOTUNIQUE, ['city', 'country']);
-
-        // Conditionally create the table.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
 
-        // Define table format_ocmooc_invalidlocs to be created.
+        // Table format_ocmooc_invalidlocs.
         $table = new xmldb_table('format_ocmooc_invalidlocs');
-
-        // Adding fields to table format_ocmooc_invalidlocs.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, 'Primary key');
         $table->add_field('city', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'Invalid city name');
         $table->add_field('country', XMLDB_TYPE_CHAR, '2', null, null, null, null, 'Optional country code (ISO 3166-1 Alpha-2)');
-
-        // Adding keys to table format_ocmooc_invalidlocs.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-
-        // Conditionally launch create table for format_ocmooc_invalidlocs.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
 
         // Ocmooc savepoint reached.
-        upgrade_plugin_savepoint(true, 2025012702, 'format', 'ocmooc');
+        upgrade_plugin_savepoint(true, 2026042000, 'format', 'ocmooc');
     }
     return true;
 }

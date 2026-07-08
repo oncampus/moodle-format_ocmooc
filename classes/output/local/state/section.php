@@ -69,6 +69,9 @@ class section extends \core_courseformat\output\local\state\section {
                 'indexcollapsed' => $indexcollapsed,
                 'contentcollapsed' => $contentcollapsed,
                 'hasrestrictions' => $this->get_has_restrictions(),
+                'component' => $section->component,
+                'bulkeditable' => ($section->section != 0),
+                'itemid' => $section->itemid,
         ];
 
         if (!empty($modinfo->sections[$section->section])) {

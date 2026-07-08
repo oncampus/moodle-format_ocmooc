@@ -407,18 +407,14 @@ class format_ocmooc extends base {
             $modinfo   = get_fast_modinfo($course);
             $section   = $modinfo->get_section_info($sectionno, IGNORE_MISSING);
             if (!$section) {
-                $url = new moodle_url('/course/view.php', ['id' => $course->id]);
-                if (!empty($options['navigation'])) {
-                    return null;
-                }
-                return $url;
+                return new moodle_url('/course/view.php', ['id' => $course->id]);
             }
         }
 
         $chapterno = 1;
         $lectionno = 1;
 
-        if ($section->parent == 0) {
+        if (empty($section->parent)) {
             $chapterno = $this->get_section_manager()->get_chapter_no_from_number($section->section);
             $lectionno = 1;
         } else {
@@ -426,8 +422,8 @@ class format_ocmooc extends base {
             $lectionno = $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
         }
         if (empty($CFG->linkcoursesections) && !empty($options['navigation']) && $sectionno !== null) {
-            // By default assume that sections are never displayed on separate pages.
-            return null;
+            // Navigation and edit controls require a concrete URL in Moodle 5.2.
+            return new moodle_url('/course/section.php', ['id' => $section->id]);
         }
         if ($this->uses_sections() && !empty($sectionno)) {
             $url->remove_params('section');

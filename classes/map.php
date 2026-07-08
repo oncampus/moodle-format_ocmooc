@@ -352,7 +352,6 @@ class map {
                     $handle = $curlhandles[$handlekey];
                     $response = curl_multi_getcontent($handle);
                     curl_multi_remove_handle($multihandle, $handle);
-                    curl_close($handle);
 
                     $responsedecoded = json_decode($response);
 

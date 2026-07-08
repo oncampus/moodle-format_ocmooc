@@ -43,7 +43,7 @@
     {{/sitehome}}
     {{^sitehome}}
         <div class="d-flex align-items-start position-relative">
-                <a role="button" data-toggle="collapse"
+                <a role="button" data-bs-toggle="collapse"
                    href="#coursecontentcollapse{{num}}"
                    id="collapssesection{{num}}"
                    aria-expanded="{{^contentcollapsed}}true{{/contentcollapsed}}{{#contentcollapsed}}false{{/contentcollapsed}}"
@@ -62,7 +62,7 @@
                 </a>
             <h3 class="sectionname course-content-item d-flex align-self-stretch align-items-center mb-0"
                 id="sectionid-{{id}}-title" data-for="section_title" data-id="{{id}}" data-number="{{num}}">
-                {{{title}}}
+                {{{name}}}
             </h3>
         </div>
     {{/sitehome}}

@@ -79,7 +79,6 @@ class fullcontent extends content_base {
 
             $format = $this->format;
             $lastsection = $format->get_last_section_number();
-            $maxsections = $format->get_max_sections();
 
             foreach ($data->chapters as $chapternumber => $chapter) {
                 // Workaround to fix index count of sections for mustache template iterating.
@@ -91,13 +90,12 @@ class fullcontent extends content_base {
                         'courseid' => $COURSE->id,
                         'action' => 'addchapter',
                         'sesskey' => sesskey(),
-                        'position' => $maxsections - $lastsection,
 
                 ];
                 $chapter->addchapter = [
                         'url' => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
                         'title' => get_string('addchapter', 'format_ocmooc'),
-                        'newsection' => $maxsections - $lastsection,
+                        'newsection' => $lastsection + 1,
                 ];
 
                 $params['action'] = 'addlection';
@@ -106,7 +104,7 @@ class fullcontent extends content_base {
                 $chapter->addlection = [
                         'url' => new \moodle_url('/course/format/ocmooc/sectionhandler.php', $params),
                         'title' => get_string('addlection', 'format_ocmooc'),
-                        'newsection' => $maxsections - $lastsection,
+                        'newsection' => $lastsection + 1,
                 ];
             }
 
@@ -168,10 +166,13 @@ class fullcontent extends content_base {
             }
 
             if ($section->parent === 0) {
-                if ($chapter == $chaptercount) {
-                    return $section->section;
+                // Only count visible chapters to stay in sync with get_chapters() in content.php.
+                if ($this->format->is_section_visible($section)) {
+                    if ($chapter == $chaptercount) {
+                        return $section->section;
+                    }
+                    $chaptercount++;
                 }
-                $chaptercount++;
             }
         }
         return false;

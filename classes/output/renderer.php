@@ -62,20 +62,8 @@ class renderer extends section_renderer {
      * @return string|null The rendered HTML or null if the course index is not used.
      */
     public function course_index_drawer(format_base $format): ?string {
-        global $COURSE;
-        $course = $format->get_course();
-        $statekey = format_base::session_cache($course);
-
         if ($format->uses_course_index()) {
             include_course_editor($format);
-            // Add course ID to page requirements to ensure M.cfg.courseId is set.
-            $this->page->requires->js_call_amd('core_courseformat/courseeditor', 'setViewFormat', [
-                $COURSE->id,
-                [
-                    'editing' => $this->page->user_is_editing(),
-                    'stateKey' => $statekey,
-                ],
-            ]);
             return $this->render_from_template('format_ocmooc/local/courseindex/drawer', []);
         }
         return '';

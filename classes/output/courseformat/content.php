@@ -47,6 +47,21 @@ class content extends content_base {
         $data->footerfirst = false;
         $data->lastfooter = false;
 
+        // Empty or new Course init Data.
+        if (empty($chapters)) {
+            $data->chapters = [];
+            $data->sections = [];
+            $data->firstsection = true;
+            $data->lastsection = true;
+            $data->chaptersstartwidth = 0;
+            $data->chapterstarttransform = 0;
+            $data->quicknav = true;
+            $data->moocnav = moocnav::get_moocnav_entries();
+            $data->moocnavdropdown = moocnav::get_drowdown_items();
+            $data->showdropdown = !empty($data->moocnavdropdown);
+            return $data;
+        }
+
         if ($chapter <= 0 || $chapter > count($chapters)) {
             $chapter = 1;
         }
@@ -173,6 +188,7 @@ class content extends content_base {
     public function get_chapters($output) {
         global $COURSE, $PAGE;
 
+        $isediting = $PAGE->user_is_editing();
         $chapters = [];
         $context = \context_course::instance($COURSE->id);
 
@@ -184,7 +200,7 @@ class content extends content_base {
             }
 
             if ($section->parent === 0) {
-                if ($this->format->is_section_visible($section)) {
+                if ($isediting || $this->format->is_section_visible($section)) {
                     $rawtitle = $section->name;
                     $sectionid = $section->id;
 
