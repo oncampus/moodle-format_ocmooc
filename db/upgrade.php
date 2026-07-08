@@ -197,5 +197,31 @@ function xmldb_format_ocmooc_upgrade($oldversion) {
         // Ocmooc savepoint reached.
         upgrade_plugin_savepoint(true, 2026042000, 'format', 'ocmooc');
     }
+
+    // Rename groups field to avoid conflict with MySQL reserved keywords.
+    if ($oldversion < 2026042001) {
+        $table = new xmldb_table('format_ocmooc_parts');
+
+        $oldfield = new xmldb_field(
+            'groups',
+            XMLDB_TYPE_INTEGER,
+            '1',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            '0'
+        );
+
+        $newfield = new xmldb_field('showgroups');
+
+        if (
+            $dbman->field_exists($table, $oldfield)
+            && !$dbman->field_exists($table, $newfield)
+        ) {
+            $dbman->rename_field($table, $oldfield, 'showgroups');
+        }
+
+        upgrade_plugin_savepoint(true, 2026042001, 'format', 'ocmooc');
+    }
     return true;
 }
