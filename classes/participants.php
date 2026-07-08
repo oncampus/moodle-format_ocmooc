@@ -312,7 +312,7 @@ class participants extends base {
             $titles[] = get_string('roles');
         }
 
-        if ($data->groups) {
+        if ($data->showgroups) {
             $notsortable[] = 'groups';
             $header[] = 'groups';
             $titles[] = get_string('groups');
@@ -466,7 +466,7 @@ class participants extends base {
             $userdata[] = implode($seperator, $rolesdata);
         }
 
-        if ($data->groups) {
+        if ($data->showgroups) {
             $groupsarr = \groups_get_user_groups($this->courseid, $user->id)[0];
             $groupsdata = [];
             foreach ($groupsarr as $group) {
@@ -533,7 +533,7 @@ class participants extends base {
                 $data->country = get_config('format_ocmooc', 'country_guest');
                 $data->badges = get_config('format_ocmooc', 'badges_guest');
                 $data->roles = get_config('format_ocmooc', 'roles_guest');
-                $data->groups = get_config('format_ocmooc', 'groups_guest');
+                $data->showgroups = get_config('format_ocmooc', 'groups_guest');
                 $data->lastaccess = get_config('format_ocmooc', 'lastaccess_guest');
             } else {
                 $data = $DB->get_record($this->setdatadb, ['courseid' => $this->courseid]);
@@ -547,7 +547,7 @@ class participants extends base {
                     $data->country = get_config('format_ocmooc', 'country');
                     $data->badges = get_config('format_ocmooc', 'badges');
                     $data->roles = get_config('format_ocmooc', 'roles');
-                    $data->groups = get_config('format_ocmooc', 'groups');
+                    $data->showgroups = get_config('format_ocmooc', 'groups');
                     $data->lastaccess = get_config('format_ocmooc', 'lastaccess');
                     $data->created = time();
                     $data->edited = time();
@@ -672,7 +672,7 @@ class participants extends base {
         $record->country = $data->country ?? false;
         $record->badges = $data->badges ?? false;
         $record->roles = $data->roles ?? false;
-        $record->groups = $data->groups ?? false;
+        $record->showgroups = $data->showgroups ?? false;
         $record->lastaccess = $data->lastaccess ?? false;
         if (!$id) {
             $record->created = time();
