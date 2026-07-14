@@ -1220,3 +1220,15 @@
     .format-ocmooc .bulkEnable {
     display: none;
     }
+
+.format-ocmooc .h5p-lazy { margin: 0.5rem 0; }
+.format-ocmooc .h5p-lazy-prompt {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px dashed var(--bs-border-color, #ced4da);
+    border-radius: 0.5rem;
+    background: var(--bs-light, #f8f9fa);
+}
+.format-ocmooc .h5p-lazy-label { color: #6c757d; }
