@@ -47,8 +47,22 @@ class content extends content_base {
         $data->footerfirst = false;
         $data->lastfooter = false;
 
-        if ($chapter <= 0 || $chapter > count($chapters)) {
-            $chapter = 1;
+        if (empty($chapters)) {
+            $data->chapters = [];
+            $data->sections = [];
+            $data->firstsection = true;
+            $data->lastsection = true;
+            $data->quicknav = false;
+            $data->chaptersstartwidth = 0;
+            $data->chapterstarttransform = 0;
+            $data->moocnav = moocnav::get_moocnav_entries();
+            $data->moocnavdropdown = moocnav::get_drowdown_items();
+            $data->showdropdown = !empty($data->moocnavdropdown);
+            return $data;
+        }
+
+        if (!array_key_exists($chapter, $chapters)) {
+            $chapter = array_key_first($chapters);
         }
 
         $lectionpreferencename = "ocmooc_last_lection_cid_{$COURSE->id}";
