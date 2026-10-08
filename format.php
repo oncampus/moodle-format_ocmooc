@@ -22,6 +22,8 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use format_ocmooc\local\h5plazy;
+
 defined('MOODLE_INTERNAL') || die();
 global $PAGE, $CFG, $COURSE;
 require_once($CFG->libdir . '/filelib.php');
@@ -48,12 +50,15 @@ if ($isediting) {
     try {
         $templateable = new \format_ocmooc\output\courseformat\fullcontent($format);
         $data = $templateable->export_for_template($renderer);
-        echo $renderer->render_from_template('format_ocmooc/local/content/content', $data);
+        $html = $renderer->render_from_template('format_ocmooc/local/content/content', $data);
+        $html = h5plazy::process($html, $renderer);
+        echo $html;
     } catch (\Exception $e) {
         echo $OUTPUT->notification(get_string('sectionnotexist', 'error'), 'error');
         echo $OUTPUT->continue_button(new moodle_url('/course/view.php', ['id' => $course->id]));
     }
     $PAGE->requires->js_call_amd('format_ocmooc/jumpto_section', 'init');
+    $PAGE->requires->js_call_amd('format_ocmooc/h5plazy', 'init');
 } else {
     // Render the enrol Button, if a user is not yet enrolled in the course.
     $isuserenrolled = \format_ocmooc\enrolbutton::is_current_user_enrolled();

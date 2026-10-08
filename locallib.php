@@ -32,7 +32,7 @@
  */
 function setgrade($contextid, $score, $maxscore) {
     global $DB, $USER, $CFG;
-    require($CFG->dirroot . '/mod/hvp/lib.php');
+    require_once($CFG->dirroot . '/mod/hvp/lib.php');
 
     $cm = get_coursemodule_from_instance('hvp', $contextid);
     if (!$cm) {
@@ -165,7 +165,8 @@ function get_progress($courseid, $sectionid) {
         }
     }
 
-    $progress = ['sectionId' => $sectionid, 'percentage' => round(($activitygrade / $activitymaxgrade) * 100)];
+    $percentage = $activitymaxgrade > 0 ? round(($activitygrade / $activitymaxgrade) * 100) : 0;
+    $progress = ['sectionId' => $sectionid, 'percentage' => $percentage];
 
     return $progress;
 }

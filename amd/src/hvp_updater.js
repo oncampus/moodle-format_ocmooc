@@ -21,12 +21,6 @@ define(['jquery', 'core/ajax'], function($, ajax) {
     ILD.subIds = [];
 
     /**
-     * Stores QuestionSet PassPercentage
-     * @type {Array}
-     */
-    ILD.questionSetPassPercentage = [];
-
-    /**
      * Stores Essay PassPercentage
      * @type {Array}
      */
@@ -151,6 +145,30 @@ define(['jquery', 'core/ajax'], function($, ajax) {
             isScored: isScored,
             subContentIds: subContentIds
         };
+    };
+
+    /**
+     * Count interactions layers from QuestionSet element.
+     *
+     * @param {number} contentId
+     * @param {object} content
+     */
+    ILD.getQuestionSetInteractions = function(contentId, content) {
+        var questions = content.questions;
+        var interactionsCounter = 0;
+
+        if (Array.isArray(questions)) {
+            $.each(questions, function(i) {
+                var subid = questions[i].subContentId ||
+                    (questions[i].metadata && questions[i].metadata.subContentId);
+
+                if (typeof subid !== 'undefined') {
+                    ILD.subIds.push(subid);
+                    interactionsCounter++;
+                }
+            });
+        }
+        ILD.interactions[contentId] = interactionsCounter;
     };
 
     /**
@@ -520,7 +538,6 @@ define(['jquery', 'core/ajax'], function($, ajax) {
 
         if (isInteraction &&
             event.getVerb() === 'answered' &&
-            typeof ILD.questionSetPassPercentage[contentId] === 'undefined' &&
             typeof ILD.singleChoiceInteractions[contentId] === 'undefined' &&
             typeof ILD.EssayPassPercentage[contentId] === 'undefined' &&
             typeof ILD.BranchingScenario[contentId] === 'undefined'
@@ -535,44 +552,13 @@ define(['jquery', 'core/ajax'], function($, ajax) {
                 if (typeof ILD.interactions[contentId] === 'undefined') {
                     ILD.interactions[contentId] = 1;
                 }
-
-                /*console.log("******MOOC-DEBUG: ILD.xAPIAnsweredListener *****");
-                console.log(subContentId.split('subContentId='));
-                console.log("type: " + ILD.ActivityTypeMap[contentId]);
-                console.log("score: " + score);
-                console.log("maxscore: " + maxScore);
-                console.log("ILD.percentage: " + ILD.percentage);
-                console.log("interactions: " + ILD.interactions[contentId]);
-                console.log("***********************");*/
-
-                if(ILD.ActivityTypeMap[contentId] === 'CoursePresentation'){
-                    // eslint-disable-next-line block-scoped-var
-                    let interactions = ILD.interactions[contentId];
-                    ILD.percentage = ILD.percentage + ((score / maxScore) / interactions) * 100;
-                    ILD.setResult(contentId, ILD.percentage, 100);
-                }else{
-                    //Set Result on Activities with Subcontet like a Interactive Video
-                    ILD.setResultWithSubcontent(contentId, subContentId, score, maxScore, ILD.interactions[contentId]);
-                }
-            } else if (ILD.subIds.indexOf(subContentId) === -1 && ILD.subIds.length === 0) {
+                //Set Result on Activities with Subcontet like a Interactive Video
+                ILD.setResultWithSubcontent(contentId, subContentId, score, maxScore, ILD.interactions[contentId]);
+            } else if (typeof subContentId === 'undefined' && ILD.subIds.length === 0) {
                 // eslint-disable-next-line block-scoped-var
                 let percentage = (score / maxScore) * 100;
 
                 ILD.setResult(contentId, percentage, 100);
-            }
-        }
-
-        // TODO: Add custom hooks/handlers for content types instead of this percentage stuff
-
-        // Check if QuestionSet is completed and percentage is set.
-        if (typeof ILD.questionSetPassPercentage[contentId] !== 'undefined' && event.getVerb() === 'completed') {
-            let score = event.getScore();
-            let maxScore = event.getMaxScore();
-            let percentage = (score / maxScore) * 100;
-            let passPercentage = ILD.questionSetPassPercentage[contentId];
-
-            if (percentage >= passPercentage) {
-                ILD.setResult(contentId, 100, 100);
             }
         }
 
@@ -776,15 +762,6 @@ define(['jquery', 'core/ajax'], function($, ajax) {
      * @param {number} contentId
      * @param {object} content
      */
-    ILD.getQuestionSetPercentage = function(contentId, content) {
-        ILD.questionSetPassPercentage[contentId] = content.passPercentage;
-    };
-
-    /**
-     *
-     * @param {number} contentId
-     * @param {object} content
-     */
     ILD.getEssayPercentage = function(contentId, content) {
         ILD.EssayPassPercentage[contentId] = content.behaviour.percentagePassing;
     };
@@ -810,48 +787,60 @@ define(['jquery', 'core/ajax'], function($, ajax) {
     };
 
     /**
-     * Check if library is InteractiveVideo or QuestionSet.
+     * Register interactions for all H5P contents on the page.
      */
     ILD.checkLibrary = function() {
-        var contentId = $('.h5p-iframe.h5p-initialized').data('content-id');
-        if (typeof contentId !== 'undefined') {
-            // eslint-disable-next-line no-undef
-            let contentData = H5PIntegration.contents['cid-' + contentId];
-            let content = JSON.parse(contentData.jsonContent); // Needs try/catch
-            let library = contentData.library; // H5P.FooBar x.y
+        // eslint-disable-next-line no-undef
+        if (typeof H5PIntegration === 'undefined' || !H5PIntegration.contents) {
+            return;
+        }
 
-            const machineName = ILD.getMachineName(library); // H5P.FooBar
-            const handlerName = ILD.getHandlerName(library); // FooBar
+        // eslint-disable-next-line no-undef
+        Object.keys(H5PIntegration.contents).forEach(function(key) {
+            // eslint-disable-next-line no-undef
+            const contentData = H5PIntegration.contents[key];
+            const contentId = parseInt(key.replace('cid-', ''), 10);
+
+            if (!contentData || !contentData.library || isNaN(contentId)) {
+                return;
+            }
+
+            let content;
+            try {
+                content = JSON.parse(contentData.jsonContent);
+            } catch (error) {
+                window.console.warn('format_ocmooc: cannot parse jsonContent of ' + key);
+                return;
+            }
+            const library = contentData.library;
 
             if (library.indexOf('H5P.InteractiveVideo') > -1) {
                 ILD.getVideoInteractions(contentId, content);
-                //Set the ActivityType for Activitys with subcontent
                 ILD.ActivityTypeMap[contentId] = 'InteractiveVideo';
             } else if (library.indexOf('H5P.QuestionSet') > -1) {
-                ILD.getQuestionSetPercentage(contentId, content);
+                ILD.getQuestionSetInteractions(contentId, content);
+                ILD.ActivityTypeMap[contentId] = 'QuestionSet';
             } else if (library.indexOf('H5P.SingleChoiceSet') > -1) {
                 ILD.getSingleChoiceInteractions(contentId, content);
             } else if (library.indexOf('H5P.Essay') > -1) {
                 ILD.getEssayPercentage(contentId, content);
             } else if (library.indexOf('H5P.BranchingScenario') > -1) {
                 ILD.BranchingScenario[contentId] = 1;
-            } else if (machineName === 'H5P.CoursePresentation') {
-                //Set the ActivityType for Activitys with subcontent
+            } else if (ILD.getMachineName(library) === 'H5P.CoursePresentation') {
                 ILD.ActivityTypeMap[contentId] = 'CoursePresentation';
 
-                // This will be the handler without hardcoding ...
+                const handlerName = ILD.getHandlerName(library);
                 if (ILD.analyzeHandlers[handlerName]) {
-                    const result = ILD.analyzeHandlers[handlerName](content);
+                    const result = ILD.sanitizeAnalyzeHandlerResult(ILD.analyzeHandlers[handlerName](content));
                     ILD.interactions[contentId] = result.subContentIds.length;
-                    ILD.subIds = result.subContentIds;
+                    ILD.subIds = ILD.subIds.concat(result.subContentIds);
 
-                    // Some content types need a custom handler for detecting completion
                     if (!result.isScored && ILD.completedHandlers[handlerName]) {
                         ILD.completedHandlers[handlerName](content, contentId);
                     }
                 }
             }
-        }
+        });
     };
 
     return {

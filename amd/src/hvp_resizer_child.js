@@ -29,45 +29,48 @@ define(['jquery', 'format_ocmooc/hvp_resizer_child'], function ($) {
 
     return {
         handleFrame: function () {
-            // Wait for document
-            // Options for the observer (which mutations to observe)
-            const config = { attributes: true, childList: false, subtree: false };
-            // Callback function to execute when mutations are observed
-            const callback = (mutationList) => {
-                for (const mutation of mutationList) {
-                    if (mutation.type === "attributes") {
-                        let iFrame = document.querySelector('.h5p-iframe');
+            const iframe = document.querySelector('.h5p-iframe');
 
-                        sendPostMessage(iFrame.clientHeight);
+            if (iframe) {
+                let lastHeight = 0;
+                const report = function () {
+                    const height = iframe.clientHeight;
+                    if (height && Math.abs(height - lastHeight) > 1) {
+                        lastHeight = height;
+                        sendPostMessage(height);
                     }
+                };
+
+                if (window.ResizeObserver) {
+                    const observer = new ResizeObserver(function () {
+                        report();
+                    });
+                    observer.observe(iframe);
+                } else {
+                    setInterval(report, 500);
                 }
-            };
-            const observer = new MutationObserver(callback);
-
-
-            //Check if a iframe Element exists
-            if ($('.h5p-iframe').length > 0) {
-                // Wait for iframe
-                $('.h5p-iframe').ready(function () {
-                    let iFrame = document.querySelector('.h5p-iframe');
-                    if (iFrame) {
-                        if (iFrame.classList.contains('h5p-initialized')) {
-                            sendPostMessage(iFrame.clientHeight);
-                        }
-                        observer.observe(iFrame, config);
+                window.addEventListener('message', function (event) {
+                    const data = event.data || {};
+                    if (data.context === 'h5p' || data.action === 'resize') {
+                        window.requestAnimationFrame(report);
                     }
                 });
+
+                iframe.addEventListener('load', report);
+                report();
             } else {
-                // Select the element with the class .h5p-content
-                var h5pContent = $('.h5p-content');
-                //Wait for H5P-Element
-                $('.h5p-content').ready(function () {
-                    if(h5pContent){
-                        sendPostMessage(h5pContent.parent().height());
+                const h5pContent = document.querySelector('.h5p-content');
+                if (h5pContent && h5pContent.parentElement) {
+                    const parent = h5pContent.parentElement;
+                    if (window.ResizeObserver) {
+                        const observer = new ResizeObserver(function () {
+                            sendPostMessage(parent.offsetHeight);
+                        });
+                        observer.observe(h5pContent);
                     }
-                });
+                    sendPostMessage(parent.offsetHeight);
+                }
             }
         },
     };
-}
-);
+});
