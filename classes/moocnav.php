@@ -101,7 +101,7 @@ class moocnav {
                 'class' => 'forumlisttab',
         ];
 
-        return array_merge_recursive($moocnav, self::get_html_pages());
+        return $moocnav;
     }
 
     /**
@@ -135,29 +135,6 @@ class moocnav {
         global $COURSE, $DB;
 
         return $DB->record_exists('format_ocmooc_social', ['courseid' => $COURSE->id]);
-    }
-
-    /**
-     * Get HTML pages for the MOOC navigation.
-     *
-     * @return array HTML pages with name and URL.
-     */
-    private static function get_html_pages() {
-        global $COURSE, $DB;
-
-        $moocnav = [];
-
-        $pages = $DB->get_records('format_ocmooc_htmlsite', ['courseid' => $COURSE->id]);
-        foreach ($pages as $page) {
-            $moocnav[] = [
-                    'name' => $page->title,
-                    'url' => (new \moodle_url(
-                        '/course/format/ocmooc/views/page.php',
-                        ['courseid' => $COURSE->id, 'id' => $page->id]
-                    ))->out(false),
-            ];
-        }
-        return $moocnav;
     }
 
     /**
