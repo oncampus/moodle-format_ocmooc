@@ -44,6 +44,18 @@ if (container && slider) {
     startPosition = getCurrentActiveIndex();
     currentPosition = getCurrentActiveIndex();
 
+    // Mobile: one chapter visible at a time, so start at the active chapter.
+    if (window.matchMedia('(max-width: 767.98px)').matches) {
+        if (currentPosition < 0) {
+            currentPosition = 0;
+        }
+        currentMargin = -currentPosition * 284;
+        slider.style.marginLeft = currentMargin + 'px';
+        buttons[0].classList.toggle('inactive', currentPosition === 0);
+        buttons[1].classList.toggle('inactive', currentPosition === slides);
+        setCenter();
+    }
+
     function slideRight() {
         if (currentPosition != 0) {
             slider.style.marginLeft = currentMargin + 284 + 'px';

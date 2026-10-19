@@ -325,17 +325,6 @@
         border-color: #dee2e6;
     }
 
-    .ocmooc-nav-link .text-container {
-        align-items: flex-start;
-        /* Align elements to the top */
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        text-overflow: ellipsis;
-    }
-
     @media (max-width: 767.98px) {
 
         .format-ocmooc .nav-tabs:not(.more-nav) .nav-link,
@@ -1218,10 +1207,13 @@
 
     /* Sammelaktionen im Bearbeitungsmpdus verstecken */
     .format-ocmooc .bulkEnable {
-    display: none;
+        display: none;
     }
 
-    .format-ocmooc .h5p-lazy { margin: 0.5rem 0; }
+    .format-ocmooc .h5p-lazy {
+        margin: 0.5rem 0;
+    }
+
     .format-ocmooc .h5p-lazy-prompt {
         display: flex;
         align-items: center;
@@ -1231,4 +1223,140 @@
         border-radius: 0.5rem;
         background: var(--bs-light, #f8f9fa);
     }
-    .format-ocmooc .h5p-lazy-label { color: #6c757d; }
+
+    .format-ocmooc .h5p-lazy-label {
+        color: #6c757d;
+    }
+
+    /* Lektionsnavigation: einheitliche Höhe, Fortschrittsbalken immer unten */
+    .ocmooc-navigation li a.ocmooc-nav-link {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: space-between;
+        padding: 5px 6px;
+        line-height: 1.2;
+    }
+
+    .ocmooc-navigation li a.ocmooc-nav-link .text-container {
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+    }
+
+    .ocmooc-navigation li a.ocmooc-nav-link .oc-progress-div {
+        flex: 0 0 15px;
+        min-height: 15px;
+        margin: 4px 0 0 0 !important;
+    }
+
+    #oc-chapters-nav-inner.frame ul li {
+        position: relative;
+    }
+
+    /*MOBILE ANSICHT*/
+    @media (max-width: 767.98px) {
+
+        /* Nichts darf die Seite seitlich verbreitern. "clip" verhindert auch programmatisches Scrollen. */
+        #page-course-view-ocmooc #region-main,
+        #page-course-view-ocmooc .course-content {
+            overflow-x: clip;
+            max-width: 100%;
+        }
+
+        /* Kapitel-Slider */
+        #oc-chapters-navigation.wrap {
+            width: 90%;
+            max-width: 90%;
+            overflow: hidden;
+            contain: paint;
+            /* schneidet auch absolut positionierte Kinder ab (Marker-Icon) */
+        }
+
+        .oc-chapter-mask {
+            max-width: 284px;
+            justify-content: flex-start !important;
+        }
+
+        #oc-chapters-nav-inner.frame {
+            width: 284px !important;
+            min-width: 284px !important;
+        }
+
+        #oc-chapters-nav-inner.frame ul li {
+            position: relative;
+        }
+
+        #oc-chapters-slider {
+            transform: none !important;
+        }
+
+        .chapters-control-prev,
+        .chapters-control-next {
+            background: rgba(255, 255, 255, 0.75);
+            opacity: 1;
+            width: 32px;
+            height: 48px;
+            top: calc(50% - 24px);
+            bottom: auto;
+            border-radius: 4px;
+        }
+
+        /* Lektionsleiste: schrumpft immer in den Container, egal wie viele Items sichtbar sind */
+        #oc-section-navigation {
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        #oc-section-navigation .navigation {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+        }
+
+        .ocmooc-navigation {
+            width: 100%;
+        }
+
+        .ocmooc-navigation li {
+            flex: 1 1 0;
+            min-width: 0;
+            max-width: 96px;
+            width: auto;
+        }
+
+        .ocmooc-navigation li:first-child,
+        .ocmooc-navigation li:last-child {
+            flex: 0 0 28px;
+            max-width: 28px;
+        }
+
+        .ocmooc-navigation li a.ocmooc-nav-link {
+            padding: 5px 2px;
+            font-size: 12px;
+            overflow: hidden;
+        }
+
+        /* Inhalt */
+        .course-content ul.ocmooc,
+        .ocmooc .activity-item,
+        .ocmooc .course-section {
+            max-width: 100%;
+            min-width: 0;
+        }
+
+        .ocmooc iframe,
+        .ocmooc img,
+        .ocmooc video,
+        .ocmooc .h5p-iframe-wrapper {
+            max-width: 100%;
+        }
+
+        .ocmooc .activity-item {
+            overflow-x: auto;
+        }
+
+        .format-ocmooc .drawer-toggles .drawer-right-toggle,
+        .format-ocmooc .drawer-toggles .drawer-left-toggle {
+            top: 5rem;
+        }
+    }

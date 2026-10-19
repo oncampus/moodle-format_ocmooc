@@ -1,8 +1,7 @@
 define(['jquery'], function($) {
     return {
         init: function() {
-            var maxVisible = window.innerWidth < 500 ? 3 :
-                 window.innerWidth < 600 ? 4 : 5;
+            var maxVisible = getMaxVisible();
 
             // Initialize: Hide non-visible lessons on page load
             $(document).ready(function() {
@@ -53,6 +52,19 @@ define(['jquery'], function($) {
                 $('.ocmooc-nav-item-next').css('visibility', isLastPage ? 'hidden' : 'visible');
             }
 
+            /**
+             * Calculate how many lesson items fit into the navigation bar.
+             * @return {number} Number of visible items (1 to 5).
+             */
+            function getMaxVisible() {
+                var container = document.getElementById('oc-section-navigation');
+                var viewport = document.documentElement.clientWidth;
+                var width = container ? Math.min(container.clientWidth, viewport) : viewport;
+                var available = width - 60; // Two arrows, 30px each.
+                var itemWidth = window.innerWidth < 768 ? 64 : 96; // Must match the CSS.
+                return Math.max(1, Math.min(5, Math.floor(available / itemWidth)));
+            }
+
             // Attach event listeners
             $(document).on('click', '.ocmooc-nav-item-prev a', function(event) {
                 event.preventDefault();
@@ -62,6 +74,17 @@ define(['jquery'], function($) {
             $(document).on('click', '.ocmooc-nav-item-next a', function(event) {
                 event.preventDefault();
                 changeLessonNav(1);
+            });
+
+            $(window).on('resize', function() {
+                var newMax = getMaxVisible();
+                if (newMax === maxVisible) {
+                    return;
+                }
+                var navItems = $('.ocmooc-nav-item').not('.ocmooc-nav-item-prev, .ocmooc-nav-item-next');
+                var first = navItems.index(navItems.filter(':visible').first());
+                maxVisible = newMax;
+                updateLessonNav(Math.max(0, Math.min(first, navItems.length - maxVisible)));
             });
         }
     };
