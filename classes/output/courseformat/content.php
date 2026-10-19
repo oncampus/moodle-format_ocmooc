@@ -292,6 +292,7 @@ class content extends content_base {
 
                 $section->sectionreturnid = $sectionnum - 1;
                 $section->rawtitle = $rawtitle;
+                $section->shorttitle = $rawtitle !== null ? shorten_text($rawtitle, 28, false, '...') : '';
                 $section->sectionnum = $sectionnum;
                 $section->progress = $this->get_progress_by_section($section);
                 $section->hasnoprogress = $section->progress === false;
