@@ -201,7 +201,7 @@ class content extends content_base {
 
             if ($section->parent === 0) {
                 if ($isediting || $this->format->is_section_visible($section)) {
-                    $rawtitle = $section->name;
+                    $rawtitle = $this->format->get_section_name($section);
                     $sectionid = $section->id;
 
                     $section = new $this->sectionclass($this->format, $section);
