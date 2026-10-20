@@ -57,12 +57,14 @@ define(['jquery'], function($) {
              * @return {number} Number of visible items (1 to 5).
              */
             function getMaxVisible() {
+                var mobile = window.innerWidth < 768;
                 var container = document.getElementById('oc-section-navigation');
                 var viewport = document.documentElement.clientWidth;
                 var width = container ? Math.min(container.clientWidth, viewport) : viewport;
-                var available = width - 60; // Two arrows, 30px each.
-                var itemWidth = window.innerWidth < 768 ? 64 : 96; // Must match the CSS.
-                return Math.max(1, Math.min(5, Math.floor(available / itemWidth)));
+                var available = width - 60;
+                var itemWidth = mobile ? 64 : 96;
+                var fit = Math.max(1, Math.floor(available / itemWidth));
+                return mobile ? Math.min(3, fit) : Math.min(5, fit);
             }
 
             // Attach event listeners

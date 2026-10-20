@@ -283,7 +283,7 @@
     .ocmooc-navigation li {
         margin: 0px;
         width: 96px;
-        height: 75px;
+        height: 70px;
         /* Set the desired height */
     }
 
@@ -1315,12 +1315,13 @@
 
         .ocmooc-navigation {
             width: 100%;
+            justify-content: center;
         }
 
         .ocmooc-navigation li {
             flex: 1 1 0;
             min-width: 0;
-            max-width: 96px;
+            max-width: 140px;
             width: auto;
         }
 
