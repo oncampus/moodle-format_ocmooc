@@ -2,9 +2,9 @@
     <div class="navigation">
         <ul id="" class="ocmooc-navigation">
                 <li class="ocmooc-nav-item-prev" style="visibility: hidden;">
-                    <a aria-label="{{#str}}previous, moodle{{/str}}">
-                        <i class="icon fa fa-chevron-left fa-fw text-dark" title="Zurück" aria-hidden="true"></i>
-                    </a>
+                    <button type="button" aria-label="{{#str}}previous, moodle{{/str}}">
+                        <i class="icon fa fa-chevron-left fa-fw text-dark" aria-hidden="true"></i>
+                    </button>
                 </li>
             {{#chaptersections}}
                 <li class="ocmooc-nav-item {{#selected}}active{{/selected}}" style="display: none;">
@@ -44,9 +44,9 @@
                 </li>
             {{/chaptersections}}
                 <li class="ocmooc-nav-item-next" style="visibility: hidden;">
-                    <a aria-label="{{#str}}next, moodle{{/str}}">
-                        <i class="icon fa fa-chevron-right fa-fw text-dark" title="Vor" aria-hidden="true"></i>
-                    </a>
+                    <button type="button" aria-label="{{#str}}next, moodle{{/str}}">
+                        <i class="icon fa fa-chevron-right fa-fw text-dark" aria-hidden="true"></i>
+                    </button>
                 </li>
         </ul>
     </div>

@@ -149,7 +149,8 @@
     }
 
     #oc-chapters-slider {
-        transition: margin-left 0.5s ease-in-out 0s;
+        transition: translate 0.5s ease-in-out 0s;
+        will-change: translate;
     }
 
     #oc-chapters-nav-inner.frame ul li {
@@ -318,6 +319,12 @@
     .ocmooc-navigation li a:hover {
         background-color: #eaeaea;
         border-color: #eaeaea;
+    }
+
+    .ocmooc-navigation li button:focus-visible,
+    .ocmooc-navigation li a:focus-visible {
+        outline: 2px solid #0f6cbf;
+        outline-offset: -2px;
     }
 
     .ocmooc-navigation li.active a {
@@ -1360,4 +1367,9 @@
         .format-ocmooc .drawer-toggles .drawer-left-toggle {
             top: 5rem;
         }
+    }
+
+    .oc-chapter-mask,
+    #oc-chapters-nav-inner.frame {
+        overflow: clip !important;
     }

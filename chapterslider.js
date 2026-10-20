@@ -50,7 +50,7 @@ if (container && slider) {
             currentPosition = 0;
         }
         currentMargin = -currentPosition * 284;
-        slider.style.marginLeft = currentMargin + 'px';
+        slider.style.translate = currentMargin + 'px 0';
         buttons[0].classList.toggle('inactive', currentPosition === 0);
         buttons[1].classList.toggle('inactive', currentPosition === slides);
         setCenter();
@@ -58,7 +58,7 @@ if (container && slider) {
 
     function slideRight() {
         if (currentPosition != 0) {
-            slider.style.marginLeft = currentMargin + 284 + 'px';
+            slider.style.translate = (currentMargin + 284) + 'px 0';
             currentMargin += 284;
             currentPosition--;
         }
@@ -73,7 +73,7 @@ if (container && slider) {
 
     function slideLeft() {
         if (currentPosition < slides) {
-            slider.style.marginLeft = currentMargin - 284 + 'px';
+            slider.style.translate = (currentMargin - 284) + 'px 0';
             currentMargin -= 284;
             currentPosition++;
         }
@@ -85,4 +85,15 @@ if (container && slider) {
         }
         setCenter();
     }
+    // Add event listener for focusin on the slider.
+    slider.addEventListener('focusin', function(event) {
+        var item = event.target.closest('.oc-chapter-item');
+        var index = Array.prototype.indexOf.call(getAlleItems(), item);
+        while (index >= 0 && currentPosition < index) {
+            slideLeft();
+        }
+        while (index >= 0 && currentPosition > index) {
+            slideRight();
+        }
+    });
 }
