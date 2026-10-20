@@ -76,8 +76,8 @@ if ($isediting) {
 }
 // Include any format js module here using $PAGE->requires->js.
 if ($PAGE->pagetype === 'course-view-ocmooc') {
-    $PAGE->requires->js('/course/format/ocmooc/lockEditbutton.js');
-    $PAGE->requires->js('/course/format/ocmooc/chapterslider.js');
-    $PAGE->requires->js('/course/format/ocmooc/courseEditorToggler.js');
-    $PAGE->requires->js('/course/format/ocmooc/amd/build/hvp_resizer_parent.min.js');
+    $PAGE->requires->js_call_amd('format_ocmooc/chapterslider', 'init');
+    $PAGE->requires->js_call_amd('format_ocmooc/lockEditbutton', 'init');
+    $PAGE->requires->js_call_amd('format_ocmooc/courseEditorToggler', 'init');
+    $PAGE->requires->js_call_amd('format_ocmooc/hvp_resizer_parent', 'init');
 }

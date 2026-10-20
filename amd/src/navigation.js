@@ -68,12 +68,12 @@ define(['jquery'], function($) {
             }
 
             // Attach event listeners
-            $(document).on('click', '.ocmooc-nav-item-prev a', function(event) {
+            $(document).on('click', '.ocmooc-nav-item-prev button', function(event) {
                 event.preventDefault();
                 changeLessonNav(-1);
             });
 
-            $(document).on('click', '.ocmooc-nav-item-next a', function(event) {
+            $(document).on('click', '.ocmooc-nav-item-next button', function(event) {
                 event.preventDefault();
                 changeLessonNav(1);
             });
