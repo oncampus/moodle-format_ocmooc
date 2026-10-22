@@ -1,15 +1,37 @@
-// Website
-window.onmessage = (e) => {
-    // Update percentage
-    if (e.data.hasOwnProperty("progressDiv") && e.data.hasOwnProperty("textDiv") && e.data.hasOwnProperty("percentage")) {
-        if(e.data.progressDiv !== null && e.data.percentage !== "0%" && e.data.textDiv !== null){
-            document.getElementById(e.data.progressDiv).style.width = e.data.percentage;
-            document.getElementById(e.data.textDiv).innerHTML = e.data.percentage;
+/**
+ * Receive progress and height updates from embedded H5P content.
+ *
+ * @module     format_ocmooc/hvp_resizer_parent
+ * @copyright  2025 oncampus GmbH <support@oncampus.de>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/**
+ * Initialise the message listener.
+ */
+export const init = () => {
+    window.addEventListener('message', (e) => {
+        const data = e.data;
+        if (!data || typeof data !== 'object') {
+            return;
         }
-    } else if (e.data.hasOwnProperty("frameHeight") && e.data.hasOwnProperty("frameId")) {
-        // To avoid retroactively adding/using ids on iframes
-        let frame = document.getElementById(e.data.frameId);
-        // Adjust the height
-        frame.style.height = `${e.data.frameHeight}px`;
-    }
+
+        if ('progressDiv' in data && 'textDiv' in data && 'percentage' in data) {
+            // Update progress percentage.
+            if (data.progressDiv !== null && data.textDiv !== null && data.percentage !== '0%') {
+                const bar = document.getElementById(data.progressDiv);
+                const text = document.getElementById(data.textDiv);
+                if (bar && text) {
+                    bar.style.width = data.percentage;
+                    text.textContent = data.percentage;
+                }
+            }
+        } else if ('frameHeight' in data && 'frameId' in data) {
+            // Adjust the iframe height.
+            const frame = document.getElementById(data.frameId);
+            if (frame) {
+                frame.style.height = `${data.frameHeight}px`;
+            }
+        }
+    });
 };
