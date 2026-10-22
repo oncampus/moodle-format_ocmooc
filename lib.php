@@ -307,6 +307,24 @@ class format_ocmooc extends base {
     }
 
     /**
+     * Returns the default name of the section (used as placeholder when no name is set).
+     *
+     * @param int|stdClass $section Section object from database or just field section.section
+     * @return string
+     */
+    public function get_default_section_name($section) {
+        $section = $this->get_section($section);
+        if ($section->section == 0) {
+            return get_string('rootsection', 'format_ocmooc');
+        } else if ($section->parent == 0) {
+            return get_string('chapter', 'format_ocmooc') . ' ' .
+                $this->get_section_manager()->get_chapter_no_from_number($section->section);
+        }
+        return get_string('lection', 'format_ocmooc') . ' ' .
+            $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
+    }
+
+    /**
      * Returns the display name of the given section that the course prefers.
      *
      * This method is required for inplace section name editor.
@@ -323,19 +341,7 @@ class format_ocmooc extends base {
                 ['context' => context_course::instance($this->courseid)]
             );
         } else {
-            if ($section->section == 0) {
-                return get_string('rootsection', 'format_ocmooc');
-            } else if ($section->parent == 0) {
-                return get_string(
-                    'chapter',
-                    'format_ocmooc'
-                ) . " " . $this->get_section_manager()->get_chapter_no_from_number($section->section);
-            } else {
-                return get_string(
-                    'lection',
-                    'format_ocmooc'
-                ) . " " . $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
-            }
+            return $this->get_default_section_name($section);
         }
     }
 
