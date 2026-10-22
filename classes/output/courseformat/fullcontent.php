@@ -67,8 +67,11 @@ class fullcontent extends content_base {
             $section = new $this->sectionclass($this->format, $section0);
             $data->initialsection = $section->export_for_template($output);
 
-            if (array_key_exists($lastchapter, $chapters) && array_key_exists($lastlection, $chapters[$lastchapter]->sections)) {
-                $section = $chapters[$lastchapter]->sections[$lastlection];
+            if (array_key_exists($lastchapter, $chapters)) {
+                $section = $chapters[$lastchapter];
+                if (array_key_exists($lastlection, $section->sections)) {
+                    $section = $section->sections[$lastlection];
+                }
                 echo \html_writer::tag('input', '', ['type' => 'hidden', 'id' => 'oc-jump-lection', 'value' => $section->num]);
             }
 

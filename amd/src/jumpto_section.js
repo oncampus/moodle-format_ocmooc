@@ -1,16 +1,13 @@
 import jQuery from 'jquery';
 
 export const init = () => {
-    jQuery(document).ready(function () {
-        let url = jQuery(location).attr('href');
-        let params = url.split('#');
-        if (params === undefined || params.length < 2)
-        {
-            let jumpmark = jQuery('#oc-jump-lection');
-            if (jumpmark !== undefined) {
-                let tag = jQuery("#section-" + jumpmark.val());
-                jQuery('#page').animate({scrollTop: tag.offset().top}, 'fast');
-            }
-        }
-    });
+    // A hash in the URL is handled by the browser.
+    if (window.location.hash) {
+        return;
+    }
+    const jumpmark = document.getElementById('oc-jump-lection');
+    const target = jumpmark ? document.getElementById('section-' + jumpmark.value) : null;
+    if (target) {
+        target.scrollIntoView({behavior: 'smooth', block: 'center'});
+    }
 };

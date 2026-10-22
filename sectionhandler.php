@@ -75,4 +75,11 @@ switch ($action) {
         break;
 }
 
+// Remember the target so the edit view jumps to the new or neighbouring section.
+$chapter = $redirecturl->get_param('chapter');
+if ($chapter) {
+    set_user_preference("ocmooc_last_chapter_cid_{$courseid}", $chapter);
+    set_user_preference("ocmooc_last_lection_cid_{$courseid}", $redirecturl->get_param('lection') ?: 1);
+}
+
 redirect($redirecturl);
