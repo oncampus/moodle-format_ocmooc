@@ -201,7 +201,7 @@ class content extends content_base {
 
             if ($section->parent === 0) {
                 if ($isediting || $this->format->is_section_visible($section)) {
-                    $rawtitle = $this->format->get_section_name($section);
+                    $rawtitle = $this->get_plain_title($section, true);
                     $sectionid = $section->id;
 
                     $section = new $this->sectionclass($this->format, $section);
@@ -285,14 +285,14 @@ class content extends content_base {
         $sectionnum = 1;
         foreach ($modinfo->get_section_info_all() as $section) {
             if ($section->section != 0 && $section->parent == $chaptersectionnumber) {
-                $rawtitle = $section->name;
+                $rawtitle = $this->get_plain_title($section, true);
 
                 $section = new $this->sectionclass($this->format, $section);
                 $section = $section->export_for_template($output);
 
                 $section->sectionreturnid = $sectionnum - 1;
                 $section->rawtitle = $rawtitle;
-                $section->shorttitle = $rawtitle !== null ? shorten_text($rawtitle, 28, false, '...') : '';
+                $section->shorttitle = shorten_text($rawtitle, 28, false, '...');
                 $section->sectionnum = $sectionnum;
                 $section->progress = $this->get_progress_by_section($section);
                 $section->hasnoprogress = $section->progress === false;
@@ -386,5 +386,19 @@ class content extends content_base {
      */
     public function get_template_name(\renderer_base $renderer): string {
         return 'format_ocmooc/local/content';
+    }
+
+    /**
+     * Get the section name with filters applied (e.g. multilang), as plain text.
+     *
+     * @param section_info $section The section.
+     * @param bool $usedefault Return the default name ("Lektion 3") if the section has no own name.
+     * @return string
+     */
+    private function get_plain_title($section, bool $usedefault): string {
+        if ((string)$section->name === '' && !$usedefault) {
+            return '';
+        }
+        return html_entity_decode(strip_tags($this->format->get_section_name($section)), ENT_QUOTES | ENT_HTML5);
     }
 }
