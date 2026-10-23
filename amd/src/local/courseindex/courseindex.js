@@ -94,6 +94,64 @@ export default class Component extends BaseCourseindex {
                     fakeelement.replaceWith(newelement);
                 });
         }
+        this._openCurrentLection();
+    }
+
+    /**
+     * Open the chapter of the lection shown on the current page and mark the lection.
+     *
+     * The lection is found by the chapter and lection URL parameters of its index link.
+     */
+    _openCurrentLection() {
+        const params = new URLSearchParams(window.location.search);
+        const chapter = params.get('chapter');
+        const lection = params.get('lection');
+        if (!chapter || !lection) {
+            return;
+        }
+
+        let link = null;
+        this.element.querySelectorAll(`${this.selectors.LECTION} [data-for="section_title"]`).forEach((candidate) => {
+            const wanted = new URL(candidate.href, window.location.origin).searchParams;
+            if (wanted.get('chapter') === chapter && wanted.get('lection') === lection) {
+                link = candidate;
+            }
+        });
+        if (!link) {
+            return;
+        }
+
+        const lectionElement = link.closest(this.selectors.LECTION);
+        const chapterElement = lectionElement.parentElement?.closest(this.selectors.CHAPTER);
+
+        // Keep the chapter open in the state, so a refresh of the index does not close it again.
+        if (chapterElement) {
+            this.reactive.dispatch('sectionIndexCollapsed', [chapterElement.dataset.id], false);
+        }
+
+        // Close all other chapters, so only the current one stays open.
+        const otherIds = [...this.element.querySelectorAll(this.selectors.CHAPTER)]
+            .map((element) => element.dataset.id)
+            .filter((id) => id !== chapterElement?.dataset.id);
+        if (otherIds.length) {
+            this.reactive.dispatch('sectionIndexCollapsed', otherIds, true);
+        }
+
+        // Open the DOM as well, in case the state is applied later.
+        let content = lectionElement.parentElement?.closest('.courseindex-item-content');
+        while (content) {
+            content.classList.add('show');
+            const toggler = this.element.querySelector(`[href="#${content.id}"]`);
+            toggler?.classList.remove('collapsed');
+            toggler?.setAttribute('aria-expanded', 'true');
+            content = content.parentElement?.closest('.courseindex-item-content');
+        }
+
+        // Mark the lection as the current page.
+        const item = lectionElement.querySelector('[data-for="section_item"]');
+        item?.classList.add('pageitem');
+        link.setAttribute('aria-current', 'page');
+        item?.scrollIntoView({block: 'nearest'});
     }
 
     getWatchers() {

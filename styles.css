@@ -1372,3 +1372,7 @@
     .format-ocmooc [data-action="moveCm"] {
         display: none !important;
     }
+
+    body:not(.editing) #courseindex [data-sectiontype="lection"] .courseindex-chevron {
+        display: none !important;
+    }
