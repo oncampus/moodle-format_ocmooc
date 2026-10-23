@@ -427,10 +427,6 @@ class format_ocmooc extends base {
             $chapterno = $this->get_section_manager()->get_chapter_no_from_number($section->parent);
             $lectionno = $this->get_section_manager()->get_lection_no_from_number($section->parent, $section->section);
         }
-        if (empty($CFG->linkcoursesections) && !empty($options['navigation']) && $sectionno !== null) {
-            // Navigation and edit controls require a concrete URL in Moodle 5.2.
-            return new moodle_url('/course/section.php', ['id' => $section->id]);
-        }
         if ($this->uses_sections() && !empty($sectionno)) {
             $url->remove_params('section');
             $url->param('chapter', $chapterno);
