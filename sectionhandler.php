@@ -73,6 +73,20 @@ switch ($action) {
         $neworder = [];
         $sectionmanager->reorder_sections($neworder, 0);
         break;
+    case 'view':
+        $sectionnum = required_param('sectionnum', PARAM_INT);
+        $modinfo    = get_fast_modinfo($course);
+        $section    = $modinfo->get_section_info($sectionnum, MUST_EXIST);
+        if ($section->parent == 0) {
+            $redirecturl->param('chapter', $sectionmanager->get_chapter_no_from_number($section->section));
+            $redirecturl->param('lection', 1);
+        } else {
+            $redirecturl->param('chapter', $sectionmanager->get_chapter_no_from_number($section->parent));
+            $redirecturl->param('lection', $sectionmanager->get_lection_no_from_number($section->parent, $section->section));
+        }
+        // Leave the edit mode and show the section as a learner sees it.
+        $USER->editing = 0;
+        break;
 }
 
 // Remember the target so the edit view jumps to the new or neighbouring section.

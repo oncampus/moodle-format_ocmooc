@@ -16,12 +16,16 @@
 
 namespace format_ocmooc\output\courseformat\content\section;
 
+use core\output\action_menu\link;
+use core\output\action_menu\link_secondary;
+use core\output\pix_icon;
+use core\url;
 use core_courseformat\output\local\content\section\controlmenu as core_controlmenu;
 
 /**
  * Section control menu override for format_ocmooc.
  *
- * Removes the duplicate action for chapters.
+ * Removes the duplicate action for chapters and shows sections in the learner view.
  *
  * @package    format_ocmooc
  * @copyright  2025 oncampus GmbH
@@ -55,5 +59,30 @@ class controlmenu extends core_controlmenu {
             );
         }
         return $controls;
+    }
+
+    /**
+     * Retrieves the view item. It leaves the edit mode and opens the section in the learner view.
+     *
+     * @return link|null The menu item if applicable, otherwise null.
+     */
+    protected function get_section_view_item(): ?link {
+        if ($this->format->get_sectionid() == $this->section->id) {
+            return null;
+        }
+        return new link_secondary(
+            url: new url(
+                '/course/format/ocmooc/sectionhandler.php',
+                [
+                    'action' => 'view',
+                    'courseid' => $this->format->get_course()->id,
+                    'sectionnum' => $this->section->section,
+                    'sesskey' => sesskey(),
+                ]
+            ),
+            icon: new pix_icon('i/viewsection', ''),
+            text: get_string('view'),
+            attributes: ['class' => 'view'],
+        );
     }
 }
