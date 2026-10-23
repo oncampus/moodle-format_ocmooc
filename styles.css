@@ -1152,12 +1152,6 @@
         }
     }
 
-
-    /* Temporary disable moveCM && Section/Lection in Activity Dropdown */
-    .format-ocmooc a.dropdown-item.editing_movecm.menu-action.cm-edit-action {
-        display: none;
-    }
-
     .format-ocmooc a.dropdown-item[data-action="moveSection"] {
         display: none;
     }
@@ -1372,4 +1366,9 @@
     .oc-chapter-mask,
     #oc-chapters-nav-inner.frame {
         overflow: clip !important;
+    }
+
+    /* Moving activities via dialog is not supported, use drag and drop in the course index. */
+    .format-ocmooc [data-action="moveCm"] {
+        display: none !important;
     }
