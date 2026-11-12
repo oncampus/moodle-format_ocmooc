@@ -34,4 +34,9 @@ export const init = () => {
             }
         }
     });
+
+    // Iframes may have reported their height before this listener existed: ask again.
+    document.querySelectorAll('iframe.h5p-iframe').forEach((frame) => {
+        frame.contentWindow.postMessage({action: 'ocmooc:requestHeight'}, window.location.origin);
+    });
 };

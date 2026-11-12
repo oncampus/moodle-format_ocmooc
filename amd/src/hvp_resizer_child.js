@@ -51,7 +51,10 @@ define(['jquery', 'format_ocmooc/hvp_resizer_child'], function ($) {
                 }
                 window.addEventListener('message', function (event) {
                     const data = event.data || {};
-                    if (data.context === 'h5p' || data.action === 'resize') {
+                    if (data.action === 'ocmooc:requestHeight') {
+                        lastHeight = 0; // Force resend, the parent missed the first report.
+                        report();
+                    } else if (data.context === 'h5p' || data.action === 'resize') {
                         window.requestAnimationFrame(report);
                     }
                 });
@@ -69,6 +72,11 @@ define(['jquery', 'format_ocmooc/hvp_resizer_child'], function ($) {
                         observer.observe(h5pContent);
                     }
                     sendPostMessage(parent.offsetHeight);
+                    window.addEventListener('message', function (event) {
+                        if ((event.data || {}).action === 'ocmooc:requestHeight') {
+                            sendPostMessage(parent.offsetHeight);
+                        }
+                    });
                 }
             }
         },
