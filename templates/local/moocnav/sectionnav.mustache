@@ -9,7 +9,7 @@
             {{#chaptersections}}
                 <li class="ocmooc-nav-item {{#selected}}active{{/selected}}" style="display: none;">
                     {{^hidden}}
-                        <a class="ocmooc-nav-link d-flex flex-column" href="{{url}}" title="{{rawtitle}}">
+                        <a class="ocmooc-nav-link d-flex flex-column{{#hasnoprogress}} ocmooc-nav-link-noprogress{{/hasnoprogress}}" href="{{url}}" title="{{rawtitle}}">
                             <div class="text-container">
                                 {{#lectionname}}
                                     <div>{{#str}}lection, format_ocmooc{{/str}}</div>
